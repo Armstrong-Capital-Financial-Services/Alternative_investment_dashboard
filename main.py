@@ -17,6 +17,8 @@ st.set_page_config(layout="wide")
 SUPABASE_URL = st.secrets["supabase"]["URL"]
 SUPABASE_KEY = st.secrets["supabase"]["KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+import tempfile
+import os
 
 def format_currency(value):
     if abs(value) >= 10000000:
@@ -1297,8 +1299,6 @@ def Geenrate_MIS_Report():
           st.write("No Transactions")
             
     rm_name='RAHUL MV'
-    import tempfile
-    import os
     if st.button("Generate Simple PDF Report"):
       with st.spinner("Generating..."):
           with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
