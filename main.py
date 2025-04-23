@@ -50,28 +50,28 @@ def fetch_table_data(connection, table_name):
         print(f"Error fetching data from {table_name}: {e}")
         return pd.DataFrame()
 
-def SMALLCASE_Analysis():
-  with psycopg2.connect(**db_config) as connection:
+def SMALLCASE_Analysis(display=True):
+ with psycopg2.connect(**db_config) as connection:
        df=fetch_table_data(connection=connection,table_name="SMALLCASE")
-  df['Subscription Start Date'] = pd.to_datetime(df['Subscription Start Date'], errors='coerce')
-  df['Subscription End Date'] = pd.to_datetime(df['Subscription End Date'], errors='coerce')
-  keywords_to_remove = ['manju', 'ashish']
-  import re
-  regex = '|'.join(keywords_to_remove)
-  df = df[~df['Name'].str.lower().str.contains(regex, na=False, regex=True)]
-  df['Networth'] = pd.to_numeric(df['Networth'], errors='coerce')
-  df['Networth'] = np.where(df['Current Investment Status'] == 'EXITED', -df['Networth'], df['Networth'])
-  df['MonthYear'] = df['Subscription Start Date'].dt.to_period('M')
-  new_clients_networth_monthly = df.groupby('MonthYear')['Networth'].sum().reset_index()
-  new_clients_networth_monthly.columns = ['Month', 'Total New Client Networth']
-  active_clients= df[(df['Current Investment Status']=='INVESTED')& (df['Subscription Status']=='SUBSCRIBED')]
-  #st.dataframe(active_clients)
-  currenty_not_active_clients = df[(df['Current Investment Status'] == 'INVESTED') & (df['Subscription Status'] == 'UNSUBSCRIBED')]
-  active_clients['Subscription Start Date'] = pd.to_datetime(active_clients['Subscription Start Date'])
-  existed_clients=df[df['Current Investment Status']=='EXITED']
-  active_clients['Networth'] = active_clients['Networth'].astype(float)
-  active_clients['MonthYear'] = active_clients['Subscription Start Date'].dt.to_period('M')
-
+ df['Subscription Start Date'] = pd.to_datetime(df['Subscription Start Date'], errors='coerce')
+ df['Subscription End Date'] = pd.to_datetime(df['Subscription End Date'], errors='coerce')
+ keywords_to_remove = ['manju', 'ashish']
+ import re
+ regex = '|'.join(keywords_to_remove)
+ df = df[~df['Name'].str.lower().str.contains(regex, na=False, regex=True)]
+ df['Networth'] = pd.to_numeric(df['Networth'], errors='coerce')
+ df['Networth'] = np.where(df['Current Investment Status'] == 'EXITED', -df['Networth'], df['Networth'])
+ df['MonthYear'] = df['Subscription Start Date'].dt.to_period('M')
+ new_clients_networth_monthly = df.groupby('MonthYear')['Networth'].sum().reset_index()
+ new_clients_networth_monthly.columns = ['Month', 'Total New Client Networth']
+ active_clients= df[(df['Current Investment Status']=='INVESTED')& (df['Subscription Status']=='SUBSCRIBED')]
+ #st.dataframe(active_clients)
+ currenty_not_active_clients = df[(df['Current Investment Status'] == 'INVESTED') & (df['Subscription Status'] == 'UNSUBSCRIBED')]
+ active_clients['Subscription Start Date'] = pd.to_datetime(active_clients['Subscription Start Date'])
+ existed_clients=df[df['Current Investment Status']=='EXITED']
+ active_clients['Networth'] = active_clients['Networth'].astype(float)
+ active_clients['MonthYear'] = active_clients['Subscription Start Date'].dt.to_period('M')
+ if display:
   col0, col1,col2,col3 = st.columns(4)
   client_smallcases = active_clients.groupby('Name')['Smallcase Name'].agg(list).reset_index()
   client_smallcases['Smallcase Count'] = client_smallcases['Smallcase Name'].apply(len)
@@ -1355,7 +1355,7 @@ if __name__ == "__main__":
     elif page == "Fractional Real Estate":
         RIETS_Analysis(display=True)
     elif page == "Smallcase":
-        SMALLCASE_Analysis()
+        SMALLCASE_Analysis(display=True)
     elif page == "FD":
         FD_Analysis()
     elif page == "AIF":
