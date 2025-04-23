@@ -12,6 +12,7 @@ from streamlit import table
 import datetime
 from psycopg2 import sql
 from supabase import create_client
+from pdf_generator_fixed import create_simple_investment_report
 st.set_page_config(layout="wide")
 SUPABASE_URL = st.secrets["supabase"]["URL"]
 SUPABASE_KEY = st.secrets["supabase"]["KEY"]
@@ -1294,17 +1295,16 @@ def Geenrate_MIS_Report():
               st.metric("Total AUM",format_currency(sum(filtered_FD['Investment Amount'])), border=True)
         else:
           st.write("No Transactions")
+            
+    rm_name='RAHUL MV'
+    import tempfile
+    import os
+    if st.button("Generate Simple PDF Report"):
+      with st.spinner("Generating..."):
+          with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+              temp_path = tmp.name
 
-from pdf_generator_fixed import create_simple_investment_report
-rm_name='RAHUL MV'
-import tempfile
-import os
-if st.button("Generate Simple PDF Report"):
-    with st.spinner("Generating..."):
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-            temp_path = tmp.name
-
-        pdf_path = create_simple_investment_report(
+          pdf_path = create_simple_investment_report(
             rm_name,
             selected_month,
             investment_df,
@@ -1313,17 +1313,15 @@ if st.button("Generate Simple PDF Report"):
             pms_clients,
             bond_filtered_df,
             filtered_FD,
-            output_path=temp_path
-        )
+            output_path=temp_path )
 
-        if pdf_path:
-            with open(pdf_path, "rb") as f:
-                st.download_button(
+          if pdf_path:
+              with open(pdf_path, "rb") as f:
+                  st.download_button(
                     label="Download Report",
                     data=f,
                     file_name=os.path.basename(pdf_path),
-                    mime="application/pdf"
-                )
+                    mime="application/pdf")
 
 def AIF_Analysis(display=True):
   if display:
