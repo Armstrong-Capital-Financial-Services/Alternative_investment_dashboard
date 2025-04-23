@@ -1099,23 +1099,231 @@ def FD_Analysis(display=True):
 
 
 def Geenrate_MIS_Report():
-    df_dict = {'PMS': PMS_Analysis(display=False),
-       'Vested': VESTED_Analysis(display=False),
-        'Bonds':BONDS_Analysis(display=False),
-       'Fractional Real Estate': RIETS_Analysis(display=False)}
-    df_list = list(df_dict.values())
-    date = st.date_input("Select Date", value=pd.to_datetime("today"))
-    month = date.strftime("%B")
-    year = date.strftime("%Y")
-    if month is not None and year is not None:
-        df_list = [df[(df['MonthOnly'] == month)&(df['YearOnly'] == year)] for df in df_list]
-    for key, df in zip(df_dict.keys(), df_list):
-        if len(df) > 0:
-            st.subheader(key)
-            st.dataframe(df)
-        elif len(df) == 0:
-            st.subheader(key)
-            st.write("No data found")
+    def fetch_table_data_MIS(table_name):
+    """Fetch data from a PostgreSQL table and return as a Pandas DataFrame."""
+    try:
+        with psycopg2.connect(**database_config) as connection:
+         query = f'SELECT * FROM "{table_name}";'  # Handling table names with special characters
+         with connection.cursor() as cursor:
+            cursor.execute(query)
+            columns = [desc[0] for desc in cursor.description]  # Get column names
+            rows = cursor.fetchall()
+            return pd.DataFrame(rows, columns=columns)
+    except psycopg2.Error as e:
+        print(f"Error fetching data from {table_name}: {e}")
+        return pd.DataFrame()  # Return empty DataFrame if an error occurs
+
+    master_data = fetch_table_data_MIS( "Clients_Master_Data")
+    master_data = master_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+    Bonds_data = fetch_table_data_MIS("BONDS")
+    Bonds_data = Bonds_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+    Bonds_data['Amount'] = Bonds_data['Amount'].astype(float)
+    Smallcase_data = fetch_table_data_MIS("SMALLCASE")
+    Smallcase_data = Smallcase_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+    #st.dataframe(Smallcase_data)
+    PMS_data = fetch_table_data_MIS("PMS")
+    PMS_data = PMS_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+    VESTED_data = fetch_table_data_MIS("VESTED")
+    VESTED_data = VESTED_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+    VESTED_data['Aum'] = VESTED_data['Aum'].str.replace(',', '',regex=False).astype(float)
+    Liquiloans_data = fetch_table_data_MIS("liquiloans")
+    Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+    Liqui_data = fetch_table_data_MIS("FRACTIONAL_REAL_ESTATE")
+    Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+
+    FD_data = fetch_table_data_MIS("FD")
+    #st.dataframe(FD_data)
+    RM_name=st.selectbox("Select the RM",options=['rahul m v'])
+    filtered_df = master_data[(master_data['RM Name'] == 'rahul m v')]
+    #st.write(filtered_df)
+    smallcase_clients = Smallcase_data.loc[Smallcase_data['PAN'].isin(filtered_df['PAN Number'])]
+    #smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == 'chandan']
+    bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
+    FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
+    pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
+    vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(filtered_df['RM Name'])]
+    vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
+    vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(str).str.replace('$', '', regex=False).astype(float)
+    liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
+    liquiloans_clients['Current Value (Rs.)'].replace(',', '', regex=True, inplace=True)
+    liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)
+    smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
+    smallcase_clients['Networth'] = np.where(smallcase_clients['Current Investment Status'] == 'EXITED', -smallcase_clients['Networth'], smallcase_clients['Networth'])
+
+    # User selects a month
+    selected_month = st.date_input("Select a Month").strftime('%B-%Y')
+    # Dictionary mapping for investment date columns
+    date_column_map = {
+    "smallcase_clients": "Subscription Start Date",
+    "bonds_clients": "Transaction Date",
+    "pms_clients": "Date of Investment",
+    "vested_clients": "Fadate",
+    "fd_clients": "Issue Date"}
+
+    # Function to filter and aggregate investments for last 3 months
+    def get_monthly_data(df, amount_col, date_col):
+      if date_col not in df.columns:
+          return pd.Series([0, 0, 0], index=three_months)  # Return zero if column missing
+      df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')  # Convert date column
+      df['Year-Month'] = df[date_col].dt.strftime('%B-%Y')
+      df_filtered = df[df['Year-Month'].isin(three_months)]
+      return df_filtered.groupby(['Year-Month'])[amount_col].sum().reindex(three_months, fill_value=0)
+
+    # Define last three months from selected month
+    selected_date = pd.to_datetime(selected_month + '-01')
+    three_months = [(selected_date - pd.DateOffset(months=i)).strftime('%B-%Y') for i in range(3)]
+
+    # Fetch investment amounts for each product using correct date column
+    investment_data = {
+    "Smallcase": get_monthly_data(smallcase_clients, 'Networth', date_column_map["smallcase_clients"]),
+    "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"]),
+    "PMS": get_monthly_data(pms_clients, 'Invested Amount', date_column_map["pms_clients"]),
+    "Vested": get_monthly_data(vested_clients, 'Aum', date_column_map["vested_clients"]),
+    "FD":get_monthly_data(FD_clients,'Investment Amount',date_column_map['fd_clients'])}
+
+    # Convert to DataFrame
+    investment_df = pd.DataFrame(investment_data).reset_index().melt(id_vars="Year-Month", var_name="Product",
+                                                                 value_name="Invested Amount")
+    investment_df = investment_df.fillna(0)
+
+    investment_df['Year-Month'] = pd.Categorical(investment_df['Year-Month'], categories=three_months[::-1], ordered=True)
+    investment_df = investment_df.sort_values('Year-Month')
+
+    # Plot Stacked Bar Chart
+    fig = px.bar(investment_df, x=investment_df["Product"], y=investment_df["Invested Amount"], color="Year-Month", barmode="group")
+    fig.update_layout(
+    xaxis_title="Products",
+    yaxis_title="Net Inflow",
+    xaxis=dict(
+        title_font=dict(size=12, family='sans serif', color='black'),
+        tickfont=dict(size=12, family='sans serif', color='black')
+    ),
+    yaxis=dict( tickformat=',.0f',
+        title_font=dict(size=12, family='sans serif', color='black'),
+        tickfont=dict(size=12, family='sans serif', color='black')
+    ))
+    fig.update_traces(
+    hovertemplate="<b>Product:</b> %{x}<br><b>Amount:</b> %{y}<extra></extra>")
+
+    # Set showlegend to True to ensure the legend shows all months
+    fig.update_layout(showlegend=True)
+
+    # Explicitly show zero values
+    fig.update_traces(marker_line_width=1.3, marker_line_color="black", opacity=0.8)
+
+    st.plotly_chart(fig)
+
+    Smallcase_Active= smallcase_clients[(smallcase_clients['Current Investment Status']=='invested')& (smallcase_clients['Subscription Status']=='subscribed')]
+    Smallcase_Active['Subscription Start Date'] = pd.to_datetime(Smallcase_Active['Subscription Start Date'], errors='coerce')
+    Smallcase_Active['Month-Year'] = Smallcase_Active['Subscription Start Date'].dt.strftime('%B-%Y')
+    filtered_smallcase = Smallcase_Active[Smallcase_Active['Month-Year'] == selected_month]
+    with st.container(border=True):
+      col1,col2=st.columns(2)
+      with col1:
+       st.subheader("SMALLCASE")
+       columns_to_select = ['Name','Networth','PAN','Smallcase Name']
+       filtered_df_smallcase = filtered_smallcase[columns_to_select]
+       filtered_df_smallcase.rename(columns={'Networth': 'Invested Amount'}, inplace=True)
+       if len(filtered_df) > 0:
+          st.dataframe(filtered_df_smallcase,hide_index=True)
+          with col2:
+              st.metric("Total AUM",format_currency(sum(filtered_df_smallcase['Invested Amount'])),border=True)
+       else:
+           st.write("No Transactions")
+
+    with st.container(border=True):
+      col1, col2 = st.columns(2)
+      with col1:
+        st.subheader("VESTED")
+      vested_clients=vested_clients[vested_clients['Invested Amount'] != 0]
+      if len(vested_clients) > 0:
+         st.dataframe(vested_clients)
+         with col2:
+            st.metric("Total AUM", format_currency(sum(vested_clients['Invested Amount'])), border=True)
+      else:
+         st.write("No Transactions")
+
+    with st.container(border=True):
+      pms_clients['Date of Investment'] = pd.to_datetime(pms_clients['Date of Investment'],
+                                                                 errors='coerce')
+      pms_clients = pms_clients[pms_clients['Year-Month'] == selected_month]
+      columns_to_select = ['Name', 'Invested Amount','PAN','Strategy']
+      filtered_df = pms_clients[columns_to_select]
+      col1, col2 = st.columns(2)
+      with col1:
+        st.subheader("PMS")
+      if len(filtered_df) > 0:
+          st.dataframe(filtered_df,hide_index=True)
+          with col2:
+              st.metric("Total AUM",format_currency(sum(filtered_df['Invested Amount'])), border=True)
+      else:
+          st.write("No Transactions")
+
+    # Filter Bonds Data
+    bonds_clients['Transaction Date'] = pd.to_datetime(bonds_clients['Transaction Date'], errors='coerce')
+    bonds_clients['Month-Year'] = bonds_clients['Transaction Date'].dt.strftime('%B-%Y')
+    filtered_bonds = bonds_clients[bonds_clients['Month-Year'] == selected_month]
+    with st.container(border=True):
+        columns_to_select = ['Name', 'Amount','PAN','Issue Name','Type']
+        bond_filtered_df = filtered_bonds[columns_to_select]
+        col1, col2 = st.columns(2)
+        with col1:
+          st.subheader("Bonds")
+        if len(filtered_df) > 0:
+            st.dataframe(bond_filtered_df,hide_index=True)
+            bond_filtered_df.rename(columns={'Amount': 'Invested Amount'}, inplace=True)
+            with col2:
+              st.metric("Total AUM",format_currency(sum(bond_filtered_df['Invested Amount'])), border=True)
+        else:
+           st.write("No Transactions")
+
+
+    FD_clients['Transaction Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
+    FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
+    filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
+    with st.container(border=True):
+        columns_to_select = ['Customer Name', 'Issue Date','Investment Amount','Channel Partner']
+        filtered_FD = filtered_FD[columns_to_select]
+        col1, col2 = st.columns(2)
+        with col1:
+          st.subheader("FD")
+        if len(filtered_FD) > 0:
+          st.dataframe(filtered_FD,hide_index=True)
+          filtered_FD.rename(columns={'Customer Name': 'Name'}, inplace=True)
+          with col2:
+              st.metric("Total AUM",format_currency(sum(filtered_FD['Investment Amount'])), border=True)
+        else:
+          st.write("No Transactions")
+
+from pdf_generator_fixed import create_simple_investment_report
+rm_name='RAHUL MV'
+import tempfile
+import os
+if st.button("Generate Simple PDF Report"):
+    with st.spinner("Generating..."):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+            temp_path = tmp.name
+
+        pdf_path = create_simple_investment_report(
+            rm_name,
+            selected_month,
+            investment_df,
+            filtered_df_smallcase,
+            vested_clients,
+            pms_clients,
+            bond_filtered_df,
+            filtered_FD,
+            output_path=temp_path
+        )
+
+        if pdf_path:
+            with open(pdf_path, "rb") as f:
+                st.download_button(
+                    label="Download Report",
+                    data=f,
+                    file_name=os.path.basename(pdf_path),
+                    mime="application/pdf"
+                )
 
 def AIF_Analysis(display=True):
   if display:
