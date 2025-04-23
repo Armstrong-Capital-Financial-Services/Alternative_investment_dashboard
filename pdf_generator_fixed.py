@@ -131,4 +131,4 @@ def create_simple_investment_report(
 
         except Exception as e:
            st.error(f"Error creating PDF report: {e}")
-           return output_path
+        return output_path
