@@ -62,7 +62,7 @@ def SMALLCASE_Analysis():
   new_clients_networth_monthly = df.groupby('MonthYear')['Networth'].sum().reset_index()
   new_clients_networth_monthly.columns = ['Month', 'Total New Client Networth']
   active_clients= df[(df['Current Investment Status']=='INVESTED')& (df['Subscription Status']=='SUBSCRIBED')]
-  st.dataframe(active_clients)
+  #st.dataframe(active_clients)
   currenty_not_active_clients = df[(df['Current Investment Status'] == 'INVESTED') & (df['Subscription Status'] == 'UNSUBSCRIBED')]
   active_clients['Subscription Start Date'] = pd.to_datetime(active_clients['Subscription Start Date'])
   existed_clients=df[df['Current Investment Status']=='EXITED']
