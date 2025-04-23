@@ -13,8 +13,8 @@ import datetime
 from psycopg2 import sql
 from supabase import create_client
 st.set_page_config(layout="wide")
-supabase_url = st.secrets["supabase"]["URL"]
-supabase_key = st.secrets["supabase"]["KEY"]
+SUPABASE_URL = st.secrets["supabase"]["URL"]
+SUPABASE_KEY = st.secrets["supabase"]["KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def format_currency(value):
