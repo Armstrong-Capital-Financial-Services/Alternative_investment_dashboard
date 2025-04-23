@@ -1298,30 +1298,37 @@ def Geenrate_MIS_Report():
         else:
           st.write("No Transactions")
             
-    rm_name='RAHUL MV'
+    rm_name = 'RAHUL MV'    
     if st.button("Generate Simple PDF Report"):
-      with st.spinner("Generating..."):
-          with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-              temp_path = tmp.name
-
-          pdf_path = create_simple_investment_report(
-            rm_name,
-            selected_month,
-            investment_df,
-            filtered_df_smallcase,
-            vested_clients,
-            pms_clients,
-            bond_filtered_df,
-            filtered_FD,
-            output_path=temp_path )
-
-          if pdf_path:
-              with open(pdf_path, "rb") as f:
-                  st.download_button(
+        with st.spinner("Generating..."):
+            # Create a dedicated output path for the PDF
+            output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
+            temp_path = os.path.join(tempfile.gettempdir(), output_filename)
+            
+            pdf_path = create_simple_investment_report(
+                rm_name,
+                selected_month,
+                investment_df,
+                filtered_df_smallcase,
+                vested_clients,
+                pms_clients,
+                bond_filtered_df,
+                filtered_FD,
+                output_path=temp_path
+            )
+            
+            if pdf_path and os.path.exists(pdf_path):
+                with open(pdf_path, "rb") as f:
+                    pdf_data = f.read()
+                
+                st.download_button(
                     label="Download Report",
-                    data=f,
+                    data=pdf_data,
                     file_name=os.path.basename(pdf_path),
-                    mime="application/pdf")
+                    mime="application/pdf"
+                )
+            else:
+                st.error("Failed to generate PDF report.")
 
 def AIF_Analysis(display=True):
   if display:
