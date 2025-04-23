@@ -13,8 +13,8 @@ import datetime
 from psycopg2 import sql
 from supabase import create_client
 st.set_page_config(layout="wide")
-SUPABASE_URL = st.secrets["SUPABASE_URL"]
-SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+supabase_url = st.secrets["supabase"]["URL"]
+supabase_key = st.secrets["supabase"]["KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def format_currency(value):
@@ -27,11 +27,11 @@ def format_currency(value):
     else:
         return f"{value:.2f}"
 db_config = {
-    "user": st.secrets["DB_USER"],
-    "password": st.secrets["DB_PASSWORD"],
-    "host": st.secrets["DB_HOST"],
-    "port": st.secrets["DB_PORT"],
-    "dbname": st.secrets["DB_NAME"]
+    "user": st.secrets["DB"]["USER"],
+    "password": st.secrets["DB"]["PASSWORD"],
+    "host": st.secrets["DB"]["HOST"],
+    "port": st.secrets["DB"]["PORT"],
+    "dbname": st.secrets["DB"]["NAME"]
 }
 
 def fetch_table_data(connection, table_name):
