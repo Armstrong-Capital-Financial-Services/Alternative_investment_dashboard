@@ -1100,8 +1100,8 @@ def FD_Analysis(display=True):
 
 def Geenrate_MIS_Report():
     def fetch_table_data_MIS(table_name):
-    """Fetch data from a PostgreSQL table and return as a Pandas DataFrame."""
-    try:
+      """Fetch data from a PostgreSQL table and return as a Pandas DataFrame."""
+      try:
         with psycopg2.connect(**database_config) as connection:
          query = f'SELECT * FROM "{table_name}";'  # Handling table names with special characters
          with connection.cursor() as cursor:
@@ -1109,7 +1109,7 @@ def Geenrate_MIS_Report():
             columns = [desc[0] for desc in cursor.description]  # Get column names
             rows = cursor.fetchall()
             return pd.DataFrame(rows, columns=columns)
-    except psycopg2.Error as e:
+      except psycopg2.Error as e:
         print(f"Error fetching data from {table_name}: {e}")
         return pd.DataFrame()  # Return empty DataFrame if an error occurs
 
