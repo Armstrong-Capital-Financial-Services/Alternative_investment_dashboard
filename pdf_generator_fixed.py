@@ -128,8 +128,7 @@ def create_simple_investment_report(
 
                 # Build PDF with page border
                 doc.build(elements, onFirstPage=draw_border, onLaterPages=draw_border)
-                return output_path
 
         except Exception as e:
            st.error(f"Error creating PDF report: {e}")
-           return None
+           return output_path
