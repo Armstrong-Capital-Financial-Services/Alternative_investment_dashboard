@@ -1103,7 +1103,7 @@ def Geenrate_MIS_Report():
     def fetch_table_data_MIS(table_name):
       """Fetch data from a PostgreSQL table and return as a Pandas DataFrame."""
       try:
-        with psycopg2.connect(**database_config) as connection:
+        with psycopg2.connect(**db_config) as connection:
          query = f'SELECT * FROM "{table_name}";'  # Handling table names with special characters
          with connection.cursor() as cursor:
             cursor.execute(query)
