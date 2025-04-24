@@ -1227,7 +1227,7 @@ def Geenrate_MIS_Report():
        columns_to_select = ['Name','Networth','PAN','Smallcase Name']
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
        filtered_df_smallcase.rename(columns={'Networth': 'Invested Amount'}, inplace=True)
-       if len(smallcase_clients) > 0:
+       if len(filtered_smallcase) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
               st.metric("Total AUM",format_currency(sum(filtered_df_smallcase['Invested Amount'])),border=True)
