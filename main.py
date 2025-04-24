@@ -1136,11 +1136,11 @@ def Geenrate_MIS_Report():
 
     FD_data = fetch_table_data_MIS("FD")
     #st.dataframe(FD_data)
-    RM_name=st.selectbox("Select the RM",options=['rahul m v'])
-    filtered_df = master_data[(master_data['RM Name'] == 'rahul m v')]
+    RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan b r','arun mathew'])
+    filtered_df = master_data[(master_data['RM Name'] == RM_name)]
     #st.write(filtered_df)
-    smallcase_clients = Smallcase_data.loc[Smallcase_data['PAN'].isin(filtered_df['PAN Number'])]
-    #smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == 'chandan']
+    #smallcase_clients = Smallcase_data.loc[Smallcase_data['PAN'].isin(filtered_df['PAN Number'])]
+    #smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
@@ -1227,7 +1227,7 @@ def Geenrate_MIS_Report():
        columns_to_select = ['Name','Networth','PAN','Smallcase Name']
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
        filtered_df_smallcase.rename(columns={'Networth': 'Invested Amount'}, inplace=True)
-       if len(filtered_df) > 0:
+       if len(smallcase_clients) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
               st.metric("Total AUM",format_currency(sum(filtered_df_smallcase['Invested Amount'])),border=True)
