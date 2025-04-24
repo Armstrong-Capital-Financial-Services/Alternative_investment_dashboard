@@ -1227,6 +1227,9 @@ def Geenrate_MIS_Report():
        columns_to_select = ['Name','Networth','PAN','Smallcase Name']
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
        filtered_df_smallcase.rename(columns={'Networth': 'Invested Amount'}, inplace=True)
+       filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
+       filtered_df_smallcase['Name'] = filtered_df_smallcase['Name'].str.upper()  
+       filtered_df_smallcase['Smallcase Name'] = filtered_df_smallcase['Smallcase Name'].str.upper()
        if len(filtered_smallcase) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
@@ -1298,7 +1301,7 @@ def Geenrate_MIS_Report():
         else:
           st.write("No Transactions")
             
-    rm_name = 'RAHUL MV'    
+    rm_name = RM_name    
     if st.button("Generate Simple PDF Report"):
         with st.spinner("Generating..."):
             # Create a dedicated output path for the PDF
