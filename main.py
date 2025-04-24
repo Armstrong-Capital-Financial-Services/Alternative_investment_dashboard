@@ -1140,7 +1140,7 @@ def Geenrate_MIS_Report():
     filtered_df = master_data[(master_data['RM Name'] == RM_name)]
     #st.write(filtered_df)
     #smallcase_clients = Smallcase_data.loc[Smallcase_data['PAN'].isin(filtered_df['PAN Number'])]
-    #smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
+    smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
