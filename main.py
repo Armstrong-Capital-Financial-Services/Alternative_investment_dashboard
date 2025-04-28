@@ -1130,7 +1130,7 @@ def Geenrate_MIS_Report():
     PMS_data = PMS_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
     VESTED_data = fetch_table_data_MIS("VESTED")
     VESTED_data = VESTED_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    VESTED_data['Aum'] = VESTED_data['Aum'].str.replace(',', '',regex=False).astype(float)
+    #VESTED_data['Aum'] = VESTED_data['Aum'].str.replace(',', '',regex=False).astype(float)
     Liquiloans_data = fetch_table_data_MIS("liquiloans")
     Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
     Liqui_data = fetch_table_data_MIS("FRACTIONAL_REAL_ESTATE")
