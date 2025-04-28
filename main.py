@@ -1146,7 +1146,7 @@ def Geenrate_MIS_Report():
     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
-    vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(filtered_df['RM Name'])]
+    vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
     vested_clients['Invested Amount'] = pd.to_numeric(vested_clients['Invested Amount'])
     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
@@ -1163,14 +1163,17 @@ def Geenrate_MIS_Report():
     "smallcase_clients": "Subscription Start Date",
     "bonds_clients": "Transaction Date",
     "pms_clients": "Date of Investment",
-    "vested_clients": "Rcdate",
+    "vested_clients": "Signupdate",
     "fd_clients": "Issue Date"}
 
     # Function to filter and aggregate investments for last 3 months
-    def get_monthly_data(df, amount_col, date_col):
+    def get_monthly_data(df, amount_col, date_col,source=None):
       if date_col not in df.columns:
           return pd.Series([0, 0, 0], index=three_months)  # Return zero if column missing
-      df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')  # Convert date column
+      if source='vested_clients':
+          df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')
+      else:         
+        df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')  # Convert date column
       df['Year-Month'] = df[date_col].dt.strftime('%B-%Y')
       df_filtered = df[df['Year-Month'].isin(three_months)]
       return df_filtered.groupby(['Year-Month'])[amount_col].sum().reindex(three_months, fill_value=0)
@@ -1184,7 +1187,7 @@ def Geenrate_MIS_Report():
     "Smallcase": get_monthly_data(smallcase_clients, 'Networth', date_column_map["smallcase_clients"]),
     "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"]),
     "PMS": get_monthly_data(pms_clients, 'Invested Amount', date_column_map["pms_clients"]),
-    "Vested": get_monthly_data(vested_clients, 'Aum', date_column_map["vested_clients"]),
+    "Vested": get_monthly_data(vested_clients, 'Aum', date_column_map["vested_clients"],source='vested_clients'),
     "FD":get_monthly_data(FD_clients,'Investment Amount',date_column_map['fd_clients'])}
 
     # Convert to DataFrame
@@ -1244,11 +1247,12 @@ def Geenrate_MIS_Report():
       col1, col2 = st.columns(2)
       with col1:
         st.subheader("VESTED")
-      vested_clients=vested_clients[vested_clients['Invested Amount'] != 0]
-      if len(vested_clients) > 0:
-         st.dataframe(vested_clients)
+        vested_clients=vested_clients[vested_clients['Invested Amount'] != 0]
+        filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
+      if len(filterd_vested) > 0:
+         st.dataframe(filtered_vested)
          with col2:
-            st.metric("Total AUM", format_currency(sum(vested_clients['Invested Amount'])), border=True)
+            st.metric("Total AUM", format_currency(sum(filered_vested['Invested Amount'])), border=True)
       else:
          st.write("No Transactions")
 
@@ -1316,7 +1320,7 @@ def Geenrate_MIS_Report():
                 selected_month,
                 investment_df,
                 filtered_df_smallcase,
-                vested_clients,
+                filtered_vested,
                 pms_clients,
                 bond_filtered_df,
                 filtered_FD,
