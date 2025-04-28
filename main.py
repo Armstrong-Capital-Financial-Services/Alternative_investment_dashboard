@@ -1170,7 +1170,7 @@ def Geenrate_MIS_Report():
     def get_monthly_data(df, amount_col, date_col,source=None):
       if date_col not in df.columns:
           return pd.Series([0, 0, 0], index=three_months)  # Return zero if column missing
-      if source='vested_clients':
+      if source=='vested_clients':
           df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')
       else:         
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')  # Convert date column
@@ -1184,8 +1184,8 @@ def Geenrate_MIS_Report():
 
     # Fetch investment amounts for each product using correct date column
     investment_data = {
-    "Smallcase": get_monthly_data(smallcase_clients, 'Networth', date_column_map["smallcase_clients"]),
-    "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"]),
+    "Smallcase": get_monthly_data(smallcase_clients, 'Networth', date_column_map["smallcase_clients"],source='smallcase_clients'),
+    "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"],source='bonds_clients'),
     "PMS": get_monthly_data(pms_clients, 'Invested Amount', date_column_map["pms_clients"]),
     "Vested": get_monthly_data(vested_clients, 'Aum', date_column_map["vested_clients"],source='vested_clients'),
     "FD":get_monthly_data(FD_clients,'Investment Amount',date_column_map['fd_clients'])}
