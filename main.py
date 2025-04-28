@@ -1252,7 +1252,7 @@ def Geenrate_MIS_Report():
       if len(filtered_vested) > 0:
          st.dataframe(filtered_vested)
          with col2:
-            st.metric("Total AUM", format_currency(sum(filered_vested['Invested Amount'])), border=True)
+            st.metric("Total AUM", format_currency(sum(filtered_vested['Invested Amount'])), border=True)
       else:
          st.write("No Transactions")
 
