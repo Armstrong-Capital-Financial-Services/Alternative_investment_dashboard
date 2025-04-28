@@ -586,17 +586,18 @@ def VESTED_Analysis(display=True):
   with psycopg2.connect(**db_config) as connection:
         raw_vested_client_data_df = fetch_table_data(connection=connection, table_name="VESTED")
   raw_vested_client_data_df = raw_vested_client_data_df[raw_vested_client_data_df['RM'] != 'Employee']
-  raw_vested_client_data_df['Signupdate'] = pd.to_datetime(raw_vested_client_data_df['Signupdate'],format="mixed")
+  raw_vested_client_data_df['Signupdate'] = pd.to_datetime(raw_vested_client_data_df['Signupdate'],format="%d-%m-%Y")
   raw_vested_client_data_df['Signupdate'] = raw_vested_client_data_df['Signupdate'].dt.strftime('%B-%Y')
   raw_vested_client_data_df=raw_vested_client_data_df.fillna(0)
   raw_vested_client_data_df['YearOnly']=raw_vested_client_data_df['Signupdate'].str.split('-').str[1]
   raw_vested_client_data_df['MonthOnly']=raw_vested_client_data_df['Signupdate'].str.split('-').str[0]
+  raw_vested_client_data_df['Invested Amount'] = pd.to_numeric(raw_vested_client_data_df['Invested Amount'])
   raw_vested_client_data_df['Invested Amount'] = raw_vested_client_data_df['Invested Amount'].astype(float)
   raw_vested_client_data_df2=raw_vested_client_data_df[raw_vested_client_data_df['Invested Amount']!=0]
   if display:
     col0, col1,col2,col3,col4= st.columns(5)
     with col0:
-        VESTED_total_AUM = raw_vested_client_data_df['Equity'].sum()
+        VESTED_total_AUM = raw_vested_client_data_df['Equity'].astype(float).sum()
         st.metric("Total AUM", f" $ {VESTED_total_AUM}", border=True)
     with col1:
         total_vested_clients = len(raw_vested_client_data_df['Name'].unique())
