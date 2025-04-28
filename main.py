@@ -586,6 +586,7 @@ def VESTED_Analysis(display=True):
   with psycopg2.connect(**db_config) as connection:
         raw_vested_client_data_df = fetch_table_data(connection=connection, table_name="VESTED")
   raw_vested_client_data_df = raw_vested_client_data_df[raw_vested_client_data_df['RM'] != 'Employee']
+  raw_vested_client_data_df = raw_vested_client_data_df.dropna(subset=['Name'])
   raw_vested_client_data_df['Signupdate'] = pd.to_datetime(raw_vested_client_data_df['Signupdate'],format="%d-%m-%Y")
   raw_vested_client_data_df['Signupdate'] = raw_vested_client_data_df['Signupdate'].dt.strftime('%B-%Y')
   raw_vested_client_data_df=raw_vested_client_data_df.fillna(0)
