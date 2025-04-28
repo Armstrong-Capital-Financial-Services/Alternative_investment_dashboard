@@ -1148,7 +1148,8 @@ def Geenrate_MIS_Report():
     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
     vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(filtered_df['RM Name'])]
     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
-    vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(str).str.replace('$', '', regex=False).astype(float)
+    vested_clients['Invested Amount'] = pd.to_numeric(vested_clients['Invested Amount'])
+    vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
     liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
     liquiloans_clients['Current Value (Rs.)'].replace(',', '', regex=True, inplace=True)
     liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)
@@ -1162,7 +1163,7 @@ def Geenrate_MIS_Report():
     "smallcase_clients": "Subscription Start Date",
     "bonds_clients": "Transaction Date",
     "pms_clients": "Date of Investment",
-    "vested_clients": "Fadate",
+    "vested_clients": "Rcdate",
     "fd_clients": "Issue Date"}
 
     # Function to filter and aggregate investments for last 3 months
