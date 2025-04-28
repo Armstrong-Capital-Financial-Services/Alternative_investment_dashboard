@@ -1249,7 +1249,7 @@ def Geenrate_MIS_Report():
         st.subheader("VESTED")
         vested_clients=vested_clients[vested_clients['Invested Amount'] != 0]
         filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
-      if len(filterd_vested) > 0:
+      if len(filtered_vested) > 0:
          st.dataframe(filtered_vested)
          with col2:
             st.metric("Total AUM", format_currency(sum(filered_vested['Invested Amount'])), border=True)
