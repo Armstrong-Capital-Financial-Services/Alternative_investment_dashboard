@@ -1252,7 +1252,7 @@ def Geenrate_MIS_Report():
       if len(filtered_vested) > 0:
         st.dataframe(filtered_vested)
         with col2:
-            st.metric("Total AUM", format_currency(sum(vested_clients['Invested Amount'])), border=True)
+            st.metric("Total AUM", format_currency(sum(vested_clients['INVESTED AMOUNT'])), border=True)
       else:
         st.write("No Transactions")
 
@@ -1262,13 +1262,14 @@ def Geenrate_MIS_Report():
       pms_clients = pms_clients[pms_clients['Year-Month'] == selected_month]
       columns_to_select = ['Name', 'Invested Amount','PAN','Strategy']
       filtered_df = pms_clients[columns_to_select]
+      filtered_df = filtered_df.apply(lambda x: x.astype(str).str.upper())  
       col1, col2 = st.columns(2)
       with col1:
         st.subheader("PMS")
       if len(filtered_df) > 0:
           st.dataframe(filtered_df,hide_index=True)
           with col2:
-              st.metric("Total AUM",format_currency(sum(filtered_df['Invested Amount'])), border=True)
+              st.metric("Total AUM",format_currency(sum(filtered_df['INVESTED AMOUNT'])), border=True)
       else:
           st.write("No Transactions")
 
@@ -1283,10 +1284,11 @@ def Geenrate_MIS_Report():
         with col1:
           st.subheader("Bonds")
         if len(filtered_df) > 0:
-            st.dataframe(bond_filtered_df,hide_index=True)
             bond_filtered_df.rename(columns={'Amount': 'Invested Amount'}, inplace=True)
+            bond_filtered_df = bond_filtered_df.apply(lambda x: x.astype(str).str.upper())  
+            st.dataframe(bond_filtered_df,hide_index=True)
             with col2:
-              st.metric("Total AUM",format_currency(sum(bond_filtered_df['Invested Amount'])), border=True)
+              st.metric("Total AUM",format_currency(sum(bond_filtered_df['INVESTED AMOUNT'])), border=True)
         else:
            st.write("No Transactions")
 
@@ -1294,6 +1296,8 @@ def Geenrate_MIS_Report():
     FD_clients['Transaction Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
     FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
     filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
+    filtered_FD.rename(columns={'Customer Name': 'Name','Investment Amount':'Invested Amount'}, inplace=True)
+    filtered_FD = filtered_FD.apply(lambda x: x.astype(str).str.upper())  
     with st.container(border=True):
         columns_to_select = ['Customer Name', 'Issue Date','Investment Amount','Channel Partner']
         filtered_FD = filtered_FD[columns_to_select]
@@ -1301,10 +1305,9 @@ def Geenrate_MIS_Report():
         with col1:
              st.subheader("FD")
         if len(filtered_FD) > 0:
-             filtered_FD.rename(columns={'Customer Name': 'Name'}, inplace=True)
              st.dataframe(filtered_FD,hide_index=True)
              with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_FD['Investment Amount'])), border=True)
+               st.metric("Total AUM",format_currency(sum(filtered_FD['INVESTED AMOUNT'])), border=True)
         else:
           st.write("No Transactions")
             
