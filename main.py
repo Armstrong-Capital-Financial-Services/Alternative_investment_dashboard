@@ -1248,7 +1248,7 @@ def Geenrate_MIS_Report():
         filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
         columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
         filtered_vested = filtered_vested[columns_to_select_vested]
-        filtered_vested.rename(columns={'Invested Amount': 'INVESTED AMOUNT','name':'NAME'}, inplace=True)
+        filtered_vested.rename(columns={'Invested Amount': 'INVESTED AMOUNT','Name':'NAME'}, inplace=True)
         filtered_vested['NAME'] = filtered_vested['NAME'].str.upper
         filtered_vested['Dwaccountno'] = filtered_vested['Dwaccountno'].str.upper
         filtered_vested['Subscription'] = filtered_vested['Subscription'].str.upper  
