@@ -1232,9 +1232,8 @@ def Geenrate_MIS_Report():
        st.subheader("SMALLCASE")
        columns_to_select = ['Name','Networth','PAN','Smallcase Name']
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
-       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT'}, inplace=True)
+       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','name':'NAME'}, inplace=True)
        filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
-       filtered_df_smallcase['Name'] = filtered_df_smallcase['Name'].str.upper()
        if len(filtered_smallcase) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
@@ -1249,7 +1248,11 @@ def Geenrate_MIS_Report():
         filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
         columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
         filtered_vested = filtered_vested[columns_to_select_vested]
-        filtered_vested = filtered_vested.apply(lambda x: x.astype(str).str.upper())
+        filtered_vested.rename(columns={'Invested Amount': 'INVESTED AMOUNT','name':'NAME'}, inplace=True)
+        filtered_vested['NAME'] = filtered_vested['NAME'].str.upper
+        filtered_vested['Dwaccountno'] = filtered_vested['Dwaccountno'].str.upper
+        filtered_vested['Subscription'] = filtered_vested['Subscription'].str.upper  
+        
       if len(filtered_vested) > 0:
         st.dataframe(filtered_vested)
         with col2:
