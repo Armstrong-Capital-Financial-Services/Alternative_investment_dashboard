@@ -897,7 +897,7 @@ def FD_Analysis(display=True):
                                                   index=len(end_month_options) - 1,  # Default to last available month
                                                   key="end_month")
             with col3:
-                selected_year = st.selectbox("Select Year", available_years)
+                selected_year = st.selectbox("Select Year", available_years,key='selected-year-1')
 
             def filter_data(df, year, start_month, end_month):
                 month_order_dict = {month: index for index, month in enumerate(month_order)}
@@ -987,7 +987,7 @@ def FD_Analysis(display=True):
                                                        # Default to last available month
                                                        key="end_month_2")
                  with col3:
-                     selected_year = st.selectbox("Select Year", available_years)
+                     selected_year = st.selectbox("Select Year", available_years,key='selected_year_2')
 
                  def filter_data(df, year, start_month, end_month):
                      month_order_dict = {month: index for index, month in enumerate(month_order)}
