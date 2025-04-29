@@ -1300,7 +1300,7 @@ def Geenrate_MIS_Report():
         col1, col2 = st.columns(2)
         if len(filtered_FD) > 0:
           with col1:
-            st.subheader("FD")
+             st.subheader("FD")
              filtered_FD.rename(columns={'Customer Name': 'Name'}, inplace=True)
              st.dataframe(filtered_FD,hide_index=True)
           with col2:
