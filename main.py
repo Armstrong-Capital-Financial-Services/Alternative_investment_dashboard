@@ -1247,9 +1247,9 @@ def Geenrate_MIS_Report():
       col1, col2 = st.columns(2)
       with col1:
         st.subheader("VESTED")
-        columns_to_select = ['Name','Dwaccountno','Subscription','Invested Amount','Unrealized P&L']
-        vested_clients = vested_clients[columns_to_select]
         filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
+        columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
+        filtered_vested = filtered_vested[columns_to_select_vested]
       if len(filtered_vested) > 0:
         st.dataframe(filtered_vested)
         with col2:
