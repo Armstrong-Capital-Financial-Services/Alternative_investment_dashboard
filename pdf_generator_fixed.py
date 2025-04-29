@@ -122,7 +122,7 @@ def create_simple_investment_report(
 
         # Add product-wise tables
         add_table("Smallcase", smallcase_clients, ['Name', 'Invested Amount', 'PAN', 'Smallcase Name'])
-        add_table("Vested", vested_clients, ['Dwaccountno', 'Invested Amount'])
+        add_table("Vested", vested_clients,['Name','Dwaccountno','Subscription','Invested Amount','Unrealized P&L'])
         add_table("PMS", pms_clients, ['Name', 'Invested Amount', 'Strategy'])
         add_table("FD", FD_clients, ['Name', 'Issue Date', 'Investment Amount', 'Channel Partner'])
         add_table("Bonds", bonds_clients, ['Name', 'Invested Amount', 'PAN', 'Issue Name', 'Type'])
