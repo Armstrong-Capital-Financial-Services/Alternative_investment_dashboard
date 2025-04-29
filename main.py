@@ -1244,17 +1244,17 @@ def Geenrate_MIS_Report():
            st.write("No Transactions")
 
     with st.container(border=True):
-    col1, col2 = st.columns(2)
-    with col1:
+      col1, col2 = st.columns(2)
+      with col1:
         st.subheader("VESTED")
         columns_to_select = ['Name','Dwaccountno','Subscription','Invested Amount','Unrealized P&L']
         vested_clients = vested_clients[columns_to_select]
         filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
-    if len(filtered_vested) > 0:
+      if len(filtered_vested) > 0:
         st.dataframe(filtered_vested)
         with col2:
             st.metric("Total AUM", format_currency(sum(vested_clients['Invested Amount'])), border=True)
-    else:
+      else:
         st.write("No Transactions")
 
     with st.container(border=True):
