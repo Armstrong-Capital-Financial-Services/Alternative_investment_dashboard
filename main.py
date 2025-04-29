@@ -1138,7 +1138,7 @@ def Geenrate_MIS_Report():
 
     FD_data = fetch_table_data_MIS("FD")
     #st.dataframe(FD_data)
-    RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan b r','arun mathew'])
+    RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan b r','arun mathew','binto sebastian','ratheesh nambiar'])
     filtered_df = master_data[(master_data['RM Name'] == RM_name)]
     #st.write(filtered_df)
     #smallcase_clients = Smallcase_data.loc[Smallcase_data['PAN'].isin(filtered_df['PAN Number'])]
