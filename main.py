@@ -1237,7 +1237,7 @@ def Geenrate_MIS_Report():
        if len(filtered_smallcase) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
-              st.metric("Total AUM",format_currency(sum(filtered_df_smallcase['Invested Amount'])),border=True)
+              st.metric("Total AUM",format_currency(sum(filtered_df_smallcase['INVESTED AMOUNT'])),border=True)
        else:
            st.write("No Transactions")
 
