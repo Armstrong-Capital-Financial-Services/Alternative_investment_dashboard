@@ -1298,11 +1298,11 @@ def Geenrate_MIS_Report():
         columns_to_select = ['Customer Name', 'Issue Date','Investment Amount','Channel Partner']
         filtered_FD = filtered_FD[columns_to_select]
         col1, col2 = st.columns(2)
-        with col1:
-          st.subheader("FD")
         if len(filtered_FD) > 0:
-          st.dataframe(filtered_FD,hide_index=True)
-          filtered_FD.rename(columns={'Customer Name': 'Name'}, inplace=True)
+          with col1:
+            st.subheader("FD")
+             filtered_FD.rename(columns={'Customer Name': 'Name'}, inplace=True)
+             st.dataframe(filtered_FD,hide_index=True)
           with col2:
               st.metric("Total AUM",format_currency(sum(filtered_FD['Investment Amount'])), border=True)
         else:
