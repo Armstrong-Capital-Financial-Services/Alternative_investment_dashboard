@@ -979,13 +979,13 @@ def FD_Analysis(display=True):
                  with col1:
                      start_month = st.selectbox("Start Month", available_months,
                                                 index=0,  # Default to first month
-                                                key="start_month")
+                                                key="start_month_2")
                  with col2:
                      end_month_options = available_months[available_months.index(start_month):]
                      selected_end_month = st.selectbox("End Month", end_month_options,
                                                        index=len(end_month_options) - 1,
                                                        # Default to last available month
-                                                       key="end_month")
+                                                       key="end_month_2")
                  with col3:
                      selected_year = st.selectbox("Select Year", available_years)
 
