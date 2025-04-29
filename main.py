@@ -1304,8 +1304,8 @@ def Geenrate_MIS_Report():
         if len(filtered_FD) > 0:
              filtered_FD.rename(columns={'Customer Name': 'Name'}, inplace=True)
              st.dataframe(filtered_FD,hide_index=True)
-          with col2:
-              st.metric("Total AUM",format_currency(sum(filtered_FD['Investment Amount'])), border=True)
+             with col2:
+               st.metric("Total AUM",format_currency(sum(filtered_FD['Investment Amount'])), border=True)
         else:
           st.write("No Transactions")
             
