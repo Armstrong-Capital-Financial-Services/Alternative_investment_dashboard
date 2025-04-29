@@ -1187,7 +1187,7 @@ def Geenrate_MIS_Report():
     "Smallcase": get_monthly_data(smallcase_clients, 'Networth', date_column_map["smallcase_clients"],source='smallcase_clients'),
     "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"],source='bonds_clients'),
     "PMS": get_monthly_data(pms_clients, 'Invested Amount', date_column_map["pms_clients"]),
-    "Vested": get_monthly_data(vested_clients, 'Aum', date_column_map["vested_clients"],source='vested_clients'),
+    "Vested": get_monthly_data(vested_clients, 'Invested Amount', date_column_map["vested_clients"],source='vested_clients'),
     "FD":get_monthly_data(FD_clients,'Investment Amount',date_column_map['fd_clients'])}
 
     # Convert to DataFrame
@@ -1299,9 +1299,9 @@ def Geenrate_MIS_Report():
         columns_to_select = ['Customer Name', 'Issue Date','Investment Amount','Channel Partner']
         filtered_FD = filtered_FD[columns_to_select]
         col1, col2 = st.columns(2)
-        if len(filtered_FD) > 0:
-          with col1:
+        with col1:
              st.subheader("FD")
+        if len(filtered_FD) > 0:
              filtered_FD.rename(columns={'Customer Name': 'Name'}, inplace=True)
              st.dataframe(filtered_FD,hide_index=True)
           with col2:
