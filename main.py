@@ -1232,8 +1232,9 @@ def Geenrate_MIS_Report():
        st.subheader("SMALLCASE")
        columns_to_select = ['Name','Networth','PAN','Smallcase Name']
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
-       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','name':'NAME'}, inplace=True)
+       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','name':'NAME','smallcase name':'SMALLCASE NAME'}, inplace=True)
        filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
+       filrered_df_smallcase['SMALLCASE NAME'] = filtered_df_smallcase['SMALLCASE NAME'].str.upper()
        if len(filtered_smallcase) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
@@ -1247,7 +1248,9 @@ def Geenrate_MIS_Report():
         st.subheader("VESTED")
         filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
         columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
-        filtered_vested = filtered_vested[columns_to_select_vested]              
+        filtered_vested = filtered_vested[columns_to_select_vested]  
+        filtered_vested.rename(columns={'Dwaccountno': 'DWACCOUNTNO','name':'NAME','Unrealized P&L':'UNREALIZED P&L','Invested Amount':'INVESTED AMOUNT','Subscription':'SUBSCRIPTION'}, inplace=True) 
+        filtered_vested = filtered_vested.apply(lambda x: x.astype(str).str.upper())
       if len(filtered_vested) > 0:
         st.dataframe(filtered_vested)
         with col2:
@@ -1261,6 +1264,7 @@ def Geenrate_MIS_Report():
       pms_clients = pms_clients[pms_clients['Year-Month'] == selected_month]
       columns_to_select = ['Name', 'Invested Amount','PAN','Strategy']
       filtered_df = pms_clients[columns_to_select]
+      filtered_df_smallcase.rename(columns={'Invested Amount': 'INVESTED AMOUNT','name':'NAME','strategy':'STRATEGY'}, inplace=True) 
       filtered_df = filtered_df.apply(lambda x: x.astype(str).str.upper())  
       col1, col2 = st.columns(2)
       with col1:
@@ -1283,7 +1287,7 @@ def Geenrate_MIS_Report():
         with col1:
           st.subheader("Bonds")
         if len(filtered_df) > 0:
-            bond_filtered_df.rename(columns={'Amount': 'Invested Amount'}, inplace=True)
+            bond_filtered_df.rename(columns={'Amount': 'INVESTED AMOUNT','Name':'NAME','Issue Name':'ISSUE NAME','Type':'TYPE'}, inplace=True)
             bond_filtered_df = bond_filtered_df.apply(lambda x: x.astype(str).str.upper())  
             st.dataframe(bond_filtered_df,hide_index=True)
             with col2:
@@ -1295,9 +1299,9 @@ def Geenrate_MIS_Report():
     FD_clients['Transaction Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
     FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
     filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
-    filtered_FD.rename(columns={'Customer Name': 'Name','Investment Amount':'Invested Amount'}, inplace=True)
+    filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
     with st.container(border=True):
-        columns_to_select = ['Name', 'Issue Date','Invested Amount','Channel Partner']
+        columns_to_select = ['NAME', 'ISSUE DATE','INVESTED AMOUNT','CHANNEL PARTNER']
         filtered_FD = filtered_FD[columns_to_select]
         col1, col2 = st.columns(2)
         with col1:
