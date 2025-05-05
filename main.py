@@ -1291,7 +1291,9 @@ def Geenrate_MIS_Report():
           st.subheader("Bonds")
           if len(bond_filtered_df) > 0:
             bond_filtered_df.rename(columns={'Amount': 'INVESTED AMOUNT','Name':'NAME','Issue Name':'ISSUE NAME','Type':'TYPE'}, inplace=True)
-            bond_filtered_df = bond_filtered_df.apply(lambda x: x.astype(str).str.upper())  
+            bond_filtered_df['NAME']=bond_filtered_df['NAME'].str.upper()
+            bond_filtered_df['ISSUE NAME]=bond_filtered_df['ISSUE NAME].str.upper()
+            bond_filtered_df['TYPE']=bond_filtered_df['TYPE'].str.upper()
             st.dataframe(bond_filtered_df,hide_index=True)
             with col2:
               st.metric("Total AUM",format_currency(sum(bond_filtered_df['INVESTED AMOUNT'])), border=True)
