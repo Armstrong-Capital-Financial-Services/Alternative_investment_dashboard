@@ -1234,7 +1234,7 @@ def Geenrate_MIS_Report():
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
        filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','name':'NAME','Smallcase Name':'SMALLCASE NAME'}, inplace=True)
        filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
-       filrered_df_smallcase['SMALLCASE NAME'] = filtered_df_smallcase['SMALLCASE NAME'].str.upper()
+       filtered_df_smallcase['SMALLCASE NAME'] = filtered_df_smallcase['SMALLCASE NAME'].str.upper()
        if len(filtered_smallcase) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
