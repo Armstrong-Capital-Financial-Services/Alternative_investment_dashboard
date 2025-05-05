@@ -1232,7 +1232,7 @@ def Geenrate_MIS_Report():
        st.subheader("SMALLCASE")
        columns_to_select = ['Name','Networth','PAN','Smallcase Name']
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
-       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','name':'NAME','Smallcase Name':'SMALLCASE NAME'}, inplace=True)
+       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','Name':'NAME','Smallcase Name':'SMALLCASE NAME'}, inplace=True)
        filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
        filtered_df_smallcase['SMALLCASE NAME'] = filtered_df_smallcase['SMALLCASE NAME'].str.upper()
        if len(filtered_smallcase) > 0:
@@ -1249,7 +1249,7 @@ def Geenrate_MIS_Report():
         filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
         columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
         filtered_vested = filtered_vested[columns_to_select_vested]  
-        filtered_vested.rename(columns={'Dwaccountno': 'DWACCOUNTNO','name':'NAME','Unrealized P&L':'UNREALIZED P&L','Invested Amount':'INVESTED AMOUNT','Subscription':'SUBSCRIPTION'}, inplace=True) 
+        filtered_vested.rename(columns={'Dwaccountno': 'DWACCOUNTNO','Name':'NAME','Unrealized P&L':'UNREALIZED P&L','Invested Amount':'INVESTED AMOUNT','Subscription':'SUBSCRIPTION'}, inplace=True) 
         filtered_vested = filtered_vested.apply(lambda x: x.astype(str).str.upper())
       if len(filtered_vested) > 0:
         st.dataframe(filtered_vested)
@@ -1264,7 +1264,7 @@ def Geenrate_MIS_Report():
       pms_clients = pms_clients[pms_clients['Year-Month'] == selected_month]
       columns_to_select = ['Name', 'Invested Amount','PAN','Strategy']
       filtered_df = pms_clients[columns_to_select]
-      filtered_df_smallcase.rename(columns={'Invested Amount': 'INVESTED AMOUNT','name':'NAME','strategy':'STRATEGY'}, inplace=True) 
+      filtered_df_smallcase.rename(columns={'Invested Amount': 'INVESTED AMOUNT','Name':'NAME','Strategy':'STRATEGY'}, inplace=True) 
       filtered_df = filtered_df.apply(lambda x: x.astype(str).str.upper())  
       col1, col2 = st.columns(2)
       with col1:
