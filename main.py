@@ -1250,7 +1250,9 @@ def Geenrate_MIS_Report():
         columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
         filtered_vested = filtered_vested[columns_to_select_vested]  
         filtered_vested.rename(columns={'Dwaccountno': 'DWACCOUNTNO','Name':'NAME','Unrealized P&L':'UNREALIZED P&L','Invested Amount':'INVESTED AMOUNT','Subscription':'SUBSCRIPTION'}, inplace=True) 
-        filtered_vested = filtered_vested.apply(lambda x: x.astype(str).str.upper())
+        filtered_vested['DWACCOUNTNO']= filtered_vested['DWACCOUNTNO'].str.upper()
+        filtered_vested['NAME']=filtered_vested['NAME'].str.upper()
+        filtered_vested['SUBSCRIPTION']=filtered_vested['SUBSCRIPTION'].str.upper()
       if len(filtered_vested) > 0:
         st.dataframe(filtered_vested)
         with col2:
