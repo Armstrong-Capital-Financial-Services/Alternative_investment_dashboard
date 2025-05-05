@@ -1235,6 +1235,7 @@ def Geenrate_MIS_Report():
        filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','Name':'NAME','Smallcase Name':'SMALLCASE NAME'}, inplace=True)
        filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
        filtered_df_smallcase['SMALLCASE NAME'] = filtered_df_smallcase['SMALLCASE NAME'].str.upper()
+       filtered_df_smallcase['NAME']=filtered_df_smallcase['NAME'].str.upper()
        if len(filtered_smallcase) > 0:
           st.dataframe(filtered_df_smallcase,hide_index=True)
           with col2:
@@ -1311,7 +1312,7 @@ def Geenrate_MIS_Report():
         if len(filtered_FD) > 0:
              st.dataframe(filtered_FD,hide_index=True)
              with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_FD['Invested Amount'])), border=True)
+               st.metric("Total AUM",format_currency(sum(filtered_FD['INVESTED AMOUNT'])), border=True)
         else:
           st.write("No Transactions")
             
