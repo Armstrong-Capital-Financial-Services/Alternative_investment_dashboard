@@ -121,11 +121,11 @@ def create_simple_investment_report(
             elements.append(Spacer(1, 12))
 
         # Add product-wise tables
-        add_table("Smallcase", smallcase_clients, ['Name', 'INVESTED AMOUNT', 'PAN', 'Smallcase Name'])
-        add_table("Vested", vested_clients,['Name','Dwaccountno','Subscription','Invested Amount','Unrealized P&L'])
-        add_table("PMS", pms_clients, ['Name', 'Invested Amount', 'Strategy'])
-        add_table("FD", FD_clients, ['Name', 'Issue Date', 'Investment Amount', 'Channel Partner'])
-        add_table("Bonds", bonds_clients, ['Name', 'Invested Amount', 'PAN', 'Issue Name', 'Type'])
+        add_table("Smallcase", smallcase_clients, ['NAME', 'INVESTED AMOUNT', 'PAN', 'SMALLCASE NAME'])
+        add_table("Vested", vested_clients,['NAME','DWACCOUNTNO','SUBSCRIPTION','INVESTED AMOUNT','UNREALIZED P&L'])
+        add_table("PMS", pms_clients, ['NAME', 'INVESTED AMOUNT', 'STRATEGY'])
+        add_table("FD", FD_clients, ['NAME', 'ISSUE DATE', 'INVESTED AMOUNT', 'CHANNEL PARTNER'])
+        add_table("Bonds", bonds_clients, ['NAME', 'INVESTED AMOUNT', 'PAN', 'ISSUE NAME', 'TYPE'])
 
         # Build PDF with page border
         doc.build(elements, onFirstPage=draw_border, onLaterPages=draw_border)
