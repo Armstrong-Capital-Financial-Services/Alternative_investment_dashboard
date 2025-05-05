@@ -1232,7 +1232,7 @@ def Geenrate_MIS_Report():
        st.subheader("SMALLCASE")
        columns_to_select = ['Name','Networth','PAN','Smallcase Name']
        filtered_df_smallcase = filtered_smallcase[columns_to_select]
-       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','name':'NAME','smallcase name':'SMALLCASE NAME'}, inplace=True)
+       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','name':'NAME','Smallcase name':'SMALLCASE NAME'}, inplace=True)
        filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
        filrered_df_smallcase['SMALLCASE NAME'] = filtered_df_smallcase['SMALLCASE NAME'].str.upper()
        if len(filtered_smallcase) > 0:
