@@ -1289,14 +1289,14 @@ def Geenrate_MIS_Report():
         col1, col2 = st.columns(2)
         with col1:
           st.subheader("Bonds")
-        if len(filtered_df) > 0:
+          if len(filtered_df) > 0:
             bond_filtered_df.rename(columns={'Amount': 'INVESTED AMOUNT','Name':'NAME','Issue Name':'ISSUE NAME','Type':'TYPE'}, inplace=True)
             bond_filtered_df = bond_filtered_df.apply(lambda x: x.astype(str).str.upper())  
             st.dataframe(bond_filtered_df,hide_index=True)
             with col2:
               st.metric("Total AUM",format_currency(sum(bond_filtered_df['INVESTED AMOUNT'])), border=True)
-        else:
-           st.write("No Transactions")
+          else:
+            st.write("No Transactions")
 
 
     FD_clients['Transaction Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
