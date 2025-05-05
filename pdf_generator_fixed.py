@@ -121,7 +121,7 @@ def create_simple_investment_report(
             elements.append(Spacer(1, 12))
 
         # Add product-wise tables
-        add_table("Smallcase", smallcase_clients, ['Name', 'Invested Amount', 'PAN', 'Smallcase Name'])
+        add_table("Smallcase", smallcase_clients, ['Name', 'INVESTED AMOUNT', 'PAN', 'Smallcase Name'])
         add_table("Vested", vested_clients,['Name','Dwaccountno','Subscription','Invested Amount','Unrealized P&L'])
         add_table("PMS", pms_clients, ['Name', 'Invested Amount', 'Strategy'])
         add_table("FD", FD_clients, ['Name', 'Issue Date', 'Investment Amount', 'Channel Partner'])
