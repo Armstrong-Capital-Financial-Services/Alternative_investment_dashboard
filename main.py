@@ -1289,7 +1289,7 @@ def Geenrate_MIS_Report():
         col1, col2 = st.columns(2)
         with col1:
           st.subheader("Bonds")
-          if len(filtered_df) > 0:
+          if len(bond_filtered_df) > 0:
             bond_filtered_df.rename(columns={'Amount': 'INVESTED AMOUNT','Name':'NAME','Issue Name':'ISSUE NAME','Type':'TYPE'}, inplace=True)
             bond_filtered_df = bond_filtered_df.apply(lambda x: x.astype(str).str.upper())  
             st.dataframe(bond_filtered_df,hide_index=True)
