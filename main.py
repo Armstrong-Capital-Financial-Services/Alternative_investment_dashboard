@@ -1304,7 +1304,8 @@ def Geenrate_MIS_Report():
 
 
     FD_clients['Transaction Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
-    filtered_FD = FD_clients[FD_clients['Year-Month'] == selected_month]
+    FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
+    filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
     filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
     with st.container(border=True):
         columns_to_select = ['NAME', 'ISSUE DATE','INVESTED AMOUNT','CHANNEL PARTNER']
