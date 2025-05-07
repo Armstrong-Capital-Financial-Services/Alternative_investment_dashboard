@@ -1172,6 +1172,8 @@ def Geenrate_MIS_Report():
           return pd.Series([0, 0, 0], index=three_months)  # Return zero if column missing
       if source=='vested_clients':
           df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')
+      elif source == 'fd_clients':
+        df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')    
       else:         
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')  # Convert date column
       df['Year-Month'] = df[date_col].dt.strftime('%B-%Y')
@@ -1302,7 +1304,6 @@ def Geenrate_MIS_Report():
 
 
     FD_clients['Transaction Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
-    FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
     filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
     filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
     with st.container(border=True):
