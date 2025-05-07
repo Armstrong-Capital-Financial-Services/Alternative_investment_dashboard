@@ -1137,7 +1137,7 @@ def Geenrate_MIS_Report():
     Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
 
     FD_data = fetch_table_data_MIS("FD")
-    #st.dataframe(FD_data)
+    FD_data = FD_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
     RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan b r','ashish lal','arun mathew','binto sebastian','ratheesh nambiar'])
     filtered_df = master_data[(master_data['RM Name'] == RM_name)]
     #st.write(filtered_df)
