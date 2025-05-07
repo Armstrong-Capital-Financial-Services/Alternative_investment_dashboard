@@ -1304,7 +1304,7 @@ def Geenrate_MIS_Report():
             st.write("No Transactions")
 
 
-    FD_clients['Issue Date'] = pd.to_datetime(FD_clients['Issue Date'],format='%d-%m-%Y')
+    FD_clients['Issue Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
     FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
     st.write("FD_clients")
     st.dataframe(FD_clients)
