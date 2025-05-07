@@ -1306,15 +1306,11 @@ def Geenrate_MIS_Report():
             st.write("No Transactions")
 
     FD_clients['Issue Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
-    st.write("FD_clients")
-    st.dataframe(FD_clients)
     FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
     filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
-    #filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
-    st.write("filtered_FD")
-    st.dataframe(filtered_FD)
+    filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
     with st.container(border=True):
-        columns_to_select = ['Customer Name', 'Investment Amount','Issue Date','Channel Partner']
+        columns_to_select = ['NAME', 'INVESTED AMOUNT','ISSUE DATE','CHANNEL PARTNER']
         filtered_FD = filtered_FD[columns_to_select]
         col1, col2 = st.columns(2)
         with col1:
