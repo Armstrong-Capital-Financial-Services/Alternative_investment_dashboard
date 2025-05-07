@@ -1146,7 +1146,6 @@ def Geenrate_MIS_Report():
     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_clients.dropna(subset=['PAN'])
-    st.dataframe(FD_clients)
     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
     vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
@@ -1310,11 +1309,11 @@ def Geenrate_MIS_Report():
     st.write("FD_clients")
     st.dataframe(FD_clients)
     filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
-    filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
+    #filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
     st.write("filtered_FD")
     st.dataframe(filtered_FD)
     with st.container(border=True):
-        columns_to_select = ['NAME', 'ISSUE DATE','INVESTED AMOUNT','CHANNEL PARTNER']
+        columns_to_select = ['Customer Name', 'Investment Amount','Issue Date','Channel Partner']
         filtered_FD = filtered_FD[columns_to_select]
         col1, col2 = st.columns(2)
         with col1:
