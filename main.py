@@ -1306,7 +1306,7 @@ def Geenrate_MIS_Report():
 
     FD_clients['Issue Date'] = pd.to_datetime(FD_clients['Issue Date'], dayfirst=True, errors='coerce')
     FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
-     FD_clients['Issue Date'] = FD_clients['Issue Date'].dt.strftime('%d/%m/%Y')
+    FD_clients['Issue Date'] = FD_clients['Issue Date'].dt.strftime('%d-%m-%Y')
     st.write("FD_clients")
     st.dataframe(FD_clients)
     filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
