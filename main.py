@@ -1145,6 +1145,7 @@ def Geenrate_MIS_Report():
     smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
+    FD_clients = FD_clients.dropna(subset=['PAN'])
     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
     vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
