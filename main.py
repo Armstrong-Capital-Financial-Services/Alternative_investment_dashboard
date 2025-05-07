@@ -1146,8 +1146,6 @@ def Geenrate_MIS_Report():
     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_clients.dropna(subset=['PAN'])
-    st.write("FD_clients")
-    st.dataframe(FD_clients)
     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
     vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
@@ -1312,6 +1310,9 @@ def Geenrate_MIS_Report():
     with st.container(border=True):
         columns_to_select = ['NAME', 'INVESTED AMOUNT','ISSUE DATE','CHANNEL PARTNER']
         filtered_FD = filtered_FD[columns_to_select]
+        filtered_FD['ISSUE DATE']= filtered_FD['ISSUE DATE'].dt.strftime('%d-%m-%Y')
+        filtered_FD['NAME']=filtered_FD['NAME'].str.upper()
+        filtered_FD['CHANNEL PARTNER']=filtered_FD['CHANNEL PARTNER'].str.upper()
         col1, col2 = st.columns(2)
         with col1:
              st.subheader("FD")
