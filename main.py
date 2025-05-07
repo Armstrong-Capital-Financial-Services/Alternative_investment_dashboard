@@ -1173,8 +1173,10 @@ def Geenrate_MIS_Report():
     def get_monthly_data(df, amount_col, date_col,source=None):
       if date_col not in df.columns:
           return pd.Series([0, 0, 0], index=three_months)  # Return zero if column missing
-      if source=='vested_clients':
+      elif source=='vested_clients':
           df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')  
+      elif source == 'fd_clients':
+        df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')  
       else:         
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')  # Convert date column
       df['Year-Month'] = df[date_col].dt.strftime('%B-%Y')
@@ -1191,7 +1193,7 @@ def Geenrate_MIS_Report():
     "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"],source='bonds_clients'),
     "PMS": get_monthly_data(pms_clients, 'Invested Amount', date_column_map["pms_clients"]),
     "Vested": get_monthly_data(vested_clients, 'Invested Amount', date_column_map["vested_clients"],source='vested_clients'),
-    "FD":get_monthly_data(FD_clients,'Investment Amount',date_column_map['fd_clients'])}
+    "FD":get_monthly_data(FD_clients,'Investment Amount',date_column_map['fd_clients'],source='fd_clients')}
 
     # Convert to DataFrame
     investment_df = pd.DataFrame(investment_data).reset_index().melt(id_vars="Year-Month", var_name="Product",
@@ -1303,7 +1305,7 @@ def Geenrate_MIS_Report():
           else:
             st.write("No Transactions")
 
-    FD_clients['Issue Date'] = pd.to_datetime(FD_clients['Issue Date'], format='%d-%m-%Y', errors='coerce') # Corrected line with added errors='coerce'
+    FD_clients['Issue Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
     st.write("FD_clients")
     st.dataframe(FD_clients)
     FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
