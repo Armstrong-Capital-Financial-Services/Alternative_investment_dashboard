@@ -1141,8 +1141,6 @@ def Geenrate_MIS_Report():
     rm_list=['rahul m v','mudit','chandan b r','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto']
     RM_name=st.selectbox("Select the RM",options=rm_list)
     filtered_df = master_data[(master_data['RM Name'] == RM_name)]
-    #st.write(filtered_df)
-    #smallcase_clients = Smallcase_data.loc[Smallcase_data['PAN'].isin(filtered_df['PAN Number'])]
     smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
@@ -1157,10 +1155,8 @@ def Geenrate_MIS_Report():
     liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)
     smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
     smallcase_clients['Networth'] = np.where(smallcase_clients['Current Investment Status'] == 'EXITED', -smallcase_clients['Networth'], smallcase_clients['Networth'])
-
-    # User selects a month
+       
     selected_month = st.date_input("Select a Month").strftime('%B-%Y')
-    # Dictionary mapping for investment date columns
     date_column_map = {
     "smallcase_clients": "Subscription Start Date",
     "bonds_clients": "Transaction Date",
@@ -1168,7 +1164,6 @@ def Geenrate_MIS_Report():
     "vested_clients": "Signupdate",
     "fd_clients": "Issue Date"}
 
-    # Function to filter and aggregate investments for last 3 months
     def get_monthly_data(df, amount_col, date_col,source=None):
       if date_col not in df.columns:
           return pd.Series([0, 0, 0], index=three_months)  # Return zero if column missing
@@ -1182,11 +1177,9 @@ def Geenrate_MIS_Report():
       df_filtered = df[df['Year-Month'].isin(three_months)]
       return df_filtered.groupby(['Year-Month'])[amount_col].sum().reindex(three_months, fill_value=0)
 
-    # Define last three months from selected month
     selected_date = pd.to_datetime(selected_month + '-01')
     three_months = [(selected_date - pd.DateOffset(months=i)).strftime('%B-%Y') for i in range(3)]
 
-    # Fetch investment amounts for each product using correct date column
     investment_data = {
     "Smallcase": get_monthly_data(smallcase_clients, 'Networth', date_column_map["smallcase_clients"],source='smallcase_clients'),
     "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"],source='bonds_clients'),
