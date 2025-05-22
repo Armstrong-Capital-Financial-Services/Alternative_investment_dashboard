@@ -588,7 +588,7 @@ def PMS_Analysis(display=True):
     with col2:
       with st.container(border=True):
         clients_across_PMS = raw_pms_client_data_df.groupby('Strategy')['Name'].nunique().reset_index()
-                fig = go.Figure(data=[go.Pie(labels=clients_across_PMS['Strategy'],
+        fig = go.Figure(data=[go.Pie(labels=clients_across_PMS['Strategy'],
                                      values=clients_across_PMS['Name'],
                                      hole=0.3,
                                      marker=dict(colors=px.colors.diverging.Temps),
