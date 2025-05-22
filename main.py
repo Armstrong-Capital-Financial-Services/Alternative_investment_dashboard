@@ -458,29 +458,36 @@ def RIETS_Analysis(display=True):
           asset_toggle=st.toggle("All Clients",key=0)
           if asset_toggle:
            asset_based_distribution_df = client_data_df['Asset Name'].value_counts()
-           asset_pie_fig = px.pie(asset_based_distribution_df, values=asset_based_distribution_df.values,
-                               names=asset_based_distribution_df.index)
+           asset_pie_fig = go.Figure(data=[go.Pie(labels=asset_based_distribution_df.index,
+                                                  values=asset_based_distribution_df.values,
+                                                  hole=0.3,
+                                                  marker=dict(colors=px.colors.diverging.Temps))])
            st.plotly_chart(asset_pie_fig)
           else:
               client_data_df = client_data_df[client_data_df['Deal Stage'] == 'Share Certificate Issued']
               asset_based_distribution_df = client_data_df['Asset Name'].value_counts()
-              asset_pie_fig = px.pie(asset_based_distribution_df, values=asset_based_distribution_df.values,
-                                     names=asset_based_distribution_df.index)  # Improved
+              asset_pie_fig = go.Figure(data=[go.Pie(labels=asset_based_distribution_df.index,
+                                                     values=asset_based_distribution_df.values,
+                                                     hole=0.3,
+                                                     marker=dict(colors=px.colors.diverging.Temps))])
               st.plotly_chart(asset_pie_fig)
     with col4:
         with st.container(border=True):
             st.subheader("Client Distribution based on Account Type")
             if asset_toggle:
               accounts_type_based_distribution_df = client_data_df['Accounts Type'].value_counts()
-              asset_pie_fig = px.pie(accounts_type_based_distribution_df, values=accounts_type_based_distribution_df.values,
-                                   names=accounts_type_based_distribution_df.index)  # Improved
+              asset_pie_fig = go.Figure(data=[go.Pie(labels=accounts_type_based_distribution_df.index,
+                                           values=accounts_type_based_distribution_df.values,
+                                           hole=0.3,
+                                           marker=dict(colors=px.colors.diverging.Temps))])
               st.plotly_chart(asset_pie_fig)
             else:
                 client_data_df = client_data_df[client_data_df['Deal Stage'] == 'Share Certificate Issued']
                 accounts_type_based_distribution_df = client_data_df['Accounts Type'].value_counts()
-                asset_pie_fig = px.pie(accounts_type_based_distribution_df,
-                                       values=accounts_type_based_distribution_df.values,
-                                       names=accounts_type_based_distribution_df.index)  # Improved
+                asset_pie_fig = go.Figure(data=[go.Pie(labels=accounts_type_based_distribution_df.index,
+                                                       values=accounts_type_based_distribution_df.values,
+                                                       hole=0.3,
+                                                       marker=dict(colors=px.colors.diverging.Temps))])
                 st.plotly_chart(asset_pie_fig)
 
     col5,col6=st.columns(2)
@@ -581,16 +588,22 @@ def PMS_Analysis(display=True):
     with col2:
       with st.container(border=True):
         clients_across_PMS = raw_pms_client_data_df.groupby('Strategy')['Name'].nunique().reset_index()
-        fig = go.Figure(data=[go.Pie(labels=clients_across_PMS['Strategy'], values=clients_across_PMS['Name'],
-                                     hovertemplate='<b>Strategy:</b> %{label}<br><b>Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>')])
+                fig = go.Figure(data=[go.Pie(labels=clients_across_PMS['Strategy'],
+                                     values=clients_across_PMS['Name'],
+                                     hole=0.3,
+                                     marker=dict(colors=px.colors.diverging.Temps),
+                                     hovertemplate="<b>Strategy:</b> %{label}<br><b>Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>"
+                                     )])
 
         st.subheader('Distribution of Clients Across Strategies')
         st.plotly_chart(fig)
     with col3:
       with st.container(border=True):
         aum_across_PMS = raw_pms_client_data_df.groupby('Strategy')['Invested Amount'].sum().reset_index()
-        fig = go.Figure(data=[go.Pie(labels=aum_across_PMS['Strategy'], values=aum_across_PMS['Invested Amount'],
-                                     hovertemplate='<b>Strategy:</b> %{label}<br><b>Amount:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>')])
+        fig = go.Figure(data=[go.Pie(labels=aum_across_PMS['Strategy'],
+                                     values=aum_across_PMS['Invested Amount'],
+                                     hole=0.3,
+                                     marker=dict(colors=px.colors.diverging.Temps))])
         st.subheader('Distribution of AUM Across Strategies')
         st.plotly_chart(fig)
     with st.container(border=True):
@@ -789,7 +802,10 @@ def BONDS_Analysis(display=True):
     with col3:
         with st.container(border=True):
             aum_across_PMS = raw_bonds_client_data_df.groupby('AMC')['Amount'].sum().reset_index()
-            fig = go.Figure(data=[go.Pie(labels=aum_across_PMS['AMC'], values=aum_across_PMS['Amount'], hovertemplate='<b>AMC:</b> %{label}<br><b>Amount:</b> %{value}<br>,<b>Percentage:</b> %{percent}<extra></extra>')])
+            fig = go.Figure(data=[go.Pie(labels=aum_across_PMS['AMC'],
+                                                   values=aum_across_PMS['Amount'],
+                                                   hole=0.3,
+                                                   marker=dict(colors=px.colors.diverging.Temps))])
             st.subheader('Distribution of AUM Across Strategies')
             st.plotly_chart(fig)
 
