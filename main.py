@@ -339,8 +339,11 @@ def SMALLCASE_Analysis(display=True):
      aum_per_smallcase['Percentage of Total AUM'] = (aum_per_smallcase['Networth'] / total_aum) * 100
      fig_pie = go.Figure(data=[go.Pie(
          labels=aum_per_smallcase['Smallcase Name'],
-         values=aum_per_smallcase['Percentage of Total AUM'])])
-     st.subheader("Distribution of AUM across Smallcases")
+         values=aum_per_smallcase['Percentage of Total AUM'],
+         hole=0.3,
+         marker=dict(colors=px.colors.diverging.Temps),
+         hovertemplate="<b>Smallcase:</b> %{label}<br><b>AUM Share:</b> %{value:.2f}%<br><b>Percentage:</b> %{percent}<extra></extra>"
+     )])
      st.plotly_chart(fig_pie)
 
   with col7:
