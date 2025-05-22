@@ -860,7 +860,7 @@ def FD_Analysis(display=True):
     active_clients['Issue Date']=pd.to_datetime(active_clients['Issue Date'],format='mixed')
     active_clients['YearOnly'] = active_clients['Issue Date'].dt.strftime("%Y")
     active_clients['Month'] = active_clients['Issue Date'].dt.strftime("%B")
-    matured_clients = FD_client_data_df[FD_client_data_df['Current Status2'].isin(["CLOSED", "mature"])]
+    matured_clients = FD_client_data_df[FD_client_data_df['Current Status2']=='Mature')]
     FD_client_data_df['Issue Date'] = pd.to_datetime(FD_client_data_df['Issue Date'],format='mixed')
     if display:
         col0,col1,col2=st.columns(3)
