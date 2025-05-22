@@ -852,7 +852,7 @@ def BONDS_Analysis(display=True):
 def FD_Analysis(display=True):
     with psycopg2.connect(**db_config) as connection:
         FD_client_data_df = fetch_table_data(connection=connection, table_name="FD")
-        FD_client_data_df['Maturity Date'] = pd.to_datetime(FD_client_data_df['Maturity Date'])
+        FD_client_data_df['Maturity Date'] = pd.to_datetime(FD_client_data_df['Maturity Date'],format='mixed')
         FD_client_data_df['Current Status2'] = FD_client_data_df['Maturity Date'].apply(
     lambda x: 'Mature' if x.date() < date.today() else 'Live')
     active_clients = FD_client_data_df[FD_client_data_df['Current Status2'] == 'Live']
