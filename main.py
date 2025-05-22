@@ -97,25 +97,31 @@ def SMALLCASE_Analysis(display=True):
   with col4:
     with st.container(border=True):
      st.subheader("New Clients Addition Monthly")
-     client_smallcases.loc[client_smallcases['Past Subscription Cycles'] == 0, 'MonthYear'] = client_smallcases.loc[
-         client_smallcases['Past Subscription Cycles'] == 0, 'Subscription Start Date'].dt.to_period('M')
-     new_clients_monthly = client_smallcases.groupby('MonthYear')['Name'].count().reset_index()
-     new_clients_monthly['MonthYear'] = new_clients_monthly['MonthYear'].dt.strftime('%B-%Y')
-     new_clients_monthly.columns = ['Month', 'New Clients']
-     fig = go.Figure(data=[go.Bar(
-      x=new_clients_monthly['Month'].astype(str),
-      y=new_clients_monthly['New Clients'], hovertemplate='<b>Month:</b> %{x}<br><b>New Clients:</b> %{y}<extra></extra>',text=new_clients_monthly['New Clients'])])
-     fig.update_layout( xaxis_title="Month", yaxis_title="New Clients",width=600,height=400,xaxis=dict(
-        title_font=dict(size=12, family='sans serif', color='black'),
-        tickfont=dict(size=12, family='sans serif', color='black')),
-                yaxis=dict(
-                            title_font=dict(size=12, family='sans serif', color='black', ),
-                            tickfont=dict(size=12, family='sans serif', color='black', ))
-                        )
-     fig.update_traces(width=0.5,textposition='outside',textfont=dict(
-        family="sans serif",
-        size=12,
-        color='black',weight='bold'))
+     client_smallcases['Subscription Start Date'] = pd.DatetimeIndex(client_smallcases['Subscription Start Date'])
+     client_smallcases2=client_smallcases.copy()
+     client_smallcases2['Subscription Start Date'] = client_smallcases2['Subscription Start Date'].dt.strftime("%B-%Y")
+     client_smallcases2[['MonthOnly', 'YearOnly']] = client_smallcases2[
+         'Subscription Start Date'].str.split('-', expand=True)
+     monthly_onboarding_clients = (
+         df.groupby(pd.Grouper(key='Subscription Start Date', freq='M'))['Name']
+         .nunique()
+         .reset_index(name='Number of Clients'))
+     monthly_onboarding_clients['Month'] = monthly_onboarding_clients['Subscription Start Date'].dt.strftime("%B-%Y")
+     fig = go.Figure(data=[
+         go.Bar(x=monthly_onboarding_clients['Month'], y=monthly_onboarding_clients['Number of Clients'],
+             hovertemplate="<b>Month:</b> %{x}<br><b>New Clients:</b> %{y}<extra></extra>",
+             text=monthly_onboarding_clients['Number of Clients'],
+             width=0.5 ) ])
+     fig.update_layout(
+         xaxis_title="Month",
+         yaxis_title="Number of Clients", width=700, height=450,
+         xaxis=dict(
+             title_font=dict(size=14, family='sans serif', color='black'),
+             tickfont=dict(size=12, family='sans serif', color='black')
+         ),  yaxis=dict(  title_font=dict(size=14, family='sans serif', color='black'),
+             tickfont=dict(size=12, family='sans serif', color='black')))
+
+     fig.update_traces(textposition='outside',textfont=dict( family="sans serif", size=12, color='black',   weight='bold'  ))
      st.plotly_chart(fig)
 ###### Active Client Distribution by Investment Status & Active Client Distribution by Subscription Plan  #######
   #with col4:
@@ -145,13 +151,11 @@ def SMALLCASE_Analysis(display=True):
    with st.container(border=True):
      st.subheader("Clients Distribution by Subscription Plan")
      subscription_plan_counts = client_smallcases['Subscription Plan'].value_counts()
-
-     fig_subscription_plan_status = go.Figure(data=[go.Pie(
-         labels=subscription_plan_counts.index,
-         values=subscription_plan_counts.values,
-         textinfo='percent+label',
-         hovertemplate='<b>Subscription Type:</b> %{label}<br><b>New Clients:</b> %{value}<extra></extra>'
-     )])
+     fig_subscription_plan_status = go.Figure(data=[go.Pie(labels=subscription_plan_counts.index,
+                                            values=subscription_plan_counts.values,
+                                            hole=0.3,
+                                            hovertemplate='<b>Subscription Type:</b> %{label}<br><b>New Clients:</b> %{value}<extra></extra>',
+                                            marker=dict(colors=px.colors.diverging.Temps))])
      fig_subscription_plan_status.update_layout(
          width=600,
          height=400,
@@ -360,7 +364,7 @@ def SMALLCASE_Analysis(display=True):
                                tickfont=dict(size=12, family='sans serif', color='black', )))
         st.plotly_chart(fig)
   with st.container(border=True):
-        opt = st.selectbox("Select type of filter", options=['Monthly Addition of New Clients', 'Top Investors'])
+        opt = st.selectbox("Select type of filter", options=['Monthly Addition of New Clients', 'Top Investors','Active Clients','Exited Clients'])
         if opt == 'Monthly Addition of New Clients':
             month_order = ['January', 'February', 'March', 'April', 'May', 'June',
                            'July', 'August', 'September', 'October', 'November', 'December']
@@ -399,6 +403,15 @@ def SMALLCASE_Analysis(display=True):
             raw_bonds_client_data_df = client_smallcases.sort_values(by=['Networth'], ascending=False).head(5)
             raw_bonds_client_data_df=raw_bonds_client_data_df.iloc[:,:-3]
             st.dataframe(raw_bonds_client_data_df, hide_index=True)
+        elif opt == 'Active Clients':
+            smallcase_options=active_clients['Smallcase Name'].unique()
+            smallcase_sel=st.selectbox("Select a smallcase",options=smallcase_options)
+            if smallcase_sel:
+                st.dataframe(active_clients[active_clients['Smallcase Name']==smallcase_sel].iloc[:,:-4],hide_index=True)
+            else:
+                st.dataframe(active_clients.iloc[:, :-4],hide_index=True)
+        elif opt == 'Exited Clients':
+            st.dataframe(existed_clients.iloc[:, :-4],hide_index=True)
 
 
 #with tab2:
