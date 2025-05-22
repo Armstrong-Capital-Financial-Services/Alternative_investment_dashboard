@@ -1117,7 +1117,88 @@ def FD_Analysis(display=True):
             near_maturity_df = near_maturity_df.iloc[:,:-2]
             st.dataframe(near_maturity_df,hide_index=True)
 
+def BANK_Analysis(display=True):
+    with psycopg2.connect(**db_config) as connection:
+       df=fetch_table_data(connection=connection,table_name="BANK")
 
+    clients_across_products=df['PRODUCTNAME'].value_counts()
+    fig = go.Figure(data=[go.Pie(labels=clients_across_products.index,
+                              values=clients_across_products.values,
+                              hole=0.3,
+                              marker=dict(colors=px.colors.diverging.Temps))])
+    col1,col2=st.columns(2)
+    with col1:
+      with st.container(border=True):
+        st.subheader("Distribution of Clients across Products")
+        st.plotly_chart(fig)
+    df['BOOKING_MONTH'] = pd.DatetimeIndex(df['BOOKING_MONTH'])
+    df2=df.copy()
+    df2['BOOKING_MONTH']=df2['BOOKING_MONTH'].dt.strftime("%B-%Y")
+    df2[['MonthOnly', 'YearOnly']] = df2[
+        'BOOKING_MONTH'].str.split('-', expand=True)
+    monthly_onboarding_clients = (
+           df.groupby(pd.Grouper(key='BOOKING_MONTH', freq='M'))['CUSTOMERNAME']
+           .agg(list)
+           .reset_index()
+           .sort_values('BOOKING_MONTH'))
+    monthly_onboarding_clients['Number of Clients'] = monthly_onboarding_clients['CUSTOMERNAME'].apply(len)
+    bank_fig = px.bar(monthly_onboarding_clients, x=monthly_onboarding_clients['BOOKING_MONTH'], y=monthly_onboarding_clients['Number of Clients'],
+                         text=monthly_onboarding_clients['Number of Clients'])
+
+    bank_fig.update_layout(
+           xaxis_title='Month',
+           yaxis_title='New Clients',
+           width=500,
+           height=400,
+           xaxis=dict(
+               title_font=dict(size=12, family='sans serif', color='black'),
+               tickfont=dict(size=12, family='sans serif', color='black')
+           ),
+           yaxis=dict(
+               title_font=dict(size=12, family='sans serif', color='black'),
+               tickfont=dict(size=12, family='sans serif', color='black')
+           ))
+    bank_fig.update_traces(
+           hovertemplate="<b>Month:</b> %{x}<br><b>New Clients:</b> %{y}<extra></extra>",
+           textposition='outside',textfont=dict(family="sans serif", size=12, color='black', weight='bold'))
+    with col2:
+        with st.container(border=True):
+          st.subheader("Monthly Addition of Clients")
+          st.plotly_chart(bank_fig)
+    with st.container(border=True):
+        opt = st.selectbox("Select type of filter", options=['Monthly Addition of Clients', 'Top Investors'])
+        if opt == 'Monthly Addition of Clients':
+            month_order = ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December']
+            available_years = sorted(df2['YearOnly'].unique())
+            available_months = sorted(df2['MonthOnly'].unique(),
+                                      key=lambda x: month_order.index(x))
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                start_month = st.selectbox("Start Month", available_months,
+                                           index=0,  # Default to first month
+                                           key="start_month")
+            with col2:
+                end_month_options = available_months[available_months.index(start_month):]
+                selected_end_month = st.selectbox("End Month", end_month_options,
+                                                  index=len(end_month_options) - 1,  # Default to last available month
+                                                  key="end_month")
+            with col3:
+                selected_year = st.selectbox("Select Year", available_years)
+
+            def filter_data(df, year, start_month, end_month):
+                month_order_dict = {month: index for index, month in enumerate(month_order)}
+                year_filtered = df[df['YearOnly'] == year]
+                month_filtered = year_filtered[
+                    (year_filtered['MonthOnly'].map(month_order_dict) >= month_order_dict[start_month]) &
+                    (year_filtered['MonthOnly'].map(month_order_dict) <= month_order_dict[selected_end_month])
+                    ]
+                month_filtered = month_filtered.sort_values(by='MonthOnly', key=lambda x: x.map(month_order_dict))
+                return month_filtered
+
+            filtered_data = filter_data(df2, selected_year, start_month, selected_end_month)
+            st.dataframe(filtered_data)
 
 
 def Geenrate_MIS_Report():
@@ -1379,7 +1460,7 @@ def AIF_Analysis(display=True):
 
 
 if __name__ == "__main__":
-    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate", "Bonds","Liquiloans","PMS","Vested","FD","AIF","MIS Report"])
+    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products", "Bonds","Liquiloans","PMS","Vested","FD","AIF","MIS Report"])
     if page == "Bonds":
         BONDS_Analysis()
     elif page == "PMS":
@@ -1396,6 +1477,8 @@ if __name__ == "__main__":
         FD_Analysis()
     elif page == "AIF":
         AIF_Analysis()
+    elif page == "Banking Products":
+        BANK_Analysis(display=True)
     elif page =="MIS Report":
         Geenrate_MIS_Report()
 
