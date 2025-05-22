@@ -872,8 +872,14 @@ def FD_Analysis(display=True):
          with col3.container(border=True):
            fd_distribution_across_providers=active_clients.groupby(['Channel Partner'])['Customer Name'].agg(list).reset_index()
            fd_distribution_across_providers['No of FD'] = fd_distribution_across_providers['Customer Name'].apply(lambda x: len(x))
-           fig = go.Figure(data=[go.Pie(labels=fd_distribution_across_providers['Channel Partner'], textinfo='percent',
-                                     values=fd_distribution_across_providers['No of FD'],hovertemplate='<b>Channel Partner:</b> %{label}<br><b>No of FD:</b> %{value}<br>,<b>Percentage:</b> %{percent}<extra></extra>')])
+           fig = go.Figure(data=[go.Pie(
+               labels=fd_distribution_across_providers['Channel Partner'],
+               values=fd_distribution_across_providers['No of FD'],
+               hole=0.3,  # Creates a donut chart
+               marker=dict(colors=px.colors.qualitative.Pastel),
+               textinfo='percent+label',
+               hovertemplate="<b>Channel Partner:</b> %{label}<br><b>Number of FDs:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>"
+           )])
 
            st.subheader("Distribution of FDs across Providers")
            st.plotly_chart(fig)
