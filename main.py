@@ -344,6 +344,7 @@ def SMALLCASE_Analysis(display=True):
          marker=dict(colors=px.colors.diverging.Temps),
          hovertemplate="<b>Smallcase:</b> %{label}<br><b>AUM Share:</b> %{value:.2f}%<br><b>Percentage:</b> %{percent}<extra></extra>"
      )])
+     st.subheader("Distribution of AUM across Smallcases")   
      st.plotly_chart(fig_pie)
 
   with col7:
