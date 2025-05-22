@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from rich.jupyter import display
 from streamlit import table
+from datetime import date
 import datetime
 from psycopg2 import sql
 from supabase import create_client
