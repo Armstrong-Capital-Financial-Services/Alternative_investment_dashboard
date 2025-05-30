@@ -1259,10 +1259,10 @@ def Geenrate_MIS_Report():
    FD_data = fetch_table_data_MIS("FD")
    FD_data = FD_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)         
    with st.container(border=True):
-   col1,col2=st.columns(2)
-   with col1:
+    col1,col2=st.columns(2)
+    with col1:
       RM_name=['rahul m v','mudit','chandan b r','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto']
-   with col2:
+    with col2:
       timeperiod=st.radio("Select the timeframe",['Monthly','Quarterly','Calender Year','Financial Year'],horizontal=True)
       if timeperiod =='Monthly':
          selected_month = st.date_input("Select a Month").strftime('%B-%Y')
@@ -1284,6 +1284,7 @@ def Geenrate_MIS_Report():
       else:
           fy_options = ['FY2020-21','FY2021-22','FY2022-23','FY2023-24','FY2024-25']
           selected_financial_year = st.selectbox("Select the Financial Year",fy_options)
+          
    filtered_df = master_data[(master_data['RM Name'] == RM_name)]
    smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
    smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
