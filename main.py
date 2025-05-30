@@ -1623,7 +1623,7 @@ def Geenrate_MIS_Report():
                 rm_name,
                 selected_month,
                 investment_df,
-                filtered_df_smallcase,
+                filtered_smallcase_df,
                 filtered_vested,
                 pms_clients,
                 bond_filtered_df,
