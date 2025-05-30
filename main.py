@@ -1230,7 +1230,7 @@ def BANK_Analysis(display=True):
 def Geenrate_MIS_Report():
    def fetch_table_data_MIS(table_name):
       try:
-         with psycopg2.connect(**database_config) as connection:
+         with psycopg2.connect(**db_config) as connection:
            query = f'SELECT * FROM "{table_name}";'
            with connection.cursor() as cursor:
               cursor.execute(query)
