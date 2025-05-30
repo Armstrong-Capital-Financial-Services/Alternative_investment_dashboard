@@ -1232,7 +1232,7 @@ def Geenrate_MIS_Report():
       try:
          with psycopg2.connect(**database_config) as connection:
            query = f'SELECT * FROM "{table_name}";'
-            with connection.cursor() as cursor:
+           with connection.cursor() as cursor:
               cursor.execute(query)
               columns = [desc[0] for desc in cursor.description]
               rows = cursor.fetchall()
