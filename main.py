@@ -1227,7 +1227,8 @@ def BANK_Analysis(display=True):
             st.dataframe(filtered_data)
 
 
-def Geenrate_MIS_Report():
+def Geenrate_MIS_Report():   
+   @st.cache_data(ttl=7200)
    def fetch_table_data_MIS(table_name):
       try:
          with psycopg2.connect(**db_config) as connection:
