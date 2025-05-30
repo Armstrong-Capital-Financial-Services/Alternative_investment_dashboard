@@ -1228,219 +1228,389 @@ def BANK_Analysis(display=True):
 
 
 def Geenrate_MIS_Report():
-    def fetch_table_data_MIS(table_name):
-      """Fetch data from a PostgreSQL table and return as a Pandas DataFrame."""
+   def fetch_table_data_MIS(table_name):
       try:
-        with psycopg2.connect(**db_config) as connection:
-         query = f'SELECT * FROM "{table_name}";'  # Handling table names with special characters
-         with connection.cursor() as cursor:
-            cursor.execute(query)
-            columns = [desc[0] for desc in cursor.description]  # Get column names
-            rows = cursor.fetchall()
-            return pd.DataFrame(rows, columns=columns)
+         with psycopg2.connect(**database_config) as connection:
+           query = f'SELECT * FROM "{table_name}";'
+            with connection.cursor() as cursor:
+              cursor.execute(query)
+              columns = [desc[0] for desc in cursor.description]
+              rows = cursor.fetchall()
+              return pd.DataFrame(rows, columns=columns)
       except psycopg2.Error as e:
         print(f"Error fetching data from {table_name}: {e}")
-        return pd.DataFrame()  # Return empty DataFrame if an error occurs
+        return pd.DataFrame()
+   master_data = fetch_table_data_MIS( "Clients_Master_Data")
+   master_data = master_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   Bonds_data = fetch_table_data_MIS("BONDS")
+   Bonds_data = Bonds_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   Bonds_data['Amount'] = Bonds_data['Amount'].astype(float)
+   Smallcase_data = fetch_table_data_MIS("SMALLCASE")
+   Smallcase_data = Smallcase_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   PMS_data = fetch_table_data_MIS("PMS")
+   PMS_data = PMS_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   VESTED_data = fetch_table_data_MIS("VESTED")
+   VESTED_data = VESTED_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   VESTED_data['Aum'] = VESTED_data['Aum'].str.replace(',', '',regex=False).astype(float)
+   Liquiloans_data = fetch_table_data_MIS("liquiloans")
+   Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   Liqui_data = fetch_table_data_MIS("FRACTIONAL_REAL_ESTATE")
+   Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   FD_data = fetch_table_data_MIS("FD")
+   FD_data = FD_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)         
+   with st.container(border=True):
+   col1,col2=st.columns(2)
+   with col1:
+      RM_name=['rahul m v','mudit','chandan b r','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto']
+   with col2:
+      timeperiod=st.radio("Select the timeframe",['Monthly','Quarterly','Calender Year','Financial Year'],horizontal=True)
+      if timeperiod =='Monthly':
+         selected_month = st.date_input("Select a Month").strftime('%B-%Y')
+      elif timeperiod =='Quarterly':
+          def generate_quarter_fy_options(start_year=2023, num_years=5):
+              options = []
+              for year in range(start_year, start_year + num_years):
+                  for quarter in range(1, 5):
+                      options.append(f'Q{quarter} - FY{year}')
+              return options
+          quarter_fy_options = generate_quarter_fy_options(start_year=2023,
+                                                           num_years=3)  # Adjust start year and number of years as needed
 
-    master_data = fetch_table_data_MIS( "Clients_Master_Data")
-    master_data = master_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    Bonds_data = fetch_table_data_MIS("BONDS")
-    Bonds_data = Bonds_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    Bonds_data['Amount'] = Bonds_data['Amount'].astype(float)
-    Smallcase_data = fetch_table_data_MIS("SMALLCASE")
-    Smallcase_data = Smallcase_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    #st.dataframe(Smallcase_data)
-    PMS_data = fetch_table_data_MIS("PMS")
-    PMS_data = PMS_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    VESTED_data = fetch_table_data_MIS("VESTED")
-    VESTED_data = VESTED_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    VESTED_data['Aum'] = VESTED_data['Aum'].str.replace(',', '',regex=False).astype(float)
-    Liquiloans_data = fetch_table_data_MIS("liquiloans")
-    Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    Liqui_data = fetch_table_data_MIS("FRACTIONAL_REAL_ESTATE")
-    Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+          selected_quarter_fy = st.selectbox("Select Quarter and Fiscal Year:", quarter_fy_options)
+      elif timeperiod =='Calender Year':
+          cy_options=['2022','2023','2024','2025']
+          selected_calender_year = st.selectbox("Select the Calender Year:",cy_options)
+          selected_calender_year = int(selected_calender_year)
+      else:
+          fy_options = ['FY2020-21','FY2021-22','FY2022-23','FY2023-24','FY2024-25']
+          selected_financial_year = st.selectbox("Select the Financial Year",fy_options)
+   filtered_df = master_data[(master_data['RM Name'] == RM_name)]
+   smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
+   smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
+   smallcase_clients['Networth'] = np.where(smallcase_clients['Current Investment Status'] == 'EXITED', -smallcase_clients['Networth'], smallcase_clients['Networth'])
+   bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
+   FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
+   FD_clients = FD_clients.dropna(subset=['PAN'])
+   pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
+   vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
+   vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
+   vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
+   liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
+   liquiloans_clients['Current Value (Rs.)'].replace(',', '', regex=True, inplace=True)
+   liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)     
 
-    FD_data = fetch_table_data_MIS("FD")
-    FD_data = FD_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-    rm_list=['rahul m v','mudit','chandan b r','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto']
-    RM_name=st.selectbox("Select the RM",options=rm_list)
-    filtered_df = master_data[(master_data['RM Name'] == RM_name)]
-    smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
-    bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
-    FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
-    FD_clients = FD_clients.dropna(subset=['PAN'])
-    pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
-    vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
-    vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
-    vested_clients['Invested Amount'] = pd.to_numeric(vested_clients['Invested Amount'])
-    vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
-    liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
-    liquiloans_clients['Current Value (Rs.)'].replace(',', '', regex=True, inplace=True)
-    liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)
-    smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
-    smallcase_clients['Networth'] = np.where(smallcase_clients['Current Investment Status'] == 'EXITED', -smallcase_clients['Networth'], smallcase_clients['Networth'])
-       
-    selected_month = st.date_input("Select a Month").strftime('%B-%Y')
-    date_column_map = {
+   date_column_map = {
     "smallcase_clients": "Subscription Start Date",
     "bonds_clients": "Transaction Date",
     "pms_clients": "Date of Investment",
     "vested_clients": "Signupdate",
     "fd_clients": "Issue Date"}
+   def get_time_series_data(df, date_col, amount_col=None, source=None, frequency='monthly', month_list=None,cy_list=None,fy_list=None):
+    if frequency == 'monthly' and month_list is None:
+        raise ValueError("month_list is required for monthly frequency.")
 
-    def get_monthly_data(df, amount_col, date_col,source=None):
-      if date_col not in df.columns:
-          return pd.Series([0, 0, 0], index=three_months)  # Return zero if column missing
-      elif source=='vested_clients':
-          df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')  
-      elif source == 'fd_clients':
-        df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')  
-      else:         
-        df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')  # Convert date column
-      df['Year-Month'] = df[date_col].dt.strftime('%B-%Y')
-      df_filtered = df[df['Year-Month'].isin(three_months)]
-      return df_filtered.groupby(['Year-Month'])[amount_col].sum().reindex(three_months, fill_value=0)
+    if date_col not in df.columns:
+        if frequency == 'monthly':
+            return pd.Series([0] * len(month_list), index=month_list)
+        elif frequency == 'calendar_year':
+            return pd.Series([0] * len(cy_list), index=cy_list)
+        elif frequency == 'financial_year':
+            return pd.Series([0] * len(fy_list), index=fy_list)
+        else:
+            return pd.DataFrame()
 
-    selected_date = pd.to_datetime(selected_month + '-01')
-    three_months = [(selected_date - pd.DateOffset(months=i)).strftime('%B-%Y') for i in range(3)]
+    # Date parsing
+    if source in ['vested_clients', 'fd_clients']:
+        df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')
+    else:
+        df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')
 
-    investment_data = {
-    "Smallcase": get_monthly_data(smallcase_clients, 'Networth', date_column_map["smallcase_clients"],source='smallcase_clients'),
-    "Bonds": get_monthly_data(bonds_clients, 'Amount', date_column_map["bonds_clients"],source='bonds_clients'),
-    "PMS": get_monthly_data(pms_clients, 'Invested Amount', date_column_map["pms_clients"]),
-    "Vested": get_monthly_data(vested_clients, 'Invested Amount', date_column_map["vested_clients"],source='vested_clients'),
-    "FD":get_monthly_data(FD_clients,'Investment Amount',date_column_map['fd_clients'],source='fd_clients')}
+    if frequency == 'monthly':
+        df['Year-Month'] = df[date_col].dt.strftime('%B-%Y')
+        df_filtered = df[df['Year-Month'].isin(month_list)]
+        return df_filtered.groupby('Year-Month')[amount_col].sum().reindex(month_list, fill_value=0)
 
-    # Convert to DataFrame
-    investment_df = pd.DataFrame(investment_data).reset_index().melt(id_vars="Year-Month", var_name="Product",
-                                                                 value_name="Invested Amount")
-    investment_df = investment_df.fillna(0)
+    elif frequency == 'quarterly':
+        df['Fiscal_Quarter'] = pd.PeriodIndex(df[date_col], freq='Q-MAR')
+        df['Fiscal_Quarter'] = df['Fiscal_Quarter'].apply(
+            lambda x: f"Q{x.quarter} - FY{x.year - 1}" if x.quarter == 4 else f"Q{x.quarter} - FY{x.year}"
+        )
+        return df.groupby('Fiscal_Quarter')
 
-    investment_df['Year-Month'] = pd.Categorical(investment_df['Year-Month'], categories=three_months[::-1], ordered=True)
-    investment_df = investment_df.sort_values('Year-Month')
+    elif frequency == 'calendar_year':
+        df['Calendar_Year'] = df[date_col].dt.year
+        df_filtered = df[df['Calendar_Year'].isin(cy_list)]
+        return df_filtered.groupby('Calendar_Year')[amount_col].sum().reindex(cy_list, fill_value=0)
 
-    # Plot Stacked Bar Chart
-    fig = px.bar(investment_df, x=investment_df["Product"], y=investment_df["Invested Amount"], color="Year-Month", barmode="group")
-    fig.update_layout(
-    xaxis_title="Products",
-    yaxis_title="Net Inflow",
-    xaxis=dict(
+    elif frequency == 'financial_year':
+        df['Financial_Year'] = df[date_col].apply(
+            lambda x: f"FY{x.year - 1}-{str(x.year)[-2:]}" if x.month <= 3 else f"FY{x.year}-{str(x.year + 1)[-2:]}"
+        )
+        df_filtered = df[df['Financial_Year'].isin(fy_list)]
+        return df_filtered.groupby('Financial_Year')[amount_col].sum().reindex(fy_list, fill_value=0)
+
+    else:
+        raise ValueError("frequency must be either 'monthly' or 'quarterly'") 
+
+   if timeperiod == 'Quarterly':
+      investment_data_quarterly={  "Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='quarterly',source='vested_clients'),
+      "FD": get_time_series_data(FD_clients, amount_col='Investment Amount', date_col=date_column_map['fd_clients'],frequency='quarterly', source='fd_clients'),
+      "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth', date_col=date_column_map["smallcase_clients"],frequency='quarterly', source='smallcase_clients'),
+      "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='quarterly', source='pms_clients'),
+      "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"], frequency='quarterly',source='bonds_clients'),}    
+   elif timeperiod == 'Calender Year':
+      cy_list = [(selected_calender_year - i) for i in range(3)]
+      investment_data_calender_year={ "Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='calendar_year',source='vested_clients',cy_list=cy_list),
+         "FD": get_time_series_data(FD_clients, amount_col='Investment Amount', date_col=date_column_map['fd_clients'],frequency='calendar_year', source='fd_clients',cy_list=cy_list),
+         "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth',  date_col=date_column_map["smallcase_clients"], frequency='calendar_year',  source='smallcase_clients',cy_list=cy_list),
+         "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='calendar_year', source='pms_clients',cy_list=cy_list),
+         "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"],frequency='calendar_year', source='bonds_clients',cy_list=cy_list)}
+      investment_df_cy = pd.DataFrame(investment_data_calender_year).reset_index().melt(id_vars="Calendar_Year", var_name="Product", value_name="Invested Amount")
+      investment_df_cy = investment_df_cy.fillna(0)
+      investment_df_cy['Calendar_Year'] = pd.Categorical(investment_df_cy['Calendar_Year'], categories=cy_list[::-1], ordered=True)
+      investment_df_cy = investment_df_cy.sort_values('Calendar_Year')    
+      fig_cy = px.bar(investment_df_cy,x="Product",y="Invested Amount",color="Calendar_Year",barmode="group")
+      fig_cy.update_layout(xaxis_title="Products",yaxis_title="Net Inflow",xaxis=dict(
+         title_font=dict(size=12, family='sans serif', color='black'),
+         tickfont=dict(size=12, family='sans serif', color='black')),yaxis=dict(tickformat=',.0f',
+         title_font=dict(size=12, family='sans serif', color='black'),
+         tickfont=dict(size=12, family='sans serif', color='black')))
+      fig_cy.update_traces(hovertemplate="<b>Product:</b> %{x}<br><b>Amount:</b> %{y:,.0f}<extra></extra>",customdata=investment_df_cy[['Calendar_Year']])
+      fig_cy.update_layout(showlegend=True)  # Ensure legend is shown
+      fig_cy.update_traces(marker_line_width=1.3, marker_line_color="black",opacity=0.8)
+      st.plotly_chart(fig_cy)   
+   elif timeperiod == 'Financial Year':
+    selected_index = fy_options.index(selected_financial_year)
+    fy_list = fy_options[max(0, selected_index - 2):selected_index + 1]
+    st.write(fy_list)
+    investment_data_financial_year={
+    "Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='financial_year',source='vested_clients',fy_list=fy_list),
+    "FD": get_time_series_data(FD_clients, amount_col='Investment Amount', date_col=date_column_map['fd_clients'],
+                               frequency='financial_year', source='fd_clients',fy_list=fy_list),
+    "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth',
+                                      date_col=date_column_map["smallcase_clients"], frequency='financial_year',
+                                      source='smallcase_clients',fy_list=fy_list),
+    "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],
+                                frequency='financial_year', source='pms_clients',fy_list=fy_list),
+    "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"],
+                                  frequency='financial_year', source='bonds_clients',fy_list=fy_list)}
+    investment_df_fy = pd.DataFrame(investment_data_financial_year).reset_index().melt(
+        id_vars="Financial_Year", var_name="Product", value_name="Invested Amount")
+    investment_df_fy = investment_df_fy.fillna(0)
+    investment_df_fy['Financial_Year'] = pd.Categorical(investment_df_fy['Financial_Year'], categories=fy_list[::-1],
+                                                       ordered=True)
+    investment_df_fy = investment_df_fy.sort_values('Financial_Year')
+    st.dataframe(investment_df_fy)   
+   elif timeperiod == 'Monthly':
+     selected_date = pd.to_datetime(selected_month + '-01')
+     three_months = [(selected_date - pd.DateOffset(months=i)).strftime('%B-%Y') for i in range(3)]
+     investment_data = {   "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth', date_col=date_column_map["smallcase_clients"], frequency='monthly',month_list=three_months,source='smallcase_clients'),
+     "Bonds": get_time_series_data(bonds_clients, amount_col='Amount',date_col= date_column_map["bonds_clients"], frequency='monthly',month_list=three_months, source='bonds_clients'),
+     "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='monthly',month_list=three_months, source='pms_clients'),
+     "Vested": get_time_series_data(vested_clients, amount_col='Invested Amount', date_col=date_column_map["vested_clients"],frequency='monthly',month_list=three_months, source='vested_clients'),
+     "FD": get_time_series_data(FD_clients, amount_col='Investment Amount',date_col= date_column_map['fd_clients'], frequency='monthly',month_list=three_months,source='fd_clients') }
+     investment_df = pd.DataFrame(investment_data).reset_index().melt(id_vars="Year-Month", var_name="Product", value_name="Invested Amount")
+     investment_df = investment_df.fillna(0)
+     investment_df['Year-Month'] = pd.Categorical(investment_df['Year-Month'], categories=three_months[::-1], ordered=True)
+     investment_df = investment_df.sort_values('Year-Month')
+     fig = px.bar(investment_df, x=investment_df["Product"], y=investment_df["Invested Amount"], color="Year-Month", barmode="group")
+     fig.update_layout( xaxis_title="Products", yaxis_title="Net Inflow", xaxis=dict(
         title_font=dict(size=12, family='sans serif', color='black'),
-        tickfont=dict(size=12, family='sans serif', color='black')
-    ),
-    yaxis=dict( tickformat=',.0f',
-        title_font=dict(size=12, family='sans serif', color='black'),
-        tickfont=dict(size=12, family='sans serif', color='black')
-    ))
-    fig.update_traces(
-    hovertemplate="<b>Product:</b> %{x}<br><b>Amount:</b> %{y}<extra></extra>")
+        tickfont=dict(size=12, family='sans serif', color='black') ), yaxis=dict( tickformat=',.0f', title_font=dict(size=12, family='sans serif', color='black'),
+        tickfont=dict(size=12, family='sans serif', color='black')))
+     fig.update_traces(  hovertemplate="<b>Product:</b> %{x}<br><b>Amount:</b> %{y}<extra></extra>")
+     fig.update_layout(showlegend=True)
+     fig.update_traces(marker_line_width=1.3, marker_line_color="black", opacity=0.8)
+     st.plotly_chart(fig)
+     data=investment_df[investment_df['Year-Month'] == selected_month]    
+   def filter_smallcase_clients(smallcase_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy= None,selected_fy=None) -> pd.DataFrame:
+    smallcase_active = smallcase_clients[ (smallcase_clients['Current Investment Status'] == 'invested') & (smallcase_clients['Subscription Status'] == 'subscribed')]
+    smallcase_active['Subscription Start Date'] = pd.to_datetime(smallcase_active['Subscription Start Date'], errors='coerce')
+    smallcase_active['Month-Year'] = smallcase_active['Subscription Start Date'].dt.strftime('%B-%Y')
+    if timeperiod == 'Monthly':
+        filtered_smallcase = smallcase_active[smallcase_active['Month-Year'] == selected_month]
+    elif timeperiod == 'Quarterly':
+        filtered_smallcase = smallcase_active[smallcase_active['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod =='Calender Year':
+        filtered_smallcase = smallcase_active[smallcase_active['Calendar_Year'] == selected_cy]
+    else:
+        filtered_smallcase = smallcase_active[smallcase_active['Financial_Year'] == selected_fy]
+    columns_to_select = ['Name', 'Networth', 'PAN', 'Smallcase Name','Subscription Start Date']
+    filtered_df_smallcase = filtered_smallcase[columns_to_select].copy()
+    filtered_df_smallcase.rename(columns={'Networth': 'Current Value'}, inplace=True)
+    filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
+    filtered_df_smallcase['Name'] = filtered_df_smallcase['Name'].str.upper()
+    filtered_df_smallcase['Smallcase Name'] = filtered_df_smallcase['Smallcase Name'].str.upper()
+    return filtered_df_smallcase
 
-    # Set showlegend to True to ensure the legend shows all months
-    fig.update_layout(showlegend=True)
+   with st.container(border=True):
+     col1,col2=st.columns(2)
+     with col1:
+      st.subheader("SMALLCASE")
+      if timeperiod == 'Monthly':
+         filtered_smallcase_df=filter_smallcase_clients(smallcase_clients,timeperiod=timeperiod,selected_month=selected_month)
+      elif timeperiod == 'Quarterly':
+         filtered_smallcase_df = filter_smallcase_clients(smallcase_clients,timeperiod= timeperiod, selected_quarter_fy=selected_quarter_fy)
+      elif timeperiod == 'Calender Year':
+          filtered_smallcase_df = filter_smallcase_clients(smallcase_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+      else:
+          filtered_smallcase_df = filter_smallcase_clients(smallcase_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
+      if len(filtered_smallcase_df) > 0:
+         st.dataframe(filtered_smallcase_df, hide_index=True)
+         with col2:
+              st.metric("Total AUM",format_currency(sum(filtered_smallcase_df['Current Value'])),border=True)
+      else:
+          st.write("No Transactions") 
+   def filter_vested_clients(vested_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
+    if timeperiod == 'Monthly':
+        filtered_df_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
+    elif timeperiod == 'Quarterly':
+        filtered_df_vested = vested_clients[vested_clients['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod == 'Calender Year':
+        filtered_df_vested = vested_clients[vested_clients['Calendar_Year'] == selected_cy]
+    else:
+        filtered_df_vested = vested_clients[vested_clients['Financial_Year'] == selected_fy]
+    columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
+    filtered_df_vested = filtered_df_vested[columns_to_select_vested].copy()
+    filtered_df_vested['Unrealized P&L'] = filtered_df_vested['Unrealized P&L'].fillna(0)
+    filtered_df_vested['Name'] = filtered_df_vested['Name'].str.upper()
+    filtered_df_vested['Subscription'] = filtered_df_vested['Subscription'].str.upper()
 
-    # Explicitly show zero values
-    fig.update_traces(marker_line_width=1.3, marker_line_color="black", opacity=0.8)
-
-    st.plotly_chart(fig)
-
-    Smallcase_Active= smallcase_clients[(smallcase_clients['Current Investment Status']=='invested')& (smallcase_clients['Subscription Status']=='subscribed')]
-    Smallcase_Active['Subscription Start Date'] = pd.to_datetime(Smallcase_Active['Subscription Start Date'], errors='coerce')
-    Smallcase_Active['Month-Year'] = Smallcase_Active['Subscription Start Date'].dt.strftime('%B-%Y')
-    filtered_smallcase = Smallcase_Active[Smallcase_Active['Month-Year'] == selected_month]
-    with st.container(border=True):
-      col1,col2=st.columns(2)
-      with col1:
-       st.subheader("SMALLCASE")
-       columns_to_select = ['Name','Networth','PAN','Smallcase Name']
-       filtered_df_smallcase = filtered_smallcase[columns_to_select]
-       filtered_df_smallcase.rename(columns={'Networth': 'INVESTED AMOUNT','Name':'NAME','Smallcase Name':'SMALLCASE NAME'}, inplace=True)
-       filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
-       filtered_df_smallcase['SMALLCASE NAME'] = filtered_df_smallcase['SMALLCASE NAME'].str.upper()
-       filtered_df_smallcase['NAME']=filtered_df_smallcase['NAME'].str.upper()
-       if len(filtered_smallcase) > 0:
-          st.dataframe(filtered_df_smallcase,hide_index=True)
-          with col2:
-              st.metric("Total AUM",format_currency(sum(filtered_df_smallcase['INVESTED AMOUNT'])),border=True)
-       else:
-           st.write("No Transactions")
-
-    with st.container(border=True):
-      col1, col2 = st.columns(2)
-      with col1:
+    return filtered_df_vested
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
         st.subheader("VESTED")
-        filtered_vested = vested_clients[vested_clients['Year-Month'] == selected_month]
-        columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
-        filtered_vested = filtered_vested[columns_to_select_vested]  
-        filtered_vested.rename(columns={'Dwaccountno': 'DWACCOUNTNO','Name':'NAME','Unrealized P&L':'UNREALIZED P&L','Invested Amount':'INVESTED AMOUNT','Subscription':'SUBSCRIPTION'}, inplace=True) 
-        filtered_vested['DWACCOUNTNO']= filtered_vested['DWACCOUNTNO'].str.upper()
-        filtered_vested['NAME']=filtered_vested['NAME'].str.upper()
-        filtered_vested['SUBSCRIPTION']=filtered_vested['SUBSCRIPTION'].str.upper()
-      if len(filtered_vested) > 0:
-        st.dataframe(filtered_vested)
-        with col2:
-            st.metric("Total AUM", format_currency(sum(filtered_vested['INVESTED AMOUNT'])), border=True)
-      else:
-        st.write("No Transactions")
-
-    with st.container(border=True):
-      pms_clients['Date of Investment'] = pd.to_datetime(pms_clients['Date of Investment'],
-                                                                 errors='coerce')
-      pms_clients = pms_clients[pms_clients['Year-Month'] == selected_month]
-      columns_to_select = ['Name', 'Invested Amount','PAN','Strategy']
-      filtered_df = pms_clients[columns_to_select]
-      filtered_df_smallcase.rename(columns={'Invested Amount': 'INVESTED AMOUNT','Name':'NAME','Strategy':'STRATEGY'}, inplace=True) 
-      filtered_df = filtered_df.apply(lambda x: x.astype(str).str.upper())  
-      col1, col2 = st.columns(2)
-      with col1:
-        st.subheader("PMS")
-      if len(filtered_df) > 0:
-          st.dataframe(filtered_df,hide_index=True)
+        if timeperiod == 'Monthly':
+            filtered_vested_df = filter_vested_clients(vested_clients, timeperiod=timeperiod,
+                                                             selected_month=selected_month)
+        elif timeperiod =='Quarterly':
+            filtered_vested_df = filter_vested_clients(vested_clients, timeperiod=timeperiod,
+                                                             selected_quarter_fy=selected_quarter_fy)
+        elif timeperiod =='Calender Year':
+            filtered_vested_df = filter_vested_clients(vested_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+        else:
+            filtered_vested_df = filter_vested_clients(vested_clients,timeperiod=timeperiod,selected_fy=selected_financial_year)
+        if len(filtered_vested_df) > 0:
+          st.dataframe(filtered_vested_df,hide_index=True)
           with col2:
-              st.metric("Total AUM",format_currency(sum(filtered_df['INVESTED AMOUNT'])), border=True)
-      else:
-          st.write("No Transactions")
+            st.metric("Total AUM", format_currency(sum(filtered_vested_df['Invested Amount'])), border=True)
+        else:
+           st.write("No Transactions")   
+   def filter_pms_clients(pms_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
+    pms_clients['Date of Investment'] = pd.to_datetime(pms_clients['Date of Investment'],
+                                                                 errors='coerce')
+    if timeperiod == 'Monthly':
+       pms_clients = pms_clients[pms_clients['Year-Month'] == selected_month]
+    elif timeperiod == 'Quarterly':
+       pms_clients = pms_clients[pms_clients['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod == 'Calender Year':
+       pms_clients = pms_clients[pms_clients['Calendar_Year'] == selected_cy]
+    else:
+        pms_clients = pms_clients[pms_clients['Financial_Year'] == selected_fy]
+    columns_to_select = ['Name', 'Invested Amount', 'PAN', 'Strategy']
+    filtered_df_pms = pms_clients[columns_to_select]
+    filtered_df_pms['Name'] =filtered_df_pms['Name'].str.upper()
+    filtered_df_pms['PAN'] = filtered_df_pms['PAN'].str.upper()
+    filtered_df_pms['Strategy'] = filtered_df_pms['Strategy'].str.upper()
 
-    # Filter Bonds Data
+    return filtered_df_pms
+
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("PMS")
+        if timeperiod == 'Monthly':
+            filtered_pms_df = filter_pms_clients(pms_clients, timeperiod=timeperiod,
+                                                       selected_month=selected_month)
+        elif timeperiod == 'Quarterly':
+            filtered_pms_df = filter_pms_clients(pms_clients, timeperiod=timeperiod,
+                                                       selected_quarter_fy=selected_quarter_fy)
+        elif timeperiod == 'Calender Year':
+            filtered_pms_df = filter_pms_clients(pms_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+        else:
+            filtered_pms_df = filter_pms_clients(pms_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
+        if len(filtered_pms_df) > 0:
+           st.dataframe(filtered_pms_df,hide_index=True)
+           with col2:
+               st.metric("Total AUM",format_currency(sum(filtered_pms_df['Invested Amount'])), border=True)
+        else:
+            st.write("No Transactions")     
+
+   def filter_bonds_clients(bonds_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
     bonds_clients['Transaction Date'] = pd.to_datetime(bonds_clients['Transaction Date'], errors='coerce')
     bonds_clients['Month-Year'] = bonds_clients['Transaction Date'].dt.strftime('%B-%Y')
-    filtered_bonds = bonds_clients[bonds_clients['Month-Year'] == selected_month]
-    with st.container(border=True):
-        columns_to_select = ['Name', 'Amount','PAN','Issue Name','Type']
-        bond_filtered_df = filtered_bonds[columns_to_select]
-        col1, col2 = st.columns(2)
-        with col1:
-          st.subheader("Bonds")
-          if len(bond_filtered_df) > 0:
-            bond_filtered_df.rename(columns={'Amount': 'INVESTED AMOUNT','Name':'NAME','Issue Name':'ISSUE NAME','Type':'TYPE'}, inplace=True)
-            bond_filtered_df['NAME']=bond_filtered_df['NAME'].str.upper()
-            bond_filtered_df['ISSUE NAME']=bond_filtered_df['ISSUE NAME'].str.upper()
-            bond_filtered_df['TYPE']=bond_filtered_df['TYPE'].str.upper()
-            st.dataframe(bond_filtered_df,hide_index=True)
-            with col2:
-              st.metric("Total AUM",format_currency(sum(bond_filtered_df['INVESTED AMOUNT'])), border=True)
-          else:
-            st.write("No Transactions")
-
-    FD_clients['Issue Date'] = pd.to_datetime(FD_clients['Issue Date'], errors='coerce')
-    FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
-    filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
-    filtered_FD.rename(columns={'Customer Name': 'NAME','Investment Amount':'INVESTED AMOUNT','Issue Date':'ISSUE DATE','Channel Partner':'CHANNEL PARTNER'}, inplace=True)
-    with st.container(border=True):
-        columns_to_select = ['NAME', 'INVESTED AMOUNT','ISSUE DATE','CHANNEL PARTNER']
-        filtered_FD = filtered_FD[columns_to_select]
-        filtered_FD['ISSUE DATE']= filtered_FD['ISSUE DATE'].dt.strftime('%d-%m-%Y')
-        filtered_FD['NAME']=filtered_FD['NAME'].str.upper()
-        filtered_FD['CHANNEL PARTNER']=filtered_FD['CHANNEL PARTNER'].str.upper()
-        col1, col2 = st.columns(2)
-        with col1:
-             st.subheader("FD")
-        if len(filtered_FD) > 0:
-             st.dataframe(filtered_FD,hide_index=True)
-             with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_FD['INVESTED AMOUNT'])), border=True)
+    if timeperiod == 'Monthly':
+        filtered_bonds = bonds_clients[bonds_clients['Month-Year'] == selected_month]
+    elif timeperiod == 'Quarterly':
+        filtered_bonds = bonds_clients[bonds_clients['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod == 'Calender Year':
+        filtered_bonds = bonds_clients[bonds_clients['Calendar_Year'] == selected_cy]
+    else:
+        filtered_bonds = bonds_clients[bonds_clients['Financial_Year'] == selected_fy]
+    columns_to_select = ['Name', 'Amount', 'PAN', 'Issue Name', 'Type']
+    filtered_df_bonds = filtered_bonds[columns_to_select]
+    filtered_df_bonds['Name'] = filtered_df_bonds['Name'].str.upper()
+    filtered_df_bonds['Issue Name'] = filtered_df_bonds['Issue Name'].str.upper()
+    filtered_df_bonds['Type'] = filtered_df_bonds['Type'].str.upper()
+    filtered_df_bonds['PAN'] = filtered_df_bonds['PAN'].str.upper()
+    return filtered_df_bonds   
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("BONDS")
+        if timeperiod == 'Monthly':
+            filtered_bonds_df = filter_bonds_clients(bonds_clients, timeperiod=timeperiod,
+                                                       selected_month=selected_month)
+        elif timeperiod == 'Quarterly':
+            filtered_bonds_df = filter_bonds_clients(bonds_clients, timeperiod=timeperiod,
+                                                       selected_quarter_fy=selected_quarter_fy)
+        elif timeperiod == 'Calender Year':
+           filtered_bonds_df = filter_bonds_clients(bonds_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
         else:
-          st.write("No Transactions")
-            
+            filtered_bonds_df = filter_bonds_clients(bonds_clients, timeperiod=timeperiod,selected_fy=selected_financial_year)
+        if len(filtered_bonds_df) > 0:
+           st.dataframe(filtered_bonds_df,hide_index=True)
+           with col2:
+               st.metric("Total AUM",format_currency(sum(filtered_bonds_df['Amount'])), border=True)
+        else:
+            st.write("No Transactions")   
+   def filter_fd_clients(FD_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
+    FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
+    if timeperiod == 'Monthly':
+        filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
+    elif timeperiod =='Quarterly':
+        filtered_FD = FD_clients[FD_clients['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod == 'Calender Year':
+        filtered_FD = FD_clients[FD_clients['Calendar_Year'] == selected_cy]
+    else:
+        filtered_FD = FD_clients[FD_clients['Financial_Year'] == selected_fy]
+    columns_to_select = ['Customer Name', 'Issue Date', 'Investment Amount', 'Channel Partner']
+    filtered_df_fd = filtered_FD[columns_to_select]
+    filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
+    filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
+    return filtered_df_fd    
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("FD")
+        if timeperiod == 'Monthly':
+            filtered_fd_df = filter_fd_clients(FD_clients, timeperiod=timeperiod,
+                                                       selected_month=selected_month)
+        elif timeperiod == 'Quarterly':
+            filtered_fd_df = filter_fd_clients(FD_clients, timeperiod=timeperiod,
+                                                       selected_quarter_fy=selected_quarter_fy)
+        elif timeperiod == 'Calender Year':
+            filtered_fd_df = filter_fd_clients(FD_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+        else :
+            filtered_fd_df = filter_fd_clients(FD_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
+        if len(filtered_fd_df) > 0:
+           st.dataframe(filtered_fd_df,hide_index=True)
+           with col2:
+               st.metric("Total AUM",format_currency(sum(filtered_fd_df['Investment Amount'])), border=True)
+        else:
+            st.write("No Transactions")
+    
     rm_name = RM_name    
     if st.button("Generate Simple PDF Report"):
         with st.spinner("Generating..."):
