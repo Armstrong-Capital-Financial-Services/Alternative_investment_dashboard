@@ -626,6 +626,7 @@ def VESTED_Analysis(display=True):
   raw_vested_client_data_df['Invested Amount'] = pd.to_numeric(raw_vested_client_data_df['Invested Amount'])
   raw_vested_client_data_df['Invested Amount'] = raw_vested_client_data_df['Invested Amount'].astype(float)
   raw_vested_client_data_df2=raw_vested_client_data_df[raw_vested_client_data_df['Invested Amount']!=0]
+  st.dataframe(raw_vested_client_data_df2)
   if display:
     col0, col1,col2,col3,col4= st.columns(5)
     with col0:
@@ -635,7 +636,7 @@ def VESTED_Analysis(display=True):
         total_vested_clients = len(raw_vested_client_data_df2['Name'].unique())
         st.metric("Total Clients", total_vested_clients, border=True)
     with col2:
-       total_onboarded_clients = raw_vested_client_data_df2[(raw_vested_client_data_df['Subscription'] == 'PREMIUM') & ( raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
+       total_onboarded_clients = raw_vested_client_data_df2[(raw_vested_client_data_df2['Subscription'] == 'PREMIUM') & ( raw_vested_client_data_df2['Invested Amount'] == 0)]['Name'].nunique()
        st.metric("Onboarded Clients",total_onboarded_clients,border=True)
     with col3:
         total_onboarded_clients = raw_vested_client_data_df2[(raw_vested_client_data_df2['Subscription'] != 'PREMIUM') & (
