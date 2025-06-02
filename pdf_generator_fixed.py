@@ -21,8 +21,8 @@ def format_currency(value):
     else:
         return f"{value:.2f}"
 
-def create_simple_investment_report(timeperiod=None,inv_df=None,output_path=None,
-        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, FD_clients):
+def create_simple_investment_report(investment_df,
+        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, FD_clients,output_path=None):
     """Create a simple investment report using ReportLab"""
 
     def draw_border(canvas, doc):
@@ -66,7 +66,6 @@ def create_simple_investment_report(timeperiod=None,inv_df=None,output_path=None
 
         # Bar Chart
         try:
-            if timeperiod == selected_month and inv_df == investment_df:
              month_data = investment_df[investment_df["Year-Month"] == selected_month]
              plt.figure(figsize=(8, 4))
              ax = plt.gca()
