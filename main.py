@@ -1624,8 +1624,8 @@ def Geenrate_MIS_Report():
               temp_path = os.path.join(tempfile.gettempdir(), output_filename)
             
               pdf_path = create_simple_investment_report(
-                rm_name,month=
-                selected_month,
+                rm_name,timeperiod=
+                selected_month,inv_df=
                 investment_df,
                 filtered_smallcase_df,
                 filtered_vested_df,
@@ -1633,10 +1633,10 @@ def Geenrate_MIS_Report():
                 filtered_bonds_df,
                 filtered_fd_df,
                 output_path=temp_path)
-            elif selected_quarter_fy: 
+            elif selected_cy: 
                  output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_quarter_fy.replace(' ', '_')}.pdf"
                  temp_path = os.path.join(tempfile.gettempdir(), output_filename)
-                 pdf_path = create_simple_investment_report(rm_name,quarter=selected_quarter_fy,investment_df,filtered_smallcase_df,filtered_vested_df,
+                 pdf_path = create_simple_investment_report(rm_name,timeperiod=selected_cy,inv_df=investment_df_cy,filtered_smallcase_df,filtered_vested_df,
                 filtered_pms_df,
                 filtered_bonds_df,
                 filtered_fd_df,
