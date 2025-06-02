@@ -1620,23 +1620,12 @@ def Geenrate_MIS_Report():
    if st.button("Generate Simple PDF Report"):
     with st.spinner("Generating..."):
         if selected_month or selected_cy:
-            period = selected_month if selected_month else selected_cy
-            inv_df = investment_df if selected_month else investment_df_cy
 
-            output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{period.replace(' ', '_')}.pdf"
+            output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
             temp_path = os.path.join(tempfile.gettempdir(), output_filename)
 
-            pdf_path = create_simple_investment_report(
-                rm_name=rm_name,
-                timeperiod=period,
-                inv_df=inv_df,
-                smallcase_clients=filtered_smallcase_df,
-                vested_clients=filtered_vested_df,
-                 pms_clients=filtered_pms_df,
-                bonds_clients=filtered_bonds_df,
-                FD_clients=filtered_fd_df,
-                output_path=temp_path
-            )
+            pdf_path = create_simple_investment_report(inveestment_df,rm_name,filtered_smallcase_df,
+               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,output_path=temp_path)
 
             if pdf_path and os.path.exists(pdf_path):
                 with open(pdf_path, "rb") as f:
