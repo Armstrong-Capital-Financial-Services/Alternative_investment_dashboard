@@ -1591,10 +1591,10 @@ def Geenrate_MIS_Report():
         filtered_FD = FD_clients[FD_clients['Financial_Year'] == selected_fy]
     columns_to_select = ['Customer Name', 'Issue Date', 'Investment Amount', 'Channel Partner']
     filtered_df_fd = filtered_FD[columns_to_select]
-    st.dataframe(filtered_df_fd)
     filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
     filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
     filtered_df_fd = filtered_df_fd.rename({'Name':'NAME','Issue Date':'ISSUE DATE','Investment Amount':'INVESTED AMOUNT', 'Channel Partner':'CHANNEL PARTNER'})
+    st.dataframe(filtered_df_fd)
     return filtered_df_fd    
    with st.container(border=True):
     col1, col2 = st.columns(2)
