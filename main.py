@@ -1618,34 +1618,30 @@ def Geenrate_MIS_Report():
     
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
-        with st.spinner("Generating..."):
-            if selected_month:
-              output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
-              temp_path = os.path.join(tempfile.gettempdir(), output_filename)
-            
-              pdf_path = create_simple_investment_report(
-                rm_name,timeperiod=
-                selected_month,inv_df=
-                investment_df,
-                filtered_smallcase_df,
-                filtered_vested_df,
-                filtered_pms_df,
-                filtered_bonds_df,
-                filtered_fd_df,
-                output_path=temp_path)
-            elif selected_cy: 
-                 output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_cy.replace(' ', '_')}.pdf"
-                 temp_path = os.path.join(tempfile.gettempdir(), output_filename)
-                 pdf_path = create_simple_investment_report(rm_name,timeperiod=selected_cy,inv_df=investment_df_cy,filtered_smallcase_df,filtered_vested_df,
-                filtered_pms_df,
-                filtered_bonds_df,
-                filtered_fd_df,
-                output_path=temp_path)
-            
+    with st.spinner("Generating..."):
+        if selected_month or selected_cy:
+            period = selected_month if selected_month else selected_cy
+            inv_df = investment_df if selected_month else investment_df_cy
+
+            output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{period.replace(' ', '_')}.pdf"
+            temp_path = os.path.join(tempfile.gettempdir(), output_filename)
+
+            pdf_path = create_simple_investment_report(
+                rm_name=rm_name,
+                timeperiod=period,
+                inv_df=inv_df,
+                filtered_smallcase_df=filtered_smallcase_df,
+                filtered_vested_df=filtered_vested_df,
+                filtered_pms_df=filtered_pms_df,
+                filtered_bonds_df=filtered_bonds_df,
+                filtered_fd_df=filtered_fd_df,
+                output_path=temp_path
+            )
+
             if pdf_path and os.path.exists(pdf_path):
                 with open(pdf_path, "rb") as f:
                     pdf_data = f.read()
-                
+
                 st.download_button(
                     label="Download Report",
                     data=pdf_data,
@@ -1654,6 +1650,8 @@ def Geenrate_MIS_Report():
                 )
             else:
                 st.error("Failed to generate PDF report.")
+        else:
+            st.warning("Please select either a month or calendar year.")
 
 def AIF_Analysis(display=True):
   if display:
