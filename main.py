@@ -1634,7 +1634,7 @@ def Geenrate_MIS_Report():
                 filtered_fd_df,
                 output_path=temp_path)
             elif selected_cy: 
-                 output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_quarter_fy.replace(' ', '_')}.pdf"
+                 output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_cy.replace(' ', '_')}.pdf"
                  temp_path = os.path.join(tempfile.gettempdir(), output_filename)
                  pdf_path = create_simple_investment_report(rm_name,timeperiod=selected_cy,inv_df=investment_df_cy,filtered_smallcase_df,filtered_vested_df,
                 filtered_pms_df,
