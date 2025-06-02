@@ -1624,7 +1624,7 @@ def Geenrate_MIS_Report():
             output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
             temp_path = os.path.join(tempfile.gettempdir(), output_filename)
 
-            pdf_path = create_simple_investment_report(inveestment_df,rm_name,filtered_smallcase_df,
+            pdf_path = create_simple_investment_report(investment_df,rm_name,filtered_smallcase_df,
                filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,output_path=temp_path)
 
             if pdf_path and os.path.exists(pdf_path):
