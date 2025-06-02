@@ -1478,7 +1478,7 @@ def Geenrate_MIS_Report():
     filtered_df_vested['Unrealized P&L'] = filtered_df_vested['Unrealized P&L'].fillna(0)
     filtered_df_vested['Name'] = filtered_df_vested['Name'].str.upper()
     filtered_df_vested['Subscription'] = filtered_df_vested['Subscription'].str.upper()
-
+    filtered_df_vested=filtered_df_vested.reaname(columns={'Name':'NAME','Dwaccountno':'DWACCOUNTNO','Subscription':'SUBSCRIPTION','Invested Amount':'INVESTED AMOUNT','Unrealized P&L':'UNREALIZED P&L'})
     return filtered_df_vested
    with st.container(border=True):
     col1, col2 = st.columns(2)
@@ -1497,7 +1497,7 @@ def Geenrate_MIS_Report():
         if len(filtered_vested_df) > 0:
           st.dataframe(filtered_vested_df,hide_index=True)
           with col2:
-            st.metric("Total AUM", format_currency(sum(filtered_vested_df['Invested Amount'])), border=True)
+            st.metric("Total AUM", format_currency(sum(filtered_vested_df['INVESTED AMOUNT'])), border=True)
         else:
            st.write("No Transactions")   
    def filter_pms_clients(pms_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
@@ -1516,7 +1516,7 @@ def Geenrate_MIS_Report():
     filtered_df_pms['Name'] =filtered_df_pms['Name'].str.upper()
     filtered_df_pms['PAN'] = filtered_df_pms['PAN'].str.upper()
     filtered_df_pms['Strategy'] = filtered_df_pms['Strategy'].str.upper()
-
+    filtered_df_pms=filtered_df_pms.rename(columns={'Name':'NAME','Invested Amount':'INVESTED AMOUNT','Strategy':'STRATEGY'})
     return filtered_df_pms
 
    with st.container(border=True):
@@ -1536,7 +1536,7 @@ def Geenrate_MIS_Report():
         if len(filtered_pms_df) > 0:
            st.dataframe(filtered_pms_df,hide_index=True)
            with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_pms_df['Invested Amount'])), border=True)
+               st.metric("Total AUM",format_currency(sum(filtered_pms_df['INVESTED AMOUNT'])), border=True)
         else:
             st.write("No Transactions")     
 
@@ -1557,6 +1557,7 @@ def Geenrate_MIS_Report():
     filtered_df_bonds['Issue Name'] = filtered_df_bonds['Issue Name'].str.upper()
     filtered_df_bonds['Type'] = filtered_df_bonds['Type'].str.upper()
     filtered_df_bonds['PAN'] = filtered_df_bonds['PAN'].str.upper()
+    filtered_df_bonds=filtered_df_bonds.rename(columns={'Name':'NAME', 'Amount':'INVESTED AMOUNT','Issue Name':'ISSUE NAME','Type':'TYPE']
     return filtered_df_bonds   
    with st.container(border=True):
     col1, col2 = st.columns(2)
@@ -1575,7 +1576,7 @@ def Geenrate_MIS_Report():
         if len(filtered_bonds_df) > 0:
            st.dataframe(filtered_bonds_df,hide_index=True)
            with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_bonds_df['Amount'])), border=True)
+               st.metric("Total AUM",format_currency(sum(filtered_bonds_df['INVESTED AMOUNT'])), border=True)
         else:
             st.write("No Transactions")   
    def filter_fd_clients(FD_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
@@ -1592,6 +1593,7 @@ def Geenrate_MIS_Report():
     filtered_df_fd = filtered_FD[columns_to_select]
     filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
     filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
+    filtered_df_fd = filtered_df_fd.rename({'Name':'NAME','Issue Date':'ISSUE DATE','Investment Amount':'INVESTED AMOUNT', 'Channel Partner':'CHANNEL PARTNER'])
     return filtered_df_fd    
    with st.container(border=True):
     col1, col2 = st.columns(2)
@@ -1610,7 +1612,7 @@ def Geenrate_MIS_Report():
         if len(filtered_fd_df) > 0:
            st.dataframe(filtered_fd_df,hide_index=True)
            with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_fd_df['Investment Amount'])), border=True)
+               st.metric("Total AUM",format_currency(sum(filtered_fd_df['INVESTED AMOUNT'])), border=True)
         else:
             st.write("No Transactions")
     
