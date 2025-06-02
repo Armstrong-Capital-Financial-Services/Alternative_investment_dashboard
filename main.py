@@ -1478,7 +1478,7 @@ def Geenrate_MIS_Report():
     filtered_df_vested['Unrealized P&L'] = filtered_df_vested['Unrealized P&L'].fillna(0)
     filtered_df_vested['Name'] = filtered_df_vested['Name'].str.upper()
     filtered_df_vested['Subscription'] = filtered_df_vested['Subscription'].str.upper()
-    filtered_df_vested=filtered_df_vested.reaname(columns={'Name':'NAME','Dwaccountno':'DWACCOUNTNO','Subscription':'SUBSCRIPTION','Invested Amount':'INVESTED AMOUNT','Unrealized P&L':'UNREALIZED P&L'})
+    filtered_df_vested=filtered_df_vested.rename(columns={'Name':'NAME','Dwaccountno':'DWACCOUNTNO','Subscription':'SUBSCRIPTION','Invested Amount':'INVESTED AMOUNT','Unrealized P&L':'UNREALIZED P&L'})
     return filtered_df_vested
    with st.container(border=True):
     col1, col2 = st.columns(2)
