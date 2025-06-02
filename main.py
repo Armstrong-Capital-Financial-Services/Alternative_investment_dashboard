@@ -1630,11 +1630,11 @@ def Geenrate_MIS_Report():
                 rm_name=rm_name,
                 timeperiod=period,
                 inv_df=inv_df,
-                filtered_smallcase_df=filtered_smallcase_df,
-                filtered_vested_df=filtered_vested_df,
-                filtered_pms_df=filtered_pms_df,
-                filtered_bonds_df=filtered_bonds_df,
-                filtered_fd_df=filtered_fd_df,
+                smallcase_clients=filtered_smallcase_df,
+                vested_clients=filtered_vested_df,
+                 pms_clients=filtered_pms_df,
+                bonds_clients=filtered_bonds_df,
+                FD_clients=filtered_fd_df,
                 output_path=temp_path
             )
 
