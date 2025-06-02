@@ -1594,7 +1594,6 @@ def Geenrate_MIS_Report():
     filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
     filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
     filtered_df_fd = filtered_df_fd.rename({'Name':'NAME','Issue Date':'ISSUE DATE', 'Channel Partner':'CHANNEL PARTNER'})
-    st.dataframe(filtered_df_fd)
     return filtered_df_fd    
    with st.container(border=True):
     col1, col2 = st.columns(2)
