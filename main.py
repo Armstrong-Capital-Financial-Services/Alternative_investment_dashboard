@@ -1618,7 +1618,7 @@ def Geenrate_MIS_Report():
     
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
-    with st.spinner("Generating..."):
+      with st.spinner("Generating..."):
             output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
             temp_path = os.path.join(tempfile.gettempdir(), output_filename)
 
@@ -1637,8 +1637,6 @@ def Geenrate_MIS_Report():
                 )
             else:
                 st.error("Failed to generate PDF report.")
-   else:
-            st.warning("Please select either a month or calendar year.")
 
 def AIF_Analysis(display=True):
   if display:
