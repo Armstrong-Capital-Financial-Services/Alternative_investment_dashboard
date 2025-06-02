@@ -21,9 +21,8 @@ def format_currency(value):
     else:
         return f"{value:.2f}"
 
-def create_simple_investment_report(
-        rm_name, selected_month, investment_df,
-        smallcase_clients, vested_clients, pms_clients, bonds_clients, FD_clients,
+def create_simple_investment_report(timeperiod=None,inv_df=None,
+        rm_name,   smallcase_clients, vested_clients, pms_clients, bonds_clients, FD_clients,
         output_path=None):
     """Create a simple investment report using ReportLab"""
 
@@ -68,32 +67,33 @@ def create_simple_investment_report(
 
         # Bar Chart
         try:
-            month_data = investment_df[investment_df["Year-Month"] == selected_month]
-            plt.figure(figsize=(8, 4))
-            ax = plt.gca()
-            ax.grid(False)
+            if timeperiod == selected_month and inv_df == investment_df:
+             month_data = investment_df[investment_df["Year-Month"] == selected_month]
+             plt.figure(figsize=(8, 4))
+             ax = plt.gca()
+             ax.grid(False)
 
-            bars = plt.bar(month_data["Product"], month_data["Invested Amount"], width=0.5)
-            plt.xlabel("Products")
-            plt.ylabel("Net Inflow")
+             bars = plt.bar(month_data["Product"], month_data["Invested Amount"], width=0.5)
+             plt.xlabel("Products")
+             plt.ylabel("Net Inflow")
 
-            ylabels = [format_currency(i) for i in ax.get_yticks()]
-            ax.set_yticklabels(ylabels)
+             ylabels = [format_currency(i) for i in ax.get_yticks()]
+             ax.set_yticklabels(ylabels)
 
-            for bar in bars:
+             for bar in bars:
                 yval = bar.get_height()
                 plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.1 * max(month_data["Invested Amount"]),
                          format_currency(yval), ha='center', va='bottom')
 
-            plt.tight_layout()
-            chart_path = os.path.join(temp_dir, "chart.png")
-            plt.savefig(chart_path)
-            plt.close()
+             plt.tight_layout()
+             chart_path = os.path.join(temp_dir, "chart.png")
+             plt.savefig(chart_path)
+             plt.close()
 
-            elements.append(Paragraph("Monthly Investment Summary", subtitle_style))
-            elements.append(Spacer(1, 6))
-            elements.append(Image(chart_path, width=400, height=200))
-            elements.append(Spacer(1, 12))
+             elements.append(Paragraph("Monthly Investment Summary", subtitle_style))
+             elements.append(Spacer(1, 6))
+             elements.append(Image(chart_path, width=400, height=200))
+             elements.append(Spacer(1, 12)) 
 
         except Exception as e:
             elements.append(Paragraph(f"Chart Error: {e}", normal_style))
