@@ -1619,8 +1619,6 @@ def Geenrate_MIS_Report():
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
     with st.spinner("Generating..."):
-        if selected_month or selected_cy:
-
             output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
             temp_path = os.path.join(tempfile.gettempdir(), output_filename)
 
