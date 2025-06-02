@@ -1557,7 +1557,7 @@ def Geenrate_MIS_Report():
     filtered_df_bonds['Issue Name'] = filtered_df_bonds['Issue Name'].str.upper()
     filtered_df_bonds['Type'] = filtered_df_bonds['Type'].str.upper()
     filtered_df_bonds['PAN'] = filtered_df_bonds['PAN'].str.upper()
-    filtered_df_bonds=filtered_df_bonds.rename(columns={'Name':'NAME', 'Amount':'INVESTED AMOUNT','Issue Name':'ISSUE NAME','Type':'TYPE']
+    filtered_df_bonds=filtered_df_bonds.rename(columns={'Name':'NAME', 'Amount':'INVESTED AMOUNT','Issue Name':'ISSUE NAME','Type':'TYPE'})
     return filtered_df_bonds   
    with st.container(border=True):
     col1, col2 = st.columns(2)
@@ -1593,7 +1593,7 @@ def Geenrate_MIS_Report():
     filtered_df_fd = filtered_FD[columns_to_select]
     filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
     filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
-    filtered_df_fd = filtered_df_fd.rename({'Name':'NAME','Issue Date':'ISSUE DATE','Investment Amount':'INVESTED AMOUNT', 'Channel Partner':'CHANNEL PARTNER'])
+    filtered_df_fd = filtered_df_fd.rename({'Name':'NAME','Issue Date':'ISSUE DATE','Investment Amount':'INVESTED AMOUNT', 'Channel Partner':'CHANNEL PARTNER'})
     return filtered_df_fd    
    with st.container(border=True):
     col1, col2 = st.columns(2)
