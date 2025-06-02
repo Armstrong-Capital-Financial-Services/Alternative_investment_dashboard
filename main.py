@@ -1593,7 +1593,7 @@ def Geenrate_MIS_Report():
     filtered_df_fd = filtered_FD[columns_to_select]
     filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
     filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
-    filtered_df_fd = filtered_df_fd.rename({'Name':'NAME','Issue Date':'ISSUE DATE','Investment Amount':'INVESTED AMOUNT', 'Channel Partner':'CHANNEL PARTNER'})
+    filtered_df_fd = filtered_df_fd.rename({'Name':'NAME','Issue Date':'ISSUE DATE', 'Channel Partner':'CHANNEL PARTNER'})
     st.dataframe(filtered_df_fd)
     return filtered_df_fd    
    with st.container(border=True):
@@ -1613,7 +1613,7 @@ def Geenrate_MIS_Report():
         if len(filtered_fd_df) > 0:
            st.dataframe(filtered_fd_df,hide_index=True)
            with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_fd_df['INVESTED AMOUNT'])), border=True)
+               st.metric("Total AUM",format_currency(sum(filtered_fd_df['Investment Amount'])), border=True)
         else:
             st.write("No Transactions")
     
