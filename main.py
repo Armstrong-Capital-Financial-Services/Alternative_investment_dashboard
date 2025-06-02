@@ -1440,10 +1440,10 @@ def Geenrate_MIS_Report():
         filtered_smallcase = smallcase_active[smallcase_active['Financial_Year'] == selected_fy]
     columns_to_select = ['Name', 'Networth', 'PAN', 'Smallcase Name','Subscription Start Date']
     filtered_df_smallcase = filtered_smallcase[columns_to_select].copy()
-    filtered_df_smallcase.rename(columns={'Networth': 'Current Value'}, inplace=True)
     filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
     filtered_df_smallcase['Name'] = filtered_df_smallcase['Name'].str.upper()
     filtered_df_smallcase['Smallcase Name'] = filtered_df_smallcase['Smallcase Name'].str.upper()
+    filtered_smallcase = filtered_smallcase.rename(columns={'Name': 'NAME', 'Smallcase Name': 'SMALLCASE NAME','Networth': 'CURRENT VALUE'})
     return filtered_df_smallcase
 
    with st.container(border=True):
@@ -1461,7 +1461,7 @@ def Geenrate_MIS_Report():
       if len(filtered_smallcase_df) > 0:
          st.dataframe(filtered_smallcase_df, hide_index=True)
          with col2:
-              st.metric("Total AUM",format_currency(sum(filtered_smallcase_df['Current Value'])),border=True)
+              st.metric("Total AUM",format_currency(sum(filtered_smallcase_df['CURRENT VALUE'])),border=True)
       else:
           st.write("No Transactions") 
    def filter_vested_clients(vested_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
