@@ -1619,12 +1619,12 @@ def Geenrate_MIS_Report():
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
         with st.spinner("Generating..."):
-            # Create a dedicated output path for the PDF
-            output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
-            temp_path = os.path.join(tempfile.gettempdir(), output_filename)
+            if selected_month:
+              output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
+              temp_path = os.path.join(tempfile.gettempdir(), output_filename)
             
-            pdf_path = create_simple_investment_report(
-                rm_name,
+              pdf_path = create_simple_investment_report(
+                rm_name,month=
                 selected_month,
                 investment_df,
                 filtered_smallcase_df,
@@ -1632,8 +1632,15 @@ def Geenrate_MIS_Report():
                 filtered_pms_df,
                 filtered_bonds_df,
                 filtered_fd_df,
-                output_path=temp_path
-            )
+                output_path=temp_path)
+            elif selected_quarter_fy: 
+                 output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_quarter_fy.replace(' ', '_')}.pdf"
+                 temp_path = os.path.join(tempfile.gettempdir(), output_filename)
+                 pdf_path = create_simple_investment_report(rm_name,quarter=selected_quarter_fy,investment_df,filtered_smallcase_df,filtered_vested_df,
+                filtered_pms_df,
+                filtered_bonds_df,
+                filtered_fd_df,
+                output_path=temp_path)
             
             if pdf_path and os.path.exists(pdf_path):
                 with open(pdf_path, "rb") as f:
