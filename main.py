@@ -1637,7 +1637,7 @@ def Geenrate_MIS_Report():
                 )
             else:
                 st.error("Failed to generate PDF report.")
-        else:
+   else:
             st.warning("Please select either a month or calendar year.")
 
 def AIF_Analysis(display=True):
