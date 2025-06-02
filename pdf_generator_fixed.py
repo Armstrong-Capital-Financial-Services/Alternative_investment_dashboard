@@ -22,7 +22,7 @@ def format_currency(value):
         return f"{value:.2f}"
 
 def create_simple_investment_report(investment_df,
-        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, FD_clients,output_path=None):
+        rm_name,selected_month, smallcase_clients, vested_clients, pms_clients, bonds_clients, FD_clients,output_path=None):
     """Create a simple investment report using ReportLab"""
 
     def draw_border(canvas, doc):
