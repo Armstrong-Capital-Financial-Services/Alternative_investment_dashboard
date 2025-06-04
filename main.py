@@ -507,7 +507,7 @@ def RIETS_Analysis(display=True):
             fill='tozeroy',
             text=client_data_df['Cummulative AUM'],
             hoverinfo='text+x+y',
-            mode='lines+markers' ), hovertemplate=("<b>Date:</b> %{x|%Y-%m-%d}<br>" "<b>Cumulative AUM:</b> %{y:$,.0f}<br>" "<extra></extra>"])
+            mode='lines+markers' )])
     fig.update_layout(
         yaxis=dict(
             tickformat=',.0f',
