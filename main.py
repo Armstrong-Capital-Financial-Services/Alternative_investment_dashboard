@@ -495,7 +495,7 @@ def RIETS_Analysis(display=True):
                                                        values=accounts_type_based_distribution_df.values,
                                                        hole=0.3,
                                                        marker=dict(colors=px.colors.diverging.Temps),
-                                                      "<b>Asset:</b> %{label}<br><b>Number of Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>")])
+                                                       hovertemplate="<b>Asset:</b> %{label}<br><b>Number of Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>")])
                 asset_pie_fig.update_layout(hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"))
                 st.plotly_chart(asset_pie_fig)
 
