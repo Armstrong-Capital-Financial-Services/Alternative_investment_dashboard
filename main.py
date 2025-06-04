@@ -464,7 +464,7 @@ def RIETS_Analysis(display=True):
                                                   hole=0.3,
                                                   marker=dict(colors=px.colors.diverging.Temps),
                                                  hovertemplate="<b>Asset:</b> %{label}<br><b>Number of Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>")])
-           asset_pie_fig.update_layout(hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"))
+           asset_pie_fig.update_layout(hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"))
            st.plotly_chart(asset_pie_fig)
           else:
               client_data_df = client_data_df[client_data_df['Deal Stage'] == 'Share Certificate Issued']
@@ -472,7 +472,9 @@ def RIETS_Analysis(display=True):
               asset_pie_fig = go.Figure(data=[go.Pie(labels=asset_based_distribution_df.index,
                                                      values=asset_based_distribution_df.values,
                                                      hole=0.3,
-                                                     marker=dict(colors=px.colors.diverging.Temps))])
+                                                     marker=dict(colors=px.colors.diverging.Temps),
+                                                    hovertemplate="<b>Asset:</b> %{label}<br><b>Number of Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>")])
+              asset_pie_fig.update_layout(hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"))
               st.plotly_chart(asset_pie_fig)
     with col4:
         with st.container(border=True):
@@ -482,7 +484,9 @@ def RIETS_Analysis(display=True):
               asset_pie_fig = go.Figure(data=[go.Pie(labels=accounts_type_based_distribution_df.index,
                                            values=accounts_type_based_distribution_df.values,
                                            hole=0.3,
-                                           marker=dict(colors=px.colors.diverging.Temps))])
+                                           marker=dict(colors=px.colors.diverging.Temps),
+                                            hovertemplate="<b>Asset:</b> %{label}<br><b>Number of Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>")])
+              asset_pie_fig.update_layout(hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"))  
               st.plotly_chart(asset_pie_fig)
             else:
                 client_data_df = client_data_df[client_data_df['Deal Stage'] == 'Share Certificate Issued']
@@ -490,26 +494,10 @@ def RIETS_Analysis(display=True):
                 asset_pie_fig = go.Figure(data=[go.Pie(labels=accounts_type_based_distribution_df.index,
                                                        values=accounts_type_based_distribution_df.values,
                                                        hole=0.3,
-                                                       marker=dict(colors=px.colors.diverging.Temps))])
+                                                       marker=dict(colors=px.colors.diverging.Temps),
+                                                      "<b>Asset:</b> %{label}<br><b>Number of Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>")])
+                asset_pie_fig.update_layout(hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"))
                 st.plotly_chart(asset_pie_fig)
-
-    col5,col6=st.columns(2)
-    with col5:
-            accounts_type_based_distribution_df = client_data_df['Deal Stage'].value_counts()
-            asset_pie_fig = px.pie(accounts_type_based_distribution_df,
-                                   values=accounts_type_based_distribution_df.values,
-                                   names=accounts_type_based_distribution_df.index)
-            with st.container(border=True):
-                st.subheader("Client Distribution based on Deal Stage")
-                st.plotly_chart(asset_pie_fig)
-    with col6:
-        with st.container(border=True):
-            st.subheader("Client Distribution based on Rental Income Type")
-            accounts_type_based_distribution_df = client_data_df['Intrest Income type'].value_counts()
-            asset_pie_fig = px.pie(accounts_type_based_distribution_df, values=accounts_type_based_distribution_df.values,
-                                   names=accounts_type_based_distribution_df.index)  # Improved
-            st.plotly_chart(asset_pie_fig)
-
 
     client_data_df = client_data_df.sort_values(['Date of investment '])
     client_data_df['Cummulative AUM'] = client_data_df['Investment Value'].cumsum(skipna=True)
