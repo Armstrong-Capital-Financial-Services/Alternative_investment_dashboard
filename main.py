@@ -462,7 +462,9 @@ def RIETS_Analysis(display=True):
            asset_pie_fig = go.Figure(data=[go.Pie(labels=asset_based_distribution_df.index,
                                                   values=asset_based_distribution_df.values,
                                                   hole=0.3,
-                                                  marker=dict(colors=px.colors.diverging.Temps))])
+                                                  marker=dict(colors=px.colors.diverging.Temps),
+                                                 hovertemplate="<b>Asset:</b> %{label}<br><b>Number of Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>")])
+           asset_pie_fig.update_layout(hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"))
            st.plotly_chart(asset_pie_fig)
           else:
               client_data_df = client_data_df[client_data_df['Deal Stage'] == 'Share Certificate Issued']
