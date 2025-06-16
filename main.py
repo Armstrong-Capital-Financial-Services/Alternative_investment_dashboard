@@ -1568,21 +1568,24 @@ def Geenrate_MIS_Report():
         else:
             st.write("No Transactions")   
    def filter_fd_clients(FD_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
-    FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
-    if timeperiod == 'Monthly':
+     FD_clients['Month-Year'] = FD_clients['Issue Date'].dt.strftime('%B-%Y')
+     if timeperiod == 'Monthly':
         filtered_FD = FD_clients[FD_clients['Month-Year'] == selected_month]
-    elif timeperiod =='Quarterly':
+     elif timeperiod =='Quarterly':
         filtered_FD = FD_clients[FD_clients['Fiscal_Quarter'] == selected_quarter_fy]
-    elif timeperiod == 'Calender Year':
+     elif timeperiod == 'Calender Year':
         filtered_FD = FD_clients[FD_clients['Calendar_Year'] == selected_cy]
-    else:
+     else:
         filtered_FD = FD_clients[FD_clients['Financial_Year'] == selected_fy]
-    columns_to_select = ['Customer Name', 'Issue Date', 'Investment Amount', 'Channel Partner']
-    filtered_df_fd = filtered_FD[columns_to_select].copy()
-    filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
-    filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
-    filtered_df_fd = filtered_df_fd.rename(columns={'Customer Name':'NAME','Issue Date':'ISSUE DATE','Investment Amount':'INVESTED AMOUNT','Channel Partner':'CHANNEL PARTNER'}) 
-    return filtered_df_fd    
+     columns_to_select = ['Customer Name', 'Issue Date', 'Investment Amount', 'Channel Partner']
+     filtered_df_fd = filtered_FD[columns_to_select]
+     filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
+     filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
+     filtered_df_fd = filtered_df_fd.rename(
+         columns={'Customer Name': 'NAME', 'Issue Date': 'ISSUE DATE', 'Investment Amount': 'INVESTED AMOUNT',
+                  'Channel Partner': 'CHANNEL PARTNER'})
+     return filtered_df_fd
+
    with st.container(border=True):
     col1, col2 = st.columns(2)
     with col1:
@@ -1600,7 +1603,7 @@ def Geenrate_MIS_Report():
         if len(filtered_fd_df) > 0:
            st.dataframe(filtered_fd_df,hide_index=True)
            with col2:
-               st.metric("Total AUM",format_currency(sum(filtered_fd_df['Investment Amount'])), border=True)
+               st.metric("Total AUM",format_currency(sum(filtered_fd_df['INVESTED AMOUNT'])), border=True)
         else:
             st.write("No Transactions")
     
