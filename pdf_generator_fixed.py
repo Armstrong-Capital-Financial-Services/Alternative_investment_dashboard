@@ -124,12 +124,12 @@ def create_simple_investment_report(investment_df,
         add_table("PMS", pms_clients, ['NAME', 'INVESTED AMOUNT', 'STRATEGY'])
         add_table("FD", fd_clients, ['NAME', 'ISSUE DATE', 'INVESTED AMOUNT', 'CHANNEL PARTNER'])
         add_table("Bonds", bonds_clients, ['NAME', 'INVESTED AMOUNT', 'PAN', 'ISSUE NAME', 'TYPE'])
-        add_table("AIF",aif_clients, ['NAME','INVESTED AMOUNT','CURRENT VLAUE'])
-        add_table("AIF",pms_clients, ['NAME','INVESTED AMOUNT','CURRENT VLAUE'])
-        add_table("AIF",bank_clients, ['NAME','INVESTED AMOUNT','CURRENT VLAUE'])
-        add_table("AIF",insurance_clients, ['NAME','INVESTED AMOUNT','CURRENT VLAUE'])
-        add_table("AIF",liqiloans_clients, ['NAME','INVESTED AMOUNT','CURRENT VLAUE'])
-        add_table("AIF",F_real_estate_clients, ['NAME','INVESTED AMOUNT','CURRENT VLAUE'])
+        add_table("AIF",aif_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("AIF",pms_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("AIF",bank_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("AIF",insurance_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("AIF",liqiloans_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("AIF",F_real_estate_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
     
         
 
