@@ -1612,6 +1612,8 @@ def Geenrate_MIS_Report():
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("AIF")
+        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
+        filtered_aif_df = pd.Dataframe(columns=column_names)
         st.write("No Transactions")
     
    rm_name = RM_name    
@@ -1621,7 +1623,7 @@ def Geenrate_MIS_Report():
             temp_path = os.path.join(tempfile.gettempdir(), output_filename)
 
             pdf_path = create_simple_investment_report(investment_df,rm_name,selected_month,filtered_smallcase_df,
-               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,output_path=temp_path)
+               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,output_path=temp_path)
 
             if pdf_path and os.path.exists(pdf_path):
                 with open(pdf_path, "rb") as f:
