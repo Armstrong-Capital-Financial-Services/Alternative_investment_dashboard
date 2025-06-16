@@ -1313,7 +1313,7 @@ def Geenrate_MIS_Report():
             return pd.DataFrame()
 
     # Date parsing
-    if source in ['vested_clients', 'fd_clients']:
+    if source in ['fd_clients']:
         df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')
     else:
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')
