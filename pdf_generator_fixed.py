@@ -22,7 +22,7 @@ def format_currency(value):
         return f"{value:.2f}"
 
 def create_simple_investment_report(investment_df,
-        rm_name,selected_month, smallcase_clients, vested_clients, pms_clients, bonds_clients, FD_clients,output_path=None):
+        rm_name,selected_month, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,output_path=None):
     """Create a simple investment report using ReportLab"""
 
     def draw_border(canvas, doc):
@@ -122,7 +122,7 @@ def create_simple_investment_report(investment_df,
         add_table("Smallcase", smallcase_clients, ['NAME', 'CURRENT VALUE', 'PAN', 'SMALLCASE NAME'])
         add_table("Vested", vested_clients,['NAME','DWACCOUNTNO','SUBSCRIPTION','INVESTED AMOUNT','UNREALIZED P&L'])
         add_table("PMS", pms_clients, ['NAME', 'INVESTED AMOUNT', 'STRATEGY'])
-        add_table("FD", FD_clients, ['NAME', 'ISSUE DATE', 'INVESTED AMOUNT', 'CHANNEL PARTNER'])
+        add_table("FD", fd_clients, ['NAME', 'ISSUE DATE', 'INVESTED AMOUNT', 'CHANNEL PARTNER'])
         add_table("Bonds", bonds_clients, ['NAME', 'INVESTED AMOUNT', 'PAN', 'ISSUE NAME', 'TYPE'])
 
         # Build PDF with page border
