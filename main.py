@@ -1607,6 +1607,12 @@ def Geenrate_MIS_Report():
                st.metric("Total AUM",format_currency(sum(filtered_fd_df['INVESTED AMOUNT'])), border=True)
         else:
             st.write("No Transactions")
+            
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("AIF")
+        st.write("No Transactions")
     
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
