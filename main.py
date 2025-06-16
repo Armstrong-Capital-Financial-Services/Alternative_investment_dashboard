@@ -1243,7 +1243,7 @@ def Geenrate_MIS_Report():
    PMS_data = PMS_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
    VESTED_data = fetch_table_data_MIS("VESTED")
    VESTED_data = VESTED_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-   VESTED_data['Aum'] = VESTED_data['Aum'].str.replace(',', '',regex=False).astype(float)
+   VESTED_data['Current Value'] = VESTED_data['Current Value'].astype(float)
    Liquiloans_data = fetch_table_data_MIS("liquiloans")
    Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
    Liqui_data = fetch_table_data_MIS("FRACTIONAL_REAL_ESTATE")
@@ -1296,7 +1296,7 @@ def Geenrate_MIS_Report():
     "smallcase_clients": "Subscription Start Date",
     "bonds_clients": "Transaction Date",
     "pms_clients": "Date of Investment",
-    "vested_clients": "Signupdate",
+    "vested_clients": "RC Date",
     "fd_clients": "Issue Date"}
    def get_time_series_data(df, date_col, amount_col=None, source=None, frequency='monthly', month_list=None,cy_list=None,fy_list=None):
     if frequency == 'monthly' and month_list is None:
@@ -1463,12 +1463,10 @@ def Geenrate_MIS_Report():
         filtered_df_vested = vested_clients[vested_clients['Calendar_Year'] == selected_cy]
     else:
         filtered_df_vested = vested_clients[vested_clients['Financial_Year'] == selected_fy]
-    columns_to_select_vested = ['Name', 'Dwaccountno', 'Subscription', 'Invested Amount', 'Unrealized P&L']
+    columns_to_select_vested = ['Name', 'Plan Type', 'Current Value', 'Invested Amount']
     filtered_df_vested = filtered_df_vested[columns_to_select_vested].copy()
-    filtered_df_vested['Unrealized P&L'] = filtered_df_vested['Unrealized P&L'].fillna(0)
     filtered_df_vested['Name'] = filtered_df_vested['Name'].str.upper()
-    filtered_df_vested['Subscription'] = filtered_df_vested['Subscription'].str.upper()
-    filtered_df_vested=filtered_df_vested.rename(columns={'Name':'NAME','Dwaccountno':'DWACCOUNTNO','Subscription':'SUBSCRIPTION','Invested Amount':'INVESTED AMOUNT','Unrealized P&L':'UNREALIZED P&L'})
+    filtered_df_vested['Plan Type'] = filtered_df_vested['Plan Type'].str.upper()
     return filtered_df_vested
    with st.container(border=True):
     col1, col2 = st.columns(2)
