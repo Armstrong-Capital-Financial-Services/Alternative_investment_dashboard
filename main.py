@@ -1615,7 +1615,47 @@ def Geenrate_MIS_Report():
         column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
         filtered_aif_df = pd.DataFrame(columns=column_names)
         st.write("No Transactions")
-    
+        
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("PMS")
+        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
+        filtered_pms_df = pd.DataFrame(columns=column_names)
+        st.write("No Transactions")     
+
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Banking Prdoucts")
+        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
+        filtered_bank_df = pd.DataFrame(columns=column_names)
+        st.write("No Transactions")   
+
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Insurance")
+        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
+        filtered_insurance_df = pd.DataFrame(columns=column_names)
+        st.write("No Transactions") 
+
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Liquiloans")
+        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
+        filtered_liquiloans_df = pd.DataFrame(columns=column_names)
+        st.write("No Transactions")  
+
+   with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Fractional Real Estate")
+        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
+        filtered_F_real_estate_df = pd.DataFrame(columns=column_names)
+        st.write("No Transactions")   
+ 
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
       with st.spinner("Generating..."):
@@ -1623,7 +1663,7 @@ def Geenrate_MIS_Report():
             temp_path = os.path.join(tempfile.gettempdir(), output_filename)
 
             pdf_path = create_simple_investment_report(investment_df,rm_name,selected_month,filtered_smallcase_df,
-               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,output_path=temp_path)
+               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_pms_df,filtered_bank_df,filtered_insurance_df,filtered_liquiloans_df, filtered_F_real_estate_df,output_path=temp_path)
 
             if pdf_path and os.path.exists(pdf_path):
                 with open(pdf_path, "rb") as f:
