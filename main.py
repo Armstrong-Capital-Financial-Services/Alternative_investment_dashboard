@@ -1613,7 +1613,7 @@ def Geenrate_MIS_Report():
     with col1:
         st.subheader("AIF")
         column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
-        filtered_aif_df = pd.Dataframe(columns=column_names)
+        filtered_aif_df = pd.DataFrame(columns=column_names)
         st.write("No Transactions")
     
    rm_name = RM_name    
