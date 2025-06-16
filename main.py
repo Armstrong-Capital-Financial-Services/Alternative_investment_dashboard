@@ -1467,7 +1467,7 @@ def Geenrate_MIS_Report():
     filtered_df_vested = filtered_df_vested[columns_to_select_vested].copy()
     filtered_df_vested['Name'] = filtered_df_vested['Name'].str.upper()
     filtered_df_vested['Plan Type'] = filtered_df_vested['Plan Type'].str.upper()
-    filtered_df_vested = filtered_df_vested.rename(columns={'Nmae':'NAME','Plan Type':'PLAN TYPE','Current Value':'CURRENT VALUE','Invested Amount':'INVESTED AMOUNT'})
+    filtered_df_vested = filtered_df_vested.rename(columns={'Name':'NAME','Plan Type':'PLAN TYPE','Current Value':'CURRENT VALUE','Invested Amount':'INVESTED AMOUNT'})
     return filtered_df_vested
    with st.container(border=True):
     col1, col2 = st.columns(2)
