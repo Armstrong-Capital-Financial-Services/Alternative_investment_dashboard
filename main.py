@@ -1253,7 +1253,7 @@ def Geenrate_MIS_Report():
    with st.container(border=True):
     col1,col2=st.columns(2)
     with col1:
-      RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan b r','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto'])
+      RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan br','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto'])
     with col2:
       timeperiod=st.radio("Select the timeframe",['Monthly','Quarterly','Calender Year','Financial Year'],horizontal=True)
       if timeperiod =='Monthly':
