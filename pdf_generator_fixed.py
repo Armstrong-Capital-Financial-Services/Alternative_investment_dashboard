@@ -73,7 +73,7 @@ def create_simple_investment_report(investment_df,
 
         # Bar Chart
         try:
-            if selected_month is not None
+            if selected_month is not None:
              month_data = investment_df[investment_df["Year-Month"] == selected_month]
              plt.figure(figsize=(8, 4))
              ax = plt.gca()
@@ -101,7 +101,7 @@ def create_simple_investment_report(investment_df,
              elements.append(Image(chart_path, width=400, height=200))
              elements.append(Spacer(1, 12)) 
             else:
-            pass
+              pass
 
         except Exception as e:
             elements.append(Paragraph(f"Chart Error: {e}", normal_style))
