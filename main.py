@@ -1681,7 +1681,7 @@ def Geenrate_MIS_Report():
                     file_name=os.path.basename(pdf_path),
                     mime="application/pdf"
                 )
-            else:
+          else:
                 st.error("Failed to generate PDF report.")
 
 def AIF_Analysis(display=True):
