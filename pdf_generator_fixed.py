@@ -21,8 +21,8 @@ def format_currency(value):
     else:
         return f"{value:.2f}"
 
-def create_simple_investment_report(investment_df,
-        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,aif_clients,bank_clients,insurance_clients,liqiloans_clients,F_real_estate_clients,output_path=None,selected_month=None,selected_quarter=None):
+def create_simple_investment_report(
+        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,aif_clients,bank_clients,insurance_clients,liqiloans_clients,F_real_estate_clients,output_path=None,selected_month=None,selected_cy=None,investment_df=None,investment_df_cy=None):
     """Create a simple investment report using ReportLab"""
 
     def draw_border(canvas, doc):
@@ -39,8 +39,8 @@ def create_simple_investment_report(investment_df,
         if selected_month is not None:
             filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
             output_path = os.path.join(tempfile.gettempdir(), filename)
-        elif selected_quarter is not None:
-            filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_quarter.replace(' ', '_')}.pdf"
+        elif selected_cy is not None:
+            filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_cy.replace(' ', '_')}.pdf"
             output_path = os.path.join(tempfile.gettempdir(), filename)
         
         # Create temporary directory for chart
@@ -67,14 +67,16 @@ def create_simple_investment_report(investment_df,
         if selected_month is not None:
             elements.append(Paragraph(f"RM: {rm_name} | Month: {selected_month}", subtitle_style))
             elements.append(Spacer(1, 12))
-        elif selected_quarter is not None:
-           elements.append(Paragraph(f"RM: {rm_name} | Month: {selected_quarter}", subtitle_style))    
+        elif selected_cy is not None:
+           elements.append(Paragraph(f"RM: {rm_name} | Month: {selected_cy}", subtitle_style))    
            elements.append(Spacer(1, 12))
 
         # Bar Chart
         try:
             if selected_month is not None:
-             month_data = investment_df[investment_df["Year-Month"] == selected_month]
+              month_data = investment_df[investment_df["Year-Month"] == selected_month]
+            elif selected_cy is not None:
+              month_data = investment_df_cy[investment_df_cy["Calendar_Year"] == selected_cy]     
              plt.figure(figsize=(8, 4))
              ax = plt.gca()
              ax.grid(False)
@@ -100,9 +102,6 @@ def create_simple_investment_report(investment_df,
              elements.append(Spacer(1, 6))
              elements.append(Image(chart_path, width=400, height=200))
              elements.append(Spacer(1, 12)) 
-            else:
-              pass
-
         except Exception as e:
             elements.append(Paragraph(f"Chart Error: {e}", normal_style))
 
