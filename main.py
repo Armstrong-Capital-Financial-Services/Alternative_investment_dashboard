@@ -642,10 +642,10 @@ def VESTED_Analysis(display=True):
         total_vested_clients = len(raw_vested_client_data_df2['Name'].unique())
         st.metric("Active Clients", total_vested_clients, border=True)
     with col2:
-       total_onboarded_clients = raw_vested_client_data_df[(raw_vested_client_data_df['Subscription'] == 'PREMIUM') & ( raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
+       total_onboarded_clients = raw_vested_client_data_df[(raw_vested_client_data_df['Plan Type'] == 'PREMIUM') & ( raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
        st.metric("Onboarded Clients",total_onboarded_clients,border=True)
     with col3:
-        total_onboarded_clients = raw_vested_client_data_df2[(raw_vested_client_data_df['Subscription'] != 'PREMIUM') & (
+        total_onboarded_clients = raw_vested_client_data_df2[(raw_vested_client_data_df['Plan Type'] != 'PREMIUM') & (
                     raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
         st.metric("Onboarding Pending Clients", total_onboarded_clients, border=True)
     with col4:
