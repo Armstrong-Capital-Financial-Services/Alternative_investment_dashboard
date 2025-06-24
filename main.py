@@ -841,6 +841,123 @@ def BONDS_Analysis(display=True):
             st.dataframe(raw_bonds_client_data_df,hide_index=True)
   return raw_bonds_client_data_df
 
+def Insurance_Analysis(display=True):
+    with psycopg2.connect(**db_config) as connection:
+        Insurance_client_data_df = fetch_table_data(connection=connection, table_name="INSURANCE")
+        Insurance_client_data_df['End Date'] = pd.to_datetime(Insurance_client_data_df['End Date'],format='mixed')
+        Insurance_client_data_df['Current Status'] = Insurance_client_data_df['End Date'].apply(
+    lambda x: 'Mature' if x.date() < date.today() else 'Live')
+    active_clients = Insurance_client_data_df[Insurance_client_data_df['Current Status'] == 'Live']
+    active_clients['Start Date']=pd.to_datetime(active_clients['Start Date'],format='mixed')
+    active_clients['YearOnly'] = active_clients['Start Date'].dt.strftime("%Y")
+    active_clients['Month'] = active_clients['Start Date'].dt.strftime("%B")
+    matured_clients = Insurance_client_data_df[Insurance_client_data_df['Current Status']=='Mature']
+    if display:
+        col0,col1,col2=st.columns(3)
+        with col0:
+            st.metric("Total AUM",format_currency(active_clients['Premium'].sum()),border=True)
+        with col1:
+            st.metric("Total Active Clients",len(active_clients),border=True)
+        with col2:
+            st.metric("Total Matured Policies",len(matured_clients),border=True)
+
+        col3,col4=st.columns(2)
+        with col3.container(border=True):
+           policy_distribution_across_providers=active_clients.groupby(['Product Partner'])['Name'].agg(list).reset_index()
+           policy_distribution_across_providers['No of Policy'] = policy_distribution_across_providers['Name'].apply(lambda x: len(x))
+           fig = go.Figure(data=[go.Pie(
+               labels=policy_distribution_across_providers['Product Partner'],
+               values=policy_distribution_across_providers['No of Policy'],
+               hole=0.3,  # Creates a donut chart
+               marker=dict(colors=px.colors.qualitative.Pastel),
+               textinfo='percent+label',
+               hovertemplate="<b>Channel Partner:</b> %{label}<br><b>Number of Policies:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>"
+           )])
+
+           st.subheader("Distribution of Policies across Providers")
+           st.plotly_chart(fig)
+        with col4.container(border=True):
+            aum_distribution_across_providers = active_clients.groupby('Product Partner')[
+                'Premium'].sum().reset_index()
+
+            # Create the bar chart
+            fig = go.Figure(go.Bar(
+                x=aum_distribution_across_providers['Premium'],
+                y=aum_distribution_across_providers['Product Partner'],
+                orientation='h',
+                hovertemplate=(
+                    "<b>Product Partner</b>: %{y}<br>"
+                    "<b>Total Premium Amount</b>: %{x:.2f}<br>"  # Format as currency
+                    "<extra></extra>"  # Removes the default "trace 0" box
+                )
+            ))
+
+            fig.update_layout(
+                xaxis_title='Total Premium Amount',
+                yaxis_title='Channel Partner',
+                yaxis=dict(autorange="reversed")
+            )
+            fig = fig.update_layout(xaxis=dict(
+                title_font=dict(size=12, family='sans serif', color='black'),
+                tickfont=dict(size=12, family='sans serif', color='black')),
+                yaxis=dict(
+                    title_font=dict(size=12, family='sans serif', color='black', ),
+                    tickfont=dict(size=12, family='sans serif', color='black', )))
+            st.subheader("Distribution of AUM across Providers")
+            st.plotly_chart(fig)
+
+        with st.container(border=True):
+            opt = st.selectbox("Select type of filter",
+                               options=['Monthly Addition of Clients', 'Policies Near Maturity'])
+            if opt == 'Monthly Addition of Clients':
+                month_order = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December']
+                available_years = sorted(active_clients['YearOnly'].unique())
+                active_clients['MonthOnly'] = active_clients['Month']
+                available_months = sorted(active_clients['MonthOnly'].unique(),
+                                          key=lambda x: month_order.index(x))
+                col1, col2, col3 = st.columns(3)
+
+                with col1:
+                    start_month = st.selectbox("Start Month", available_months,
+                                               index=0,  # Default to first month
+                                               key="start_month_fd2")
+                with col2:
+                    end_month_options = available_months[available_months.index(start_month):]
+                    selected_end_month = st.selectbox("End Month", end_month_options,
+                                                      index=len(end_month_options) - 1,
+                                                      # Default to last available month
+                                                      key="end_month_fd2")
+                with col3:
+                    selected_year = st.selectbox("Select Year", available_years)
+
+                def filter_data(df, year, start_month, end_month):
+                    month_order_dict = {month: index for index, month in enumerate(month_order)}
+                    year_filtered = df[df['YearOnly'] == year]
+                    month_filtered = year_filtered[
+                        (year_filtered['MonthOnly'].map(month_order_dict) >= month_order_dict[start_month]) &
+                        (year_filtered['MonthOnly'].map(month_order_dict) <= month_order_dict[selected_end_month])
+                        ]
+                    month_filtered = month_filtered.sort_values(by='MonthOnly', key=lambda x: x.map(month_order_dict))
+                    return month_filtered
+
+                filtered_data = filter_data(active_clients, selected_year, start_month, selected_end_month)
+                filtered_data = filtered_data.iloc[:, :-3]
+                st.dataframe(filtered_data, hide_index=True)
+            elif opt == 'Policies Near Maturity':
+                # delta=st.number_input("Enter the months from now ")
+                # delta=delta*30
+                today = datetime.date.today()
+                one_month_from_today = today + datetime.timedelta(days=30)
+
+                active_clients['End Date'] = pd.to_datetime(active_clients['End Date'],
+                                                                 format='mixed').dt.date
+                near_maturity_df = active_clients[
+                    (active_clients['End Date'] >= today) & (
+                                active_clients['End Date'] <= one_month_from_today)]
+                near_maturity_df = near_maturity_df.iloc[:, :-2]
+                st.dataframe(near_maturity_df, hide_index=True)
+
 def FD_Analysis(display=True):
     with psycopg2.connect(**db_config) as connection:
         FD_client_data_df = fetch_table_data(connection=connection, table_name="FD")
@@ -1690,7 +1807,7 @@ def AIF_Analysis(display=True):
 
 
 if __name__ == "__main__":
-    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products", "Bonds","Liquiloans","PMS","Vested","FD","AIF","MIS Report"])
+    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products","Insurance", "Bonds","Liquiloans","PMS","Vested","FD","AIF","MIS Report"])
     if page == "Bonds":
         BONDS_Analysis()
     elif page == "PMS":
@@ -1699,6 +1816,8 @@ if __name__ == "__main__":
         VESTED_Analysis(display=True)
     elif page == "Liquiloans":
         Liquiloans()
+    elif page == "Insurance":
+        Insurance_Analysis(display=True)
     elif page == "Fractional Real Estate":
         RIETS_Analysis(display=True)
     elif page == "Smallcase":
