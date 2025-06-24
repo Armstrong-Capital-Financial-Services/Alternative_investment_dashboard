@@ -636,7 +636,7 @@ def VESTED_Analysis(display=True):
   if display:
     col0, col1,col2,col3,col4= st.columns(5)
     with col0:
-        VESTED_total_AUM = raw_vested_client_data_df2['Equity'].astype(float).sum()
+        VESTED_total_AUM = raw_vested_client_data_df2['Current Value'].astype(float).sum()
         st.metric("Total AUM", f" $ {VESTED_total_AUM}", border=True)
     with col1:
         total_vested_clients = len(raw_vested_client_data_df2['Name'].unique())
