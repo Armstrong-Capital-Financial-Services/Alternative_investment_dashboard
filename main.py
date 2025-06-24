@@ -794,10 +794,16 @@ def BONDS_Analysis(display=True):
     with col3:
         with st.container(border=True):
             aum_across_PMS = raw_bonds_client_data_df.groupby('AMC')['Amount'].sum().reset_index()
-            fig = go.Figure(data=[go.Pie(labels=aum_across_PMS['AMC'],
-                                                   values=aum_across_PMS['Amount'],
-                                                   hole=0.3,
-                                                   marker=dict(colors=px.colors.diverging.Temps))])
+            fig = go.Figure(data=[go.Pie(
+                labels=aum_across_PMS['AMC'],
+                values=aum_across_PMS['Amount'],
+                hole=0.3,
+                marker=dict(colors=px.colors.diverging.Temps),
+                hovertemplate=(
+                    "<b>AMC</b>: %{label}<br>"  # Displays the AMC label
+                    "<b>Percentage</b>: %{percent}<extra></extra>"  # Displays the percentage, removes extra trace info
+                )
+            )])
             st.subheader('Distribution of AUM Across Strategies')
             st.plotly_chart(fig)
 
