@@ -624,7 +624,8 @@ def VESTED_Analysis(display=True):
         raw_vested_client_data_df = fetch_table_data(connection=connection, table_name="VESTED")
   raw_vested_client_data_df = raw_vested_client_data_df[raw_vested_client_data_df['RM'] != 'Employee']
   raw_vested_client_data_df = raw_vested_client_data_df.dropna(subset=['Name'])
-  raw_vested_client_data_df['RC Date'] = pd.to_datetime(raw_vested_client_data_df['RC Date'],format="mixed")
+  st.dataframe(raw_vested_client_data_df)
+  raw_vested_client_data_df['RC Date'] = pd.to_datetime(raw_vested_client_data_df['RC Date'],format='mixed')
   raw_vested_client_data_df['RC Date'] = raw_vested_client_data_df['RC Date'].dt.strftime('%B-%Y')
   raw_vested_client_data_df=raw_vested_client_data_df.fillna(0)
   raw_vested_client_data_df['YearOnly']=raw_vested_client_data_df['RC Date'].str.split('-').str[1]
@@ -632,24 +633,23 @@ def VESTED_Analysis(display=True):
   raw_vested_client_data_df['Invested Amount'] = pd.to_numeric(raw_vested_client_data_df['Invested Amount'])
   raw_vested_client_data_df['Invested Amount'] = raw_vested_client_data_df['Invested Amount'].astype(float)
   raw_vested_client_data_df2=raw_vested_client_data_df[raw_vested_client_data_df['Invested Amount']!=0]
-  st.dataframe(raw_vested_client_data_df2)
   if display:
     col0, col1,col2,col3,col4= st.columns(5)
     with col0:
-        VESTED_total_AUM = raw_vested_client_data_df2['Current Value'].astype(float).sum()
+        VESTED_total_AUM = raw_vested_client_data_df['Current Value'].astype(float).sum()
         st.metric("Total AUM", f" $ {VESTED_total_AUM}", border=True)
     with col1:
-        total_vested_clients = len(raw_vested_client_data_df2['Name'].unique())
-        st.metric("Active Clients", total_vested_clients, border=True)
+        total_vested_clients = len(raw_vested_client_data_df['Name'].unique())
+        st.metric("Total Clients", total_vested_clients, border=True)
     with col2:
        total_onboarded_clients = raw_vested_client_data_df[(raw_vested_client_data_df['Plan Type'] == 'PREMIUM') & ( raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
        st.metric("Onboarded Clients",total_onboarded_clients,border=True)
     with col3:
-        total_onboarded_clients = raw_vested_client_data_df2[(raw_vested_client_data_df['Plan Type'] != 'PREMIUM') & (
+        total_onboarded_clients = raw_vested_client_data_df[(raw_vested_client_data_df['Plan Type'] != 'PREMIUM') & (
                     raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
         st.metric("Onboarding Pending Clients", total_onboarded_clients, border=True)
     with col4:
-        count = raw_vested_client_data_df2['Invested Amount'].dropna().astype(bool).sum()
+        count = raw_vested_client_data_df['Invested Amount'].dropna().astype(bool).sum()
         st.metric("Total Active Clients", count, border=True)
 
     col5,col6 = st.columns(2)
@@ -664,9 +664,23 @@ def VESTED_Analysis(display=True):
             else:
                 new_clients_monthly = raw_vested_client_data_df.groupby('RC Date')['Name'].count().reset_index()
 
-            new_clients_monthly = new_clients_monthly.sort_values('RC Date', ascending=False)
+            month_order = ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December']
 
-            fig = px.bar(new_clients_monthly, x=new_clients_monthly['RC Date'], y=new_clients_monthly['Name'],
+            new_clients_monthly['MonthOnly'] = new_clients_monthly['RC Date'].str.split('-').str[0]
+            new_clients_monthly['YearOnly'] = new_clients_monthly['RC Date'].str.split('-').str[1]
+
+            month_order_dict = {month: idx for idx, month in enumerate(month_order)}
+            new_clients_monthly['MonthNumber'] = new_clients_monthly['MonthOnly'].map(month_order_dict).astype(int)
+            new_clients_monthly['YearNumber'] = new_clients_monthly['YearOnly'].astype(int)
+
+
+            new_clients_monthly = new_clients_monthly.sort_values(['YearNumber', 'MonthNumber'])
+
+            new_clients_monthly = new_clients_monthly.drop(['MonthOnly', 'YearOnly', 'MonthNumber', 'YearNumber'],
+                                                           axis=1)
+
+            fig = px.bar(new_clients_monthly, x=new_clients_monthly['Signupdate'], y=new_clients_monthly['Name'],
                          text=new_clients_monthly['Name'])
 
             fig.update_layout(
@@ -700,8 +714,8 @@ def VESTED_Analysis(display=True):
         if opt=='Monthly Addition of Clients':
             month_order = ['January', 'February', 'March', 'April', 'May', 'June',
                            'July', 'August', 'September', 'October', 'November', 'December']
-            available_years = sorted(raw_vested_client_data_df['RC Date'].str.split('-').str[1].unique())
-            available_months = sorted(raw_vested_client_data_df['RC Date'].str.split('-').str[0].unique(),
+            available_years = sorted(raw_vested_client_data_df['Signupdate'].str.split('-').str[1].unique())
+            available_months = sorted(raw_vested_client_data_df['Signupdate'].str.split('-').str[0].unique(),
                                       key=lambda x: month_order.index(x))
             col1, col2, col3 = st.columns(3)
 
