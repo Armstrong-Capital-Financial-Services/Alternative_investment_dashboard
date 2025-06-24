@@ -624,7 +624,7 @@ def VESTED_Analysis(display=True):
         raw_vested_client_data_df = fetch_table_data(connection=connection, table_name="VESTED")
   raw_vested_client_data_df = raw_vested_client_data_df[raw_vested_client_data_df['RM'] != 'Employee']
   raw_vested_client_data_df = raw_vested_client_data_df.dropna(subset=['Name'])
-  raw_vested_client_data_df['RC Date'] = pd.to_datetime(raw_vested_client_data_df['RC Date'],format="%d-%m-%Y")
+  raw_vested_client_data_df['RC Date'] = pd.to_datetime(raw_vested_client_data_df['RC Date'],format="mixed")
   raw_vested_client_data_df['RC Date'] = raw_vested_client_data_df['RC Date'].dt.strftime('%B-%Y')
   raw_vested_client_data_df=raw_vested_client_data_df.fillna(0)
   raw_vested_client_data_df['YearOnly']=raw_vested_client_data_df['RC Date'].str.split('-').str[1]
