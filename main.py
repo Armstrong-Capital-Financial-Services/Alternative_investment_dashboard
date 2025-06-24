@@ -625,7 +625,7 @@ def VESTED_Analysis(display=True):
   raw_vested_client_data_df = raw_vested_client_data_df[raw_vested_client_data_df['RM'] != 'Employee']
   raw_vested_client_data_df = raw_vested_client_data_df.dropna(subset=['Name'])
   st.dataframe(raw_vested_client_data_df)
-  raw_vested_client_data_df['RC Date'] = pd.to_datetime(raw_vested_client_data_df['RC Date'],format='mixed')
+  raw_vested_client_data_df['RC Date'] = pd.to_datetime(raw_vested_client_data_df['RC Date'],format='%d-%m-%Y')
   raw_vested_client_data_df['RC Date'] = raw_vested_client_data_df['RC Date'].dt.strftime('%B-%Y')
   raw_vested_client_data_df=raw_vested_client_data_df.fillna(0)
   raw_vested_client_data_df['YearOnly']=raw_vested_client_data_df['RC Date'].str.split('-').str[1]
@@ -634,7 +634,7 @@ def VESTED_Analysis(display=True):
   raw_vested_client_data_df['Invested Amount'] = raw_vested_client_data_df['Invested Amount'].astype(float)
   raw_vested_client_data_df2=raw_vested_client_data_df[raw_vested_client_data_df['Invested Amount']!=0]
   if display:
-    col0, col1,col2,col3,col4= st.columns(5)
+    col0, col1,col2,col3= st.columns(4)
     with col0:
         VESTED_total_AUM = raw_vested_client_data_df['Current Value'].astype(float).sum()
         st.metric("Total AUM", f" $ {VESTED_total_AUM}", border=True)
@@ -642,13 +642,10 @@ def VESTED_Analysis(display=True):
         total_vested_clients = len(raw_vested_client_data_df['Name'].unique())
         st.metric("Total Clients", total_vested_clients, border=True)
     with col2:
-       total_onboarded_clients = raw_vested_client_data_df[(raw_vested_client_data_df['Plan Type'] == 'PREMIUM') & ( raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
-       st.metric("Onboarded Clients",total_onboarded_clients,border=True)
-    with col3:
-        total_onboarded_clients = raw_vested_client_data_df[(raw_vested_client_data_df['Plan Type'] != 'PREMIUM') & (
+        total_onboarded_clients = raw_vested_client_data_df[(raw_vested_client_data_df['Plan Type'] == 'PREMIUM') & (
                     raw_vested_client_data_df['Invested Amount'] == 0)]['Name'].nunique()
-        st.metric("Onboarding Pending Clients", total_onboarded_clients, border=True)
-    with col4:
+        st.metric("Inactive Clients", total_onboarded_clients, border=True)
+    with col3:
         count = raw_vested_client_data_df['Invested Amount'].dropna().astype(bool).sum()
         st.metric("Total Active Clients", count, border=True)
 
