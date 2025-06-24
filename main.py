@@ -369,7 +369,7 @@ def SMALLCASE_Analysis(display=True):
                                tickfont=dict(size=12, family='sans serif', color='black', )))
         st.plotly_chart(fig)
   with st.container(border=True):
-        opt = st.selectbox("Select type of filter", options=['Monthly Addition of New Clients', 'Top Investors','Active Clients','Exited Clients'])
+        opt = st.selectbox("Select type of filter", options=['Monthly Addition of New Clients', 'Top Investors','Active Clients','Exited Clients','Subscriptions near expiry'])
         if opt == 'Monthly Addition of New Clients':
             month_order = ['January', 'February', 'March', 'April', 'May', 'June',
                            'July', 'August', 'September', 'October', 'November', 'December']
@@ -411,12 +411,28 @@ def SMALLCASE_Analysis(display=True):
         elif opt == 'Active Clients':
             smallcase_options=active_clients['Smallcase Name'].unique()
             smallcase_sel=st.selectbox("Select a smallcase",options=smallcase_options)
+            active_clients['Subscription Start Date'] = pd.to_datetime(active_clients['Subscription Start Date'],format='mixed').dt.date
+            active_clients['Subscription End Date'] = pd.to_datetime(active_clients['Subscription End Date'], format='mixed').dt.date
             if smallcase_sel:
                 st.dataframe(active_clients[active_clients['Smallcase Name']==smallcase_sel].iloc[:,:-4],hide_index=True)
             else:
                 st.dataframe(active_clients.iloc[:, :-4],hide_index=True)
         elif opt == 'Exited Clients':
+            existed_clients['Subscription Start Date'] = pd.to_datetime(existed_clients['Subscription Start Date'],format='mixed').dt.date
+            existed_clients['Subscription End Date'] = pd.to_datetime(existed_clients['Subscription End Date'], format='mixed').dt.date
             st.dataframe(existed_clients.iloc[:, :-4],hide_index=True)
+
+        elif opt == 'Subscriptions near expiry':
+            today = datetime.date.today()
+            one_month_from_today = today + datetime.timedelta(days=30)
+
+            active_clients['Subscription Start Date'] = pd.to_datetime(active_clients['Subscription Start Date'],format='mixed').dt.date
+
+            active_clients['Subscription End Date'] = pd.to_datetime(active_clients['Subscription End Date'], format='mixed').dt.date
+            near_maturity_df = active_clients[
+                (active_clients['Subscription End Date'] >= today) & (active_clients['Subscription End Date'] <= one_month_from_today)]
+            near_maturity_df = near_maturity_df.iloc[:, :-2]
+            st.dataframe(near_maturity_df, hide_index=True)
 
 
 #with tab2:
