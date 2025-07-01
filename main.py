@@ -1619,7 +1619,6 @@ def Geenrate_MIS_Report():
     columns_to_select_vested = ['Name', 'Plan Type', 'Current Value', 'Invested Amount','RC Date']
     filtered_df_vested = filtered_df_vested[columns_to_select_vested].copy()
     filtered_df_vested['RC Date'] = filtered_df_vested['RC Date'].dt.strftime('%d-%m-%Y')
-    filtered_df_vested= filtered_df_vested.rename(columns={'RC Date':'Onbording Date'})
     filtered_df_vested['Name'] = filtered_df_vested['Name'].str.upper()
     filtered_df_vested['Plan Type'] = filtered_df_vested['Plan Type'].str.upper()
     filtered_df_vested = filtered_df_vested.rename(columns={'Name':'NAME','Plan Type':'PLAN TYPE','Current Value':'CURRENT VALUE','Invested Amount':'INVESTED AMOUNT'})
