@@ -1270,7 +1270,7 @@ def FD_Analysis(display=True):
                 return month_filtered
 
             filtered_data = filter_data(active_clients, selected_year, start_month, selected_end_month)
-            filtered_data['Issue Date'] = pd.to_datetime(filltered_data['Issue Date'],format='%d-%m-%Y').dt.strftime('%d-%m-%Y')
+            filtered_data['Issue Date'] = pd.to_datetime(filtered_data['Issue Date'],format='%d-%m-%Y').dt.strftime('%d-%m-%Y')
             filtered_data=filtered_data.iloc[:,:-3]
             st.dataframe(filtered_data,hide_index=True)
           elif opt == 'Top Investors':
