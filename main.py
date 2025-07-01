@@ -1430,14 +1430,16 @@ def Geenrate_MIS_Report():
           fy_options = ['FY2020-21','FY2021-22','FY2022-23','FY2023-24','FY2024-25']
           selected_financial_year = st.selectbox("Select the Financial Year",fy_options)
           
-   filtered_df = master_data[(master_data['RM Name'] == RM_name)]
+   
    if RM_name == 'all':
      smallcase_clients = Smallcase_data[Smallcase_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth'])]
      vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth'])]
+     filtered_df = master_data[(master_data['RM Name'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth']))]  
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
    else:
      smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
+     filtered_df = master_data[(master_data['RM Name'] == RM_name)]  
      vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
