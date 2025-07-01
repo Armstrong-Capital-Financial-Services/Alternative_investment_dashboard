@@ -1406,7 +1406,7 @@ def Geenrate_MIS_Report():
    with st.container(border=True):
     col1,col2=st.columns(2)
     with col1:
-      RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan br','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto'])
+      RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan br','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto','all'])
     with col2:
       timeperiod=st.radio("Select the timeframe",['Monthly','Quarterly','Calender Year','Financial Year'],horizontal=True)
       if timeperiod =='Monthly':
@@ -1431,16 +1431,22 @@ def Geenrate_MIS_Report():
           selected_financial_year = st.selectbox("Select the Financial Year",fy_options)
           
    filtered_df = master_data[(master_data['RM Name'] == RM_name)]
-   smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
+   if RM_name == 'all':
+     smallcase_clients = Smallcase_data[Smallcase_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth'])]
+     vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth'])]
+     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
+     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
+    else:
+     smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
+     vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
+     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
+     vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
    smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
    smallcase_clients['Networth'] = np.where(smallcase_clients['Current Investment Status'] == 'EXITED', -smallcase_clients['Networth'], smallcase_clients['Networth'])
    bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
    FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
    FD_clients = FD_clients.dropna(subset=['PAN'])
    pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
-   vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
-   vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
-   vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
    liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
    liquiloans_clients['Current Value (Rs.)'].replace(',', '', regex=True, inplace=True)
    liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)     
@@ -1571,6 +1577,7 @@ def Geenrate_MIS_Report():
      data=investment_df[investment_df['Year-Month'] == selected_month]    
    def filter_smallcase_clients(smallcase_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy= None,selected_fy=None) -> pd.DataFrame:
     smallcase_active = smallcase_clients[ (smallcase_clients['Current Investment Status'] == 'invested') & (smallcase_clients['Subscription Status'] == 'subscribed')]
+    smallcase_active['RM'] = smallcase_active['RM'].str.upper()   
     smallcase_active['Subscription Start Date'] = pd.to_datetime(smallcase_active['Subscription Start Date'], errors='coerce')
     smallcase_active['Month-Year'] = smallcase_active['Subscription Start Date'].dt.strftime('%B-%Y')
     if timeperiod == 'Monthly':
@@ -1581,11 +1588,17 @@ def Geenrate_MIS_Report():
         filtered_smallcase = smallcase_active[smallcase_active['Calendar_Year'] == selected_cy]
     else:
         filtered_smallcase = smallcase_active[smallcase_active['Financial_Year'] == selected_fy]
-    columns_to_select = ['Name', 'Networth', 'PAN', 'Smallcase Name','Subscription Start Date']
+    if RM_name == 'all':
+        columns_to_select = ['Name', 'Networth', 'PAN', 'Smallcase Name', 'Subscription Start Date','RM']
+        
+    else:
+        columns_to_select = ['Name', 'Networth', 'PAN', 'Smallcase Name','Subscription Start Date']
     filtered_df_smallcase = filtered_smallcase[columns_to_select].copy()
     filtered_df_smallcase['PAN'] = filtered_df_smallcase['PAN'].str.upper()
+    filtered_df_smallcase['Subscription Start Date'] = filtered_df_smallcase['Subscription Start Date'].dt.strftime("%d-%m-%Y")   
     filtered_df_smallcase['Name'] = filtered_df_smallcase['Name'].str.upper()
     filtered_df_smallcase['Smallcase Name'] = filtered_df_smallcase['Smallcase Name'].str.upper()
+       
     filtered_df_smallcase = filtered_df_smallcase.rename(columns={'Name': 'NAME', 'Smallcase Name': 'SMALLCASE NAME','Networth': 'CURRENT VALUE'})
     return filtered_df_smallcase
 
