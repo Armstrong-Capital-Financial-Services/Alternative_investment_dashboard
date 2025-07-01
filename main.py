@@ -1436,7 +1436,7 @@ def Geenrate_MIS_Report():
      vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth'])]
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
-    else:
+   else:
      smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
      vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
