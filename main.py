@@ -1001,7 +1001,7 @@ def FD_Analysis(display=True):
         FD_client_data_df['Current Status2'] = FD_client_data_df['Maturity Date'].apply(
     lambda x: 'Mature' if x.date() < date.today() else 'Live')
     active_clients = FD_client_data_df[FD_client_data_df['Current Status2'] == 'Live']
-    active_clients['Issue Date']=pd.to_datetime(active_clients['Issue Date'],format='mixed')
+    active_clients['Issue Date']=pd.to_datetime(active_clients['Issue Date'],format='%d-%m-%Y')
     active_clients['YearOnly'] = active_clients['Issue Date'].dt.strftime("%Y")
     active_clients['Month'] = active_clients['Issue Date'].dt.strftime("%B")
     matured_clients = FD_client_data_df[FD_client_data_df['Current Status2']=='Mature']
