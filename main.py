@@ -1466,7 +1466,7 @@ def Geenrate_MIS_Report():
             return pd.DataFrame()
 
     # Date parsing
-    if source in ['fd_clients']:
+    if source in ['fd_clients','vested_clients']:
         df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')
     else:
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')
@@ -1616,8 +1616,10 @@ def Geenrate_MIS_Report():
         filtered_df_vested = vested_clients[vested_clients['Calendar_Year'] == selected_cy]
     else:
         filtered_df_vested = vested_clients[vested_clients['Financial_Year'] == selected_fy]
-    columns_to_select_vested = ['Name', 'Plan Type', 'Current Value', 'Invested Amount']
+    columns_to_select_vested = ['Name', 'Plan Type', 'Current Value', 'Invested Amount','RC Date']
     filtered_df_vested = filtered_df_vested[columns_to_select_vested].copy()
+    filtered_df_vested['RC Date'] = filtered_df_vested['RC Date'].dt.strftime('%d-%m-%Y')
+    filtered_df_vested= filtered_df_vested.rename(columns={'RC Date':'Onbording Date'})
     filtered_df_vested['Name'] = filtered_df_vested['Name'].str.upper()
     filtered_df_vested['Plan Type'] = filtered_df_vested['Plan Type'].str.upper()
     filtered_df_vested = filtered_df_vested.rename(columns={'Name':'NAME','Plan Type':'PLAN TYPE','Current Value':'CURRENT VALUE','Invested Amount':'INVESTED AMOUNT'})
