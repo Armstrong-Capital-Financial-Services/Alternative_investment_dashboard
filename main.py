@@ -1271,11 +1271,13 @@ def FD_Analysis(display=True):
 
             filtered_data = filter_data(active_clients, selected_year, start_month, selected_end_month)
             filtered_data['Issue Date'] = pd.to_datetime( filtered_data['Issue Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')
-            filtered_data['Maturity Date'] = pd.to_dateime( filtered_data['Maturity Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')  
+            filtered_data['Maturity Date'] = pd.to_datetime( filtered_data['Maturity Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')  
             filtered_data=filtered_data.iloc[:,:-3]
             st.dataframe(filtered_data,hide_index=True)
           elif opt == 'Top Investors':
             active_clients = active_clients.sort_values(by=['Investment Amount'],ascending=False).head(5)
+            active_clients['Issue Date'] = pd.to_datetime(active_clients['Issue Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')
+            active_clients['Maturity Date'] = pd.to_datetime(active_clients['Maturity Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y') 
             st.dataframe(active_clients,hide_index=True)
           elif opt == 'FDs Near Maturity':
             #delta=st.number_input("Enter the months from now ")
@@ -1287,6 +1289,8 @@ def FD_Analysis(display=True):
             near_maturity_df = active_clients[
                 (active_clients['Maturity Date'] >= today) & (active_clients['Maturity Date'] <= one_month_from_today)]
             near_maturity_df = near_maturity_df.iloc[:,:-2]
+            near_maturity_df['Issue Date'] = pd.to_datetime(near_maturity_df['Issue Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')
+            near_maturity_df['Maturity Date'] = pd.to_datetime(near_maturity_df['Maturity Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')               
             st.dataframe(near_maturity_df,hide_index=True)
 
 def BANK_Analysis(display=True):
