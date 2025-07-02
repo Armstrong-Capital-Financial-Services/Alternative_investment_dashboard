@@ -1292,6 +1292,7 @@ def BANK_Analysis(display=True):
        df=fetch_table_data(connection=connection,table_name="BANK")
 
     clients_across_products=df['PRODUCTNAME'].value_counts()
+    st.dataframe(clients_across_products)
     fig = go.Figure(data=[go.Pie(labels=clients_across_products.index,
                               values=clients_across_products.values,
                               hole=0.3,
