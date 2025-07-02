@@ -1296,10 +1296,10 @@ def BANK_Analysis(display=True):
  
     with col1:
             portfolio_clients_count = clients_across_products.get('Portfolio', 0)
-            st.metric("Portfolio Clients",portfolio_clients_count),border=True)
+            st.metric("Portfolio Clients",portfolio_clients_count,border=True)
     with col2:
             savings_account_clients_count = clients_across_products.get('Savings Account', 0)
-            st.metric("Saving Account Clients",len(matured_clients),border=True)
+            st.metric("Saving Account Clients",savings_account_clients_count,border=True)
     
     fig = go.Figure(data=[go.Pie(labels=clients_across_products.index,
                               values=clients_across_products.values,
