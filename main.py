@@ -1292,7 +1292,15 @@ def BANK_Analysis(display=True):
        df=fetch_table_data(connection=connection,table_name="BANK")
 
     clients_across_products=df['PRODUCTNAME'].value_counts()
-    st.dataframe(clients_across_products)
+    col1,col2=st.columns(2)
+ 
+    with col1:
+            portfolio_clients_count = clients_across_products.get('Portfolio', 0)
+            st.metric("Portfolio Clients",portfolio_clients_count),border=True)
+    with col2:
+            savings_account_clients_count = clients_across_products.get('Savings Account', 0)
+            st.metric("Saving Account Clients",len(matured_clients),border=True)
+    
     fig = go.Figure(data=[go.Pie(labels=clients_across_products.index,
                               values=clients_across_products.values,
                               hole=0.3,
