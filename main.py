@@ -1447,7 +1447,7 @@ def Geenrate_MIS_Report():
           
    
    if RM_name == 'all':
-     smallcase_clients = Smallcase_data[Smallcase_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', ,'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth'])]
+     smallcase_clients = Smallcase_data[Smallcase_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew','ashish lal','binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth'])]
      vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth'])]
      filtered_df = master_data[(master_data['RM Name'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth']))]  
      pms_clients = PMS_data.loc[PMS_data['PAN'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth'])]  
