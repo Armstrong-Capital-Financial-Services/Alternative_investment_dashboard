@@ -1750,6 +1750,7 @@ def Geenrate_MIS_Report():
      columns_to_select = ['Customer Name', 'Issue Date', 'Investment Amount', 'Channel Partner']
      filtered_df_fd = filtered_FD[columns_to_select]
      filtered_df_fd['Customer Name'] = filtered_df_fd['Customer Name'].str.upper()
+     filtered_df_fd['Issue Date'] = filtered_df_fd['Issue Date'].dt.strftime("%d-%m-%Y")
      filtered_df_fd['Channel Partner'] = filtered_df_fd['Channel Partner'].str.upper()
      filtered_df_fd = filtered_df_fd.rename(
          columns={'Customer Name': 'NAME', 'Issue Date': 'ISSUE DATE', 'Investment Amount': 'INVESTED AMOUNT',
