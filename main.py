@@ -1447,9 +1447,10 @@ def Geenrate_MIS_Report():
           
    
    if RM_name == 'all':
-     smallcase_clients = Smallcase_data[Smallcase_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth'])]
-     vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth'])]
-     filtered_df = master_data[(master_data['RM Name'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas', 'khushboo sheth']))]  
+     smallcase_clients = Smallcase_data[Smallcase_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', ,'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth'])]
+     vested_clients = VESTED_data.loc[VESTED_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth'])]
+     filtered_df = master_data[(master_data['RM Name'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth']))]  
+     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth'])]  
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
    else:
@@ -1458,12 +1459,12 @@ def Geenrate_MIS_Report():
      vested_clients = VESTED_data.loc[VESTED_data['RM'] == RM_name]
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
+     pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
    smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
    smallcase_clients['Networth'] = np.where(smallcase_clients['Current Investment Status'] == 'EXITED', -smallcase_clients['Networth'], smallcase_clients['Networth'])
    bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
    FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
    FD_clients = FD_clients.dropna(subset=['PAN'])
-   pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
    liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
    liquiloans_clients['Current Value (Rs.)'].replace(',', '', regex=True, inplace=True)
    liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)     
