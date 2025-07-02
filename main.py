@@ -1799,15 +1799,7 @@ def Geenrate_MIS_Report():
         st.subheader("AIF")
         column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
         filtered_aif_df = pd.DataFrame(columns=column_names)
-        st.write("No Transactions")
-        
-   with st.container(border=True):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("PMS")
-        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
-        filtered_pms_df = pd.DataFrame(columns=column_names)
-        st.write("No Transactions")     
+        st.write("No Transactions")  
 
    with st.container(border=True):
     col1, col2 = st.columns(2)
