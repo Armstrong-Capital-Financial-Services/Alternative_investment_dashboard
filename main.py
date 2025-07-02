@@ -175,80 +175,80 @@ def SMALLCASE_Analysis(display=True):
 
 
 ############AUM INFLOW MONTHLY##########
-  filtered_data = new_clients_networth_monthly[new_clients_networth_monthly['Total New Client Networth'] != 0]
-  filtered_data = filtered_data.sort_values(by='Month')
-  filtered_data['Month'] = filtered_data['Month'].dt.strftime('%B-%Y')
-  filtered_data['Monthonly'] = filtered_data['Month'].str.split('-').str[0]
-  filtered_data['Year'] = filtered_data['Month'].str.split('-').str[1]
-  with st.container(border=True):
-   st.subheader("Monthly AUM Inflow")
-   timeperiod = st.toggle("Custom Time Period",key="AUM INFLOW MONTHLY")
-   if timeperiod:
-      month_order = ['January', 'February', 'March', 'April', 'May', 'June',
-                     'July', 'August', 'September', 'October', 'November', 'December']
-      available_years = sorted(filtered_data['Month'].str.split('-').str[1].unique())
-      available_months = sorted(filtered_data['Month'].str.split('-').str[0].unique(),
-                                key=lambda x: month_order.index(x))
-      col1, col2, col3 = st.columns(3)
+  #filtered_data = new_clients_networth_monthly[new_clients_networth_monthly['Total New Client Networth'] != 0]
+  #filtered_data = filtered_data.sort_values(by='Month')
+  #filtered_data['Month'] = filtered_data['Month'].dt.strftime('%B-%Y')
+  #filtered_data['Monthonly'] = filtered_data['Month'].str.split('-').str[0]
+  #filtered_data['Year'] = filtered_data['Month'].str.split('-').str[1]
+  #ith st.container(border=True):
+   #st.subheader("Monthly AUM Inflow")
+   #timeperiod = st.toggle("Custom Time Period",key="AUM INFLOW MONTHLY")
+   #if timeperiod:
+      #month_order = ['January', 'February', 'March', 'April', 'May', 'June',
+      #               'July', 'August', 'September', 'October', 'November', 'December']
+      #available_years = sorted(filtered_data['Month'].str.split('-').str[1].unique())
+      #available_months = sorted(filtered_data['Month'].str.split('-').str[0].unique(),
+      #                          key=lambda x: month_order.index(x))
+      #col1, col2, col3 = st.columns(3)
 
-      with col1:
-          start_month = st.selectbox("Start Month", available_months,
-                                     index=0,  # Default to first month
-                                     key="start_month")
-      with col2:
-          end_month_options = available_months[available_months.index(start_month):]
-          selected_end_month = st.selectbox("End Month", end_month_options,
-                                            index=len(end_month_options) - 1,  # Default to last available month
-                                            key="end_month")
-      with col3:
-          selected_year = st.selectbox("Select Year", available_years)
+      #with col1:
+      #    start_month = st.selectbox("Start Month", available_months,
+      #                               index=0,  # Default to first month
+      #                               key="start_month")
+      #with col2:
+      #    end_month_options = available_months[available_months.index(start_month):]
+      #    selected_end_month = st.selectbox("End Month", end_month_options,
+      #                                      index=len(end_month_options) - 1,  # Default to last available month
+      #                                      key="end_month")
+      #with col3:
+          #selected_year = st.selectbox("Select Year", available_years)
 
-      def filter_data(df, year, start_month, end_month):
-          month_order_dict = {month: index for index, month in enumerate(month_order)}
-          year_filtered = df[df['Year'] == year]
-          year_filtered['MonthOnly'] = year_filtered['Month'].str.split('-').str[0]
-          month_filtered = year_filtered[
-              (year_filtered['MonthOnly'].map(month_order_dict) >= month_order_dict[start_month]) &
-              (year_filtered['MonthOnly'].map(month_order_dict) <= month_order_dict[selected_end_month])
-              ]
-          month_filtered = month_filtered.sort_values(by='MonthOnly', key=lambda x: x.map(month_order_dict))
-          return month_filtered
+      #def filter_data(df, year, start_month, end_month):
+          #month_order_dict = {month: index for index, month in enumerate(month_order)}
+          #year_filtered = df[df['Year'] == year]
+          #year_filtered['MonthOnly'] = year_filtered['Month'].str.split('-').str[0]
+          #month_filtered = year_filtered[
+          #    (year_filtered['MonthOnly'].map(month_order_dict) >= month_order_dict[start_month]) &
+          #    (year_filtered['MonthOnly'].map(month_order_dict) <= month_order_dict[selected_end_month])
+          #    ]
+          #month_filtered = month_filtered.sort_values(by='MonthOnly', key=lambda x: x.map(month_order_dict))
+          #return month_filtered
 
-      filtered_data = filter_data(filtered_data, selected_year, start_month, selected_end_month)
-      if not filtered_data.empty:
-         num_data_points = len(filtered_data)
-         bar_width = max(0.1, min(0.8, 2.5 / num_data_points))
-         fig = go.Figure(data=[go.Bar( x=filtered_data['MonthOnly'].astype(str), y=filtered_data['Total New Client Networth'],
-         text=filtered_data['Total New Client Networth'].apply(format_currency),width=bar_width)])
-         fig.update_layout( xaxis_title="Month", yaxis_title="Total  Networth", yaxis_tickformat=',.0f',xaxis=dict(
-             title_font=dict(size=12, family='sans serif', color='black'),
-             tickfont=dict(size=12, family='sans serif', color='black')),
-                           yaxis=dict(
-                               title_font=dict(size=12, family='sans serif', color='black', ),
-                               tickfont=dict(size=12, family='sans serif', color='black', )))
-         fig.update_traces(width=0.5, textposition='outside', textfont=dict(
-             family="sans serif",
-             size=12,
-             color='black',weight='bold' ))
-         st.plotly_chart(fig)
-   else:
-       fig = go.Figure(data=[go.Bar(x=filtered_data['Month'].astype(str), y=filtered_data['Total New Client Networth'],
+      #filtered_data = filter_data(filtered_data, selected_year, start_month, selected_end_month)
+      #if not filtered_data.empty:
+         #num_data_points = len(filtered_data)
+         #bar_width = max(0.1, min(0.8, 2.5 / num_data_points))
+         #fig = go.Figure(data=[go.Bar( x=filtered_data['MonthOnly'].astype(str), y=filtered_data['Total New Client Networth'],
+         #text=filtered_data['Total New Client Networth'].apply(format_currency),width=bar_width)])
+         #fig.update_layout( xaxis_title="Month", yaxis_title="Total  Networth", yaxis_tickformat=',.0f',xaxis=dict(
+         #    title_font=dict(size=12, family='sans serif', color='black'),
+         #    tickfont=dict(size=12, family='sans serif', color='black')),
+         #                  yaxis=dict(
+         #                      title_font=dict(size=12, family='sans serif', color='black', ),
+         #                      tickfont=dict(size=12, family='sans serif', color='black', )))
+         #fig.update_traces(width=0.5, textposition='outside', textfont=dict(
+         #    family="sans serif",
+         #    size=12,
+         #    color='black',weight='bold' ))
+         #st.plotly_chart(fig)
+   #else:
+       #fig = go.Figure(data=[go.Bar(x=filtered_data['Month'].astype(str), y=filtered_data['Total New Client Networth'],
 
-                                    text=filtered_data['Total New Client Networth'].apply(format_currency), )])
+       #                             text=filtered_data['Total New Client Networth'].apply(format_currency), )])
 
-       fig.update_layout(xaxis_title="Month", yaxis_title="Total Networth", yaxis_tickformat=',.0f',xaxis=dict(
-             title_font=dict(size=12, family='sans serif', color='black'),
-             tickfont=dict(size=12, family='sans serif', color='black')),
-                           yaxis=dict(
-                               title_font=dict(size=12, family='sans serif', color='black', ),
-                               tickfont=dict(size=12, family='sans serif', color='black', )))
-       fig.update_traces(width=0.5, textposition='outside', textfont=dict(
-           family="sans serif",
-           size=12,
-           color='black',weight='bold' ))
+       #fig.update_layout(xaxis_title="Month", yaxis_title="Total Networth", yaxis_tickformat=',.0f',xaxis=dict(
+       #      title_font=dict(size=12, family='sans serif', color='black'),
+       #      tickfont=dict(size=12, family='sans serif', color='black')),
+       #                    yaxis=dict(
+       #                        title_font=dict(size=12, family='sans serif', color='black', ),
+       #                        tickfont=dict(size=12, family='sans serif', color='black', )))
+       #fig.update_traces(width=0.5, textposition='outside', textfont=dict(
+        #   family="sans serif",
+        #   size=12,
+        #   color='black',weight='bold' ))
 
-       st.subheader("Monthly AUM Inflow")
-       st.plotly_chart(fig)
+       #st.subheader("Monthly AUM Inflow")
+       #st.plotly_chart(fig)
 
 ########CUMMULATIVE_AUM_GROWTH######
   with st.container(border=True):
@@ -294,7 +294,7 @@ def SMALLCASE_Analysis(display=True):
               x=filtered_data['MonthOnly'].astype(str),
               y=filtered_data['Cumulative AUM'],
               fill='tozeroy',
-              hovertemplate='%{y:,.2f}<extra></extra>',
+              hovertemplate='<b>Month</b>: %{x}<br><b>Cumulative AUM</b>: %{y:,.2f}<extra></extra>',
               text=filtered_data['Cumulative AUM'].apply(format_currency)
           )] )
         fig.update_layout(
