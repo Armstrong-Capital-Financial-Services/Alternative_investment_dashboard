@@ -1453,7 +1453,7 @@ def Geenrate_MIS_Report():
      pms_clients = PMS_data.loc[PMS_data['PAN'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth','manju mastakar'])]  
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].fillna(0)
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
-     FD_clients = FD_data.loc[FD_data['PAN'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth','manju mastakar'])]
+     FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
      FD_clients = FD_clients.dropna(subset=['PAN'])
        
    else:
