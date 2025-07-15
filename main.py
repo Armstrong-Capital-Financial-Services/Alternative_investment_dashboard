@@ -1414,14 +1414,18 @@ def Geenrate_MIS_Report():
    VESTED_data['Current Value'] = VESTED_data['Current Value'].astype(float)
    Liquiloans_data = fetch_table_data_MIS("liquiloans")
    Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-   Liqui_data = fetch_table_data_MIS("FRACTIONAL_REAL_ESTATE")
-   Liquiloans_data = Liquiloans_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
    FD_data = fetch_table_data_MIS("FD")
-   FD_data = FD_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)         
+   FD_data = FD_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)  
+   Insurance_data = fetch_table_data_MIS("INSURANCE")
+   Insurance_data = Insurance_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   FracRealEstate_data = fetch_table_data_MIS("FRACTIONAL_REAL_ESTATE")
+   FracRealEstate_data = FracRealEstate_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+   Banking_data = fetch_table_data_MIS("BANK")
+   Banking_data = Banking_data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
    with st.container(border=True):
     col1,col2=st.columns(2)
     with col1:
-      RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan br','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto','all'])
+      RM_name=st.selectbox("Select the RM",options=['rahul m v','mudit','chandan br','ashish lal','arun mathew','binto sebastian','ratheesh nambiar','khushboo sheth','manju - divya','manju - suhas','manju - chandan','manju - rahul','manju - khushboo','manju - mudit','manju - binto','manju mastakar','all'])
     with col2:
       timeperiod=st.radio("Select the timeframe",['Monthly','Quarterly','Calender Year','Financial Year'],horizontal=True)
       if timeperiod =='Monthly':
@@ -1434,7 +1438,7 @@ def Geenrate_MIS_Report():
                       options.append(f'Q{quarter} - FY{year}')
               return options
           quarter_fy_options = generate_quarter_fy_options(start_year=2023,
-                                                           num_years=3)  # Adjust start year and number of years as needed
+                                                           num_years=3)  
 
           selected_quarter_fy = st.selectbox("Select Quarter and Fiscal Year:", quarter_fy_options)
       elif timeperiod =='Calender Year':
@@ -1455,6 +1459,12 @@ def Geenrate_MIS_Report():
      vested_clients['Invested Amount'] = vested_clients['Invested Amount'].astype(float)
      FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
      FD_clients = FD_clients.dropna(subset=['PAN'])
+     Banking_clients = Banking_data.loc[Banking_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth','manju mastakar'])]
+     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
+     FracRealEstate_clients = FracRealEstate_data.loc[FracRealEstate_data['RM'].isin(['rahul m v', 'mudit', 'chandan br', 'arun mathew', 'ashish lal', 'binto sebastian', 'manju - suhas','manju - rahul', 'khushboo sheth','manju mastakar'])]
+     Liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
+     Insurance_clients = Insurance_data.loc[Insurance_data['PAN'].isin(filtered_df['PAN Number'])]  
+       
        
    else:
      smallcase_clients = Smallcase_data.loc[Smallcase_data['RM'] == RM_name]
@@ -1465,19 +1475,30 @@ def Geenrate_MIS_Report():
      FD_clients = FD_data.loc[FD_data['PAN'].isin(filtered_df['PAN Number'])]
      FD_clients = FD_clients.dropna(subset=['PAN'])
      pms_clients = PMS_data.loc[PMS_data['PAN'].isin(filtered_df['PAN Number'])]
+     bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
+     Banking_clients = Banking_data.loc[Banking_data['RM'] == RM_name]
+     FracRealEstate_clients = FracRealEstate_data.loc[FracRealEstate_data['RM'] == RM_name]
+     Liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
+     Insurance_clients = Insurance_data.loc[Insurance_data['PAN'].isin(filtered_df['PAN Number'])]
+   bonds_clients = bonds_clients.merge(filtered_df[['PAN Number', 'RM Name']], left_on='PAN', right_on='PAN Number', how='left')
+   FD_clients = FD_clients.merge(filtered_df[['PAN Number', 'RM Name']], left_on='PAN', right_on='PAN Number', how='left')
+   FracRealEstate_clients =  FracRealEstate_clients[FracRealEstate_clients['Deal Stage'] == 'share certificate issued']
    smallcase_clients['Networth'] = pd.to_numeric(smallcase_clients['Networth'], errors='coerce')
+   Liquiloans_clients = Liquiloans_clients.merge(filtered_df[['PAN Number', 'RM Name']],left_on='PAN', right_on='PAN Number', how='left')
+   Liquiloans_clients['Current Value (Rs.)'] = Liquiloans_clients['Current Value (Rs.)'].astype(float)
    smallcase_clients['Networth'] = np.where(smallcase_clients['Current Investment Status'] == 'EXITED', -smallcase_clients['Networth'], smallcase_clients['Networth'])
-   bonds_clients = Bonds_data.loc[Bonds_data['PAN'].isin(filtered_df['PAN Number'])]
-   liquiloans_clients = Liquiloans_data.loc[Liquiloans_data['PAN'].isin(filtered_df['PAN Number'])]
-   liquiloans_clients['Current Value (Rs.)'].replace(',', '', regex=True, inplace=True)
-   liquiloans_clients['Current Value (Rs.)']=liquiloans_clients['Current Value (Rs.)'].astype(float)     
+   Insurance_clients = Insurance_clients.dropna(subset=['PAN'])
+   Insurance_clients = Insurance_clients.merge(filtered_df[['PAN Number', 'RM Name']], left_on='PAN', right_on='PAN Number', how='left') 
 
    date_column_map = {
     "smallcase_clients": "Subscription Start Date",
     "bonds_clients": "Transaction Date",
     "pms_clients": "Date of Investment",
     "vested_clients": "RC Date",
-    "fd_clients": "Issue Date"}
+    "fd_clients": "Issue Date",
+    'banking_clients': 'BOOKING_MONTH',
+    'fractional_real_estate_clients':'Date of investment',
+    'insurance_clients':'Start Date',}
    def get_time_series_data(df, date_col, amount_col=None, source=None, frequency='monthly', month_list=None,cy_list=None,fy_list=None):
     if frequency == 'monthly' and month_list is None:
         raise ValueError("month_list is required for monthly frequency.")
@@ -1493,7 +1514,7 @@ def Geenrate_MIS_Report():
             return pd.DataFrame()
 
     # Date parsing
-    if source in ['fd_clients','vested_clients']:
+    if source in ['fd_clients','vested_clients','pms_clients','bank_clients','fractional_real_estate_client','insurance_clients']:
         df[date_col] = pd.to_datetime(df[date_col], format='%d-%m-%Y')
     else:
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce', format='mixed')
@@ -1526,18 +1547,24 @@ def Geenrate_MIS_Report():
         raise ValueError("frequency must be either 'monthly' or 'quarterly'") 
 
    if timeperiod == 'Quarterly':
-      investment_data_quarterly={  "Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='quarterly',source='vested_clients'),
+      investment_data_quarterly={"Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='quarterly',source='vested_clients'),
       "FD": get_time_series_data(FD_clients, amount_col='Investment Amount', date_col=date_column_map['fd_clients'],frequency='quarterly', source='fd_clients'),
       "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth', date_col=date_column_map["smallcase_clients"],frequency='quarterly', source='smallcase_clients'),
       "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='quarterly', source='pms_clients'),
-      "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"], frequency='quarterly',source='bonds_clients'),}    
+      "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"], frequency='quarterly',source='bonds_clients'),
+      "Banking": get_time_series_data(Banking_clients, date_col=date_column_map["banking_clients"], frequency='quarterly', source='bank_clients'),
+      "Fractional_Real_Estate":get_time_series_data(FracRealEstate_clients, date_col=date_column_map["fractional_real_estate_clients"], frequency='quarterly', source='fractional_real_estate_client'),
+      "Insurance_clients": get_time_series_data(Insurance_clients,date_column_map['insurance_clients'],frequency='quarterly', source='insurance_clients')}    
    elif timeperiod == 'Calender Year':
       cy_list = [(selected_calender_year - i) for i in range(3)]
       investment_data_calender_year={ "Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='calendar_year',source='vested_clients',cy_list=cy_list),
          "FD": get_time_series_data(FD_clients, amount_col='Investment Amount', date_col=date_column_map['fd_clients'],frequency='calendar_year', source='fd_clients',cy_list=cy_list),
          "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth',  date_col=date_column_map["smallcase_clients"], frequency='calendar_year',  source='smallcase_clients',cy_list=cy_list),
          "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='calendar_year', source='pms_clients',cy_list=cy_list),
-         "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"],frequency='calendar_year', source='bonds_clients',cy_list=cy_list)}
+         "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"],frequency='calendar_year', source='bonds_clients',cy_list=cy_list),
+         "Banking": get_time_series_data(Banking_clients,amount_col='ELIGIBLE_AMT', date_col=date_column_map["banking_clients"], frequency='calendar_year', source='bank_clients',cy_list=cy_list),
+         "Fractional_Real_Estate":get_time_series_data(FracRealEstate_clients,amount_col='Investment Value' ,date_col=date_column_map["fractional_real_estate_clients"], frequency='calendar_year', source='fractional_real_estate_client',cy_list=cy_list),
+         "Insurance_clients": get_time_series_data(Insurance_clients,amount_col='Premium',date_col= date_column_map['insurance_clients'], frequency='calendar_year', source='insurance_clients',cy_list=cy_list)}
       investment_df_cy = pd.DataFrame(investment_data_calender_year).reset_index().melt(id_vars="Calendar_Year", var_name="Product", value_name="Invested Amount")
       investment_df_cy = investment_df_cy.fillna(0)
       investment_df_cy['Calendar_Year'] = pd.Categorical(investment_df_cy['Calendar_Year'], categories=cy_list[::-1], ordered=True)
@@ -1577,11 +1604,14 @@ def Geenrate_MIS_Report():
    elif timeperiod == 'Monthly':
      selected_date = pd.to_datetime(selected_month + '-01')
      three_months = [(selected_date - pd.DateOffset(months=i)).strftime('%B-%Y') for i in range(3)]
-     investment_data = {   "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth', date_col=date_column_map["smallcase_clients"], frequency='monthly',month_list=three_months,source='smallcase_clients'),
+     investment_data = { "Smallcase": get_time_series_data(smallcase_clients, amount_col='Networth', date_col=date_column_map["smallcase_clients"], frequency='monthly',month_list=three_months,source='smallcase_clients'),
      "Bonds": get_time_series_data(bonds_clients, amount_col='Amount',date_col= date_column_map["bonds_clients"], frequency='monthly',month_list=three_months, source='bonds_clients'),
      "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='monthly',month_list=three_months, source='pms_clients'),
      "Vested": get_time_series_data(vested_clients, amount_col='Invested Amount', date_col=date_column_map["vested_clients"],frequency='monthly',month_list=three_months, source='vested_clients'),
-     "FD": get_time_series_data(FD_clients, amount_col='Investment Amount',date_col= date_column_map['fd_clients'], frequency='monthly',month_list=three_months,source='fd_clients') }
+     "FD": get_time_series_data(FD_clients, amount_col='Investment Amount',date_col= date_column_map['fd_clients'], frequency='monthly',month_list=three_months,source='fd_clients'),
+     "Banking": get_time_series_data(Banking_clients,amount_col='ELIGIBLE_AMT', date_col=date_column_map["banking_clients"], frequency='monthly',month_list=three_months, source='bank_clients'),
+     "Fractional_Real_Estate":get_time_series_data(FracRealEstate_clients,amount_col='Investment Value', date_col=date_column_map["fractional_real_estate_clients"], frequency='monthly',month_list=three_months, source='fractional_real_estate_client'),
+     "Insurance_clients": get_time_series_data(Insurance_clients, amount_col='Premium',  date_col=date_column_map['insurance_clients'], frequency='monthly', source='insurance_clients', month_list=three_months)                 }
      investment_df = pd.DataFrame(investment_data).reset_index().melt(id_vars="Year-Month", var_name="Product", value_name="Invested Amount")
      investment_df = investment_df.fillna(0)
      investment_df['Year-Month'] = pd.Categorical(investment_df['Year-Month'], categories=three_months[::-1], ordered=True)
@@ -1798,46 +1828,123 @@ def Geenrate_MIS_Report():
         else:
             st.write("No Transactions")
             
+   def filter_bank_clients(bank_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
+    bank_clients['BOOKING_MONTH'] = pd.to_datetime(bank_clients['BOOKING_MONTH']).dt.strftime("%d-%m-%Y")
+    if timeperiod == 'Monthly':
+       bank_clients = bank_clients[bank_clients['Year-Month'] == selected_month]
+    elif timeperiod == 'Quarterly':
+       bank_clients = bank_clients[bank_clients['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod == 'Calender Year':
+       bank_clients = bank_clients[bank_clients['Calendar_Year'] == selected_cy]
+    else:
+        bank_clients = bank_clients[bank_clients['Financial_Year'] == selected_fy]
+    columns_to_select = ['CUSTOMERNAME', 'BOOKING_MONTH', 'PRODUCTNAME', 'RM']
+    filtered_df_bank = bank_clients[columns_to_select]
+    filtered_df_bank['CUSTOMERNAME'] =filtered_df_bank['CUSTOMERNAME'].str.upper()
+    filtered_df_bank['BOOKING_MONTH'] = filtered_df_bank['BOOKING_MONTH'].str.upper()
+    filtered_df_bank['PRODUCTNAME'] = filtered_df_bank['PRODUCTNAME'].str.upper()
+    filtered_df_bank['RM'] = filtered_df_bank['RM'].str.upper()
+
+    return filtered_df_bank
+
    with st.container(border=True):
-    col1, col2 = st.columns(2)
+    col1,col2= st.columns([1,1])
+    with col1:
+        st.subheader("BANKING PRODUCTS")
+        if timeperiod == 'Monthly':
+            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,
+                                                       selected_month=selected_month)
+        elif timeperiod == 'Quarterly':
+            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,
+                                                       selected_quarter_fy=selected_quarter_fy)
+        elif timeperiod == 'Calender Year':
+            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+        else:
+            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
+        if len(filtered_FracRealEstate_df) > 0:
+           st.dataframe(filtered_FracRealEstate_df,hide_index=True)
+        else:
+            st.write("No Transactions")
+
+   with st.container(border=True):
+   col1, col2 = st.columns(2)
     with col1:
         st.subheader("AIF")
         column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
         filtered_aif_df = pd.DataFrame(columns=column_names)
         st.write("No Transactions")  
 
-   with st.container(border=True):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Banking Prdoucts")
-        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
-        filtered_bank_df = pd.DataFrame(columns=column_names)
-        st.write("No Transactions")   
+   def filter_fractionalrealestate_clients(FracRealEstate_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
+    FracRealEstate_clients['Date of investment'] = pd.to_datetime(FracRealEstate_clients['Date of investment']).dt.strftime("%d-%m-%Y")
+    if timeperiod == 'Monthly':
+        FracRealEstate_clients = FracRealEstate_clients[FracRealEstate_clients['Year-Month'] == selected_month]
+    elif timeperiod == 'Quarterly':
+        FracRealEstate_clients = FracRealEstate_clients[FracRealEstate_clients['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod == 'Calender Year':
+        FracRealEstate_clients = FracRealEstate_clients[FracRealEstate_clients['Calendar_Year'] == selected_cy]
+    else:
+        FracRealEstate_clients = FracRealEstate_clients[FracRealEstate_clients['Financial_Year'] == selected_fy]
+    columns_to_select = ['Name', 'Asset Name','Investment Value','Date of investment', 'RM']
+    filtered_df_FracRealEstate = FracRealEstate_clients[columns_to_select]
+    filtered_df_FracRealEstate['Name'] = filtered_df_FracRealEstate['Name'].str.upper()
+    filtered_df_FracRealEstate['Asset Name'] = filtered_df_FracRealEstate['Asset Name'].str.upper()
+    filtered_df_FracRealEstate['RM'] = filtered_df_FracRealEstate['RM'].str.upper()
 
+    return filtered_df_FracRealEstate
    with st.container(border=True):
-    col1, col2 = st.columns(2)
+    col1,col2= st.columns([1,1])
     with col1:
-        st.subheader("Insurance")
-        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
-        filtered_insurance_df = pd.DataFrame(columns=column_names)
-        st.write("No Transactions") 
+        st.subheader("FRACTIONAL REAL ESTATE")
+        if timeperiod == 'Monthly':
+            filtered_FracRealEstate_df = filter_fractionalrealestate_clients(FracRealEstate_clients, timeperiod=timeperiod,
+                                                       selected_month=selected_month)
+        elif timeperiod == 'Quarterly':
+            filtered_FracRealEstate_df = filter_fractionalrealestate_clients(FracRealEstate_clients, timeperiod=timeperiod,
+                                                       selected_quarter_fy=selected_quarter_fy)
+        elif timeperiod == 'Calender Year':
+            filtered_FracRealEstate_df = filter_fractionalrealestate_clients(FracRealEstate_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+        else:
+            filtered_FracRealEstate_df = filter_fractionalrealestate_clients(FracRealEstate_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
+        if len(filtered_FracRealEstate_df) > 0:
+           st.dataframe(filtered_FracRealEstate_df,hide_index=True)
+        else:
+            st.write("No Transactions") 
+            
+   def filter_insurance_clients(Insurance_clients: pd.DataFrame, timeperiod, selected_month = None, selected_quarter_fy = None,selected_cy=None,selected_fy=None) -> pd.DataFrame:
+    Insurance_clients['Start Date'] = pd.to_datetime(Insurance_clients['Start Date']).dt.strftime("%d-%m-%Y")
+    if timeperiod == 'Monthly':
+        Insurance_clients = Insurance_clients[Insurance_clients['Year-Month'] == selected_month]
+    elif timeperiod == 'Quarterly':
+        Insurance_clients = Insurance_clients[Insurance_clients['Fiscal_Quarter'] == selected_quarter_fy]
+    elif timeperiod == 'Calender Year':
+        Insurance_clients = Insurance_clients[Insurance_clients['Calendar_Year'] == selected_cy]
+    else:
+        Insurance_clients = Insurance_clients[Insurance_clients['Financial_Year'] == selected_fy]
+    columns_to_select = ['Name', 'Product Partner','Premium','Sum insured','Start Date','End Date','RM Name']
+    filtered_df_Insurance = Insurance_clients[columns_to_select]
+    filtered_df_Insurance['Name'] = filtered_df_Insurance['Name'].str.upper()
+    filtered_df_Insurance['Product Partner'] = filtered_df_Insurance['Product Partner'].str.upper()
+    filtered_df_Insurance['RM Name'] = filtered_df_Insurance['RM Name'].str.upper()
 
+    return filtered_df_Insurance
    with st.container(border=True):
-    col1, col2 = st.columns(2)
+    col1,col2= st.columns([1,1])
     with col1:
-        st.subheader("Liquiloans")
-        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
-        filtered_liquiloans_df = pd.DataFrame(columns=column_names)
-        st.write("No Transactions")  
-
-   with st.container(border=True):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Fractional Real Estate")
-        column_names = ['NAME', 'CURRENT VALUE', 'INVESTED VALUE']
-        filtered_F_real_estate_df = pd.DataFrame(columns=column_names)
-        st.write("No Transactions")   
- 
+        st.subheader("INSURANCE")
+        if timeperiod == 'Monthly':
+            filtered_insurance_df = filter_insurance_clients(Insurance_clients, timeperiod=timeperiod,
+                                                       selected_month=selected_month)
+        elif timeperiod == 'Quarterly':
+            filtered_insurance_df = filter_insurance_clients(Insurance_clients, timeperiod=timeperiod,
+                                                       selected_quarter_fy=selected_quarter_fy)
+        elif timeperiod == 'Calender Year':
+            filtered_insurance_df = filter_insurance_clients(Insurance_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+        else:
+            filtered_insurance_df = filter_insurance_clients(Insurance_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
+        if len(filtered_insurance_df) > 0:
+           st.dataframe(filtered_insurance_df,hide_index=True)
+        else:
+            st.write("No Transactions")
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
       with st.spinner("Generating..."):
