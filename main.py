@@ -998,8 +998,7 @@ def FD_Analysis(display=True):
     with psycopg2.connect(**db_config) as connection:
         FD_client_data_df = fetch_table_data(connection=connection, table_name="FD")
         FD_client_data_df['Maturity Date'] = pd.to_datetime(FD_client_data_df['Maturity Date'],format='mixed')
-        FD_client_data_df['Current Status2'] = FD_client_data_df['Maturity Date'].apply(
-    lambda x: 'Mature' if x.date() < date.today() else 'Live')
+        FD_client_data_df['Current Status2'] = FD_client_data_df['Maturity Date'].apply( lambda x: 'Mature' if x.date() < date.today() else 'Live')
     active_clients = FD_client_data_df[FD_client_data_df['Current Status2'] == 'Live']
     active_clients['Issue Date']=pd.to_datetime(active_clients['Issue Date'],format='%d-%m-%Y')
     active_clients['YearOnly'] = active_clients['Issue Date'].dt.strftime("%Y")
@@ -1034,12 +1033,14 @@ def FD_Analysis(display=True):
          with col4.container(border=True):
             aum_distribution_across_providers = active_clients.groupby('Channel Partner')[
                 'Investment Amount'].sum().reset_index()
-
-            # Create the bar chart
+             
+            aum_distribution_across_providers = aum_distribution_across_providers.sort_values(
+                by='Investment Amount', ascending=True) 
             fig = go.Figure(go.Bar(
-                x=aum_distribution_across_providers['Investment Amount'],
+                x=aum_distribution_across_providers['Investment Amount'].apply(format_currency),
                 y=aum_distribution_across_providers['Channel Partner'],
-                orientation='h'
+                orientation='h',hovertemplate="<b>Channel Partner</b>: %{y}<br>" +
+                      "<b>Investment Amount</b>: %{x}<extra></extra>"
             ))
 
             fig.update_layout(
