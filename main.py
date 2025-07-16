@@ -85,7 +85,7 @@ def SMALLCASE_Analysis(display=True):
   #tab1, tab2 = st.tabs(["Active Clients", "Pending KYC Clients"])
   #with tab1:
   with col0:
-      st.metric("Total AUM", format_currency(new_clients_networth_monthly['Total New Client Networth'].sum().round(2)),
+      st.metric("Total AUM", format_currency(active_clients['Networth'].sum().round(2)),
                 border=True)
   with col1:
       st.metric("Total Active Clients", len(active_clients['Name'].unique()), border=True)
