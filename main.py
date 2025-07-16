@@ -779,7 +779,7 @@ def BONDS_Analysis(display=True):
   with psycopg2.connect(**db_config) as connection:
         raw_bonds_client_data_df = fetch_table_data(connection=connection, table_name="BONDS")
   raw_bonds_client_data_df['Amount'] = pd.to_numeric(raw_bonds_client_data_df['Amount'])
-  raw_bonds_client_data_df['Transaction Date'] = pd.to_datetime(raw_bonds_client_data_df['Transaction Date'])
+  raw_bonds_client_data_df['Transaction Date'] = pd.to_datetime(raw_bonds_client_data_df['Transaction Date'],format="%d-%m-%y")
   raw_bonds_client_data_df['Transaction Date'] = raw_bonds_client_data_df['Transaction Date'].dt.strftime("%B-%Y")
   raw_bonds_client_data_df['MonthOnly'] = raw_bonds_client_data_df['Transaction Date'].str.split('-').str[0]
   raw_bonds_client_data_df['YearOnly'] = raw_bonds_client_data_df['Transaction Date'].str.split('-').str[1]
