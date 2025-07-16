@@ -1583,7 +1583,6 @@ def Geenrate_MIS_Report():
    elif timeperiod == 'Financial Year':
     selected_index = fy_options.index(selected_financial_year)
     fy_list = fy_options[max(0, selected_index - 2):selected_index + 1]
-    st.write(fy_list)
     investment_data_financial_year={
     "Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='financial_year',source='vested_clients',fy_list=fy_list),
     "FD": get_time_series_data(FD_clients, amount_col='Investment Amount', date_col=date_column_map['fd_clients'],
@@ -1600,8 +1599,7 @@ def Geenrate_MIS_Report():
     investment_df_fy = investment_df_fy.fillna(0)
     investment_df_fy['Financial_Year'] = pd.Categorical(investment_df_fy['Financial_Year'], categories=fy_list[::-1],
                                                        ordered=True)
-    investment_df_fy = investment_df_fy.sort_values('Financial_Year')
-    st.dataframe(investment_df_fy)   
+    investment_df_fy = investment_df_fy.sort_values('Financial_Year') 
    elif timeperiod == 'Monthly':
      selected_date = pd.to_datetime(selected_month + '-01')
      three_months = [(selected_date - pd.DateOffset(months=i)).strftime('%B-%Y') for i in range(3)]
@@ -1947,25 +1945,25 @@ def Geenrate_MIS_Report():
         else:
             st.write("No Transactions")
    rm_name = RM_name    
-   if st.button("Generate Simple PDF Report"):
-      with st.spinner("Generating..."):
-          output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
-          temp_path = os.path.join(tempfile.gettempdir(), output_filename)
-          pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
-               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df,filtered_liquiloans_df, filtered_F_real_estate_df,output_path=temp_path)
+   #if st.button("Generate Simple PDF Report"):
+   #   with st.spinner("Generating..."):
+   #       output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
+   #       temp_path = os.path.join(tempfile.gettempdir(), output_filename)
+   #       pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
+   #            filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df,filtered_liquiloans_df, filtered_F_real_estate_df,output_path=temp_path)
               
-          if pdf_path and os.path.exists(pdf_path):
-                with open(pdf_path, "rb") as f:
-                    pdf_data = f.read()
+   #       if pdf_path and os.path.exists(pdf_path):
+   #             with open(pdf_path, "rb") as f:
+   #                 pdf_data = f.read()
 
-                st.download_button(
-                    label="Download Report",
-                    data=pdf_data,
-                    file_name=os.path.basename(pdf_path),
-                    mime="application/pdf"
-                )
-          else:
-                st.error("Failed to generate PDF report.")
+   #             st.download_button(
+   #                 label="Download Report",
+   #                 data=pdf_data,
+   #                 file_name=os.path.basename(pdf_path),
+   #                 mime="application/pdf"
+   #             )
+   #       else:
+   #             st.error("Failed to generate PDF report.")
 
 def AIF_Analysis(display=True):
   if display:
