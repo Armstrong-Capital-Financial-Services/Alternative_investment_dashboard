@@ -1554,8 +1554,8 @@ def Geenrate_MIS_Report():
       "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='quarterly', source='pms_clients'),
       "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"], frequency='quarterly',source='bonds_clients'),
       "Banking": get_time_series_data(Banking_clients, date_col=date_column_map["banking_clients"], frequency='quarterly', source='bank_clients'),
-      "Fractional_Real_Estate":get_time_series_data(FracRealEstate_clients, date_col=date_column_map["fractional_real_estate_clients"], frequency='quarterly', source='fractional_real_estate_client'),
-      "Insurance_clients": get_time_series_data(Insurance_clients,date_column_map['insurance_clients'],frequency='quarterly', source='insurance_clients')}    
+      "Fractional Real Estate":get_time_series_data(FracRealEstate_clients, date_col=date_column_map["fractional_real_estate_clients"], frequency='quarterly', source='fractional_real_estate_client'),
+      "Insurance": get_time_series_data(Insurance_clients,date_column_map['insurance_clients'],frequency='quarterly', source='insurance_clients')}    
    elif timeperiod == 'Calender Year':
       cy_list = [(selected_calender_year - i) for i in range(3)]
       investment_data_calender_year={ "Vested": get_time_series_data(vested_clients,amount_col='Invested Amount',date_col=date_column_map["vested_clients"],frequency='calendar_year',source='vested_clients',cy_list=cy_list),
@@ -1564,8 +1564,8 @@ def Geenrate_MIS_Report():
          "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],frequency='calendar_year', source='pms_clients',cy_list=cy_list),
          "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"],frequency='calendar_year', source='bonds_clients',cy_list=cy_list),
          "Banking": get_time_series_data(Banking_clients,amount_col='ELIGIBLE_AMT', date_col=date_column_map["banking_clients"], frequency='calendar_year', source='bank_clients',cy_list=cy_list),
-         "Fractional_Real_Estate":get_time_series_data(FracRealEstate_clients,amount_col='Investment Value' ,date_col=date_column_map["fractional_real_estate_clients"], frequency='calendar_year', source='fractional_real_estate_client',cy_list=cy_list),
-         "Insurance_clients": get_time_series_data(Insurance_clients,amount_col='Premium',date_col= date_column_map['insurance_clients'], frequency='calendar_year', source='insurance_clients',cy_list=cy_list)}
+         "Fractional Real Estate":get_time_series_data(FracRealEstate_clients,amount_col='Investment Value' ,date_col=date_column_map["fractional_real_estate_clients"], frequency='calendar_year', source='fractional_real_estate_client',cy_list=cy_list),
+         "Insurance": get_time_series_data(Insurance_clients,amount_col='Premium',date_col= date_column_map['insurance_clients'], frequency='calendar_year', source='insurance_clients',cy_list=cy_list)}
       investment_df_cy = pd.DataFrame(investment_data_calender_year).reset_index().melt(id_vars="Calendar_Year", var_name="Product", value_name="Invested Amount")
       investment_df_cy = investment_df_cy.fillna(0)
       investment_df_cy['Calendar_Year'] = pd.Categorical(investment_df_cy['Calendar_Year'], categories=cy_list[::-1], ordered=True)
@@ -1593,7 +1593,10 @@ def Geenrate_MIS_Report():
     "PMS": get_time_series_data(pms_clients, amount_col='Invested Amount', date_col=date_column_map["pms_clients"],
                                 frequency='financial_year', source='pms_clients',fy_list=fy_list),
     "Bonds": get_time_series_data(bonds_clients, amount_col='Amount', date_col=date_column_map["bonds_clients"],
-                                  frequency='financial_year', source='bonds_clients',fy_list=fy_list)}
+                                  frequency='financial_year', source='bonds_clients',fy_list=fy_list),
+    "Banking": get_time_series_data(Banking_clients, amount_col='ELIGIBLE_AMT',date_col=date_column_map["banking_clients"], frequency='financial_year',source='bank_clients', fy_list=fy_list),
+    "Fractional Real Estate": get_time_series_data(FracRealEstate_clients, amount_col='Investment Value',date_col=date_column_map["fractional_real_estate_clients"],frequency='financial_year',source='fractional_real_estate_client', fy_list=fy_list),
+    "Insurance": get_time_series_data(Insurance_clients, amount_col='Premium',  date_col=date_column_map['insurance_clients'], frequency='financial_year', source='insurance_clients', fy_list=fy_list)}
     investment_df_fy = pd.DataFrame(investment_data_financial_year).reset_index().melt(
         id_vars="Financial_Year", var_name="Product", value_name="Invested Amount")
     investment_df_fy = investment_df_fy.fillna(0)
@@ -1609,8 +1612,8 @@ def Geenrate_MIS_Report():
      "Vested": get_time_series_data(vested_clients, amount_col='Invested Amount', date_col=date_column_map["vested_clients"],frequency='monthly',month_list=three_months, source='vested_clients'),
      "FD": get_time_series_data(FD_clients, amount_col='Investment Amount',date_col= date_column_map['fd_clients'], frequency='monthly',month_list=three_months,source='fd_clients'),
      "Banking": get_time_series_data(Banking_clients,amount_col='ELIGIBLE_AMT', date_col=date_column_map["banking_clients"], frequency='monthly',month_list=three_months, source='bank_clients'),
-     "Fractional_Real_Estate":get_time_series_data(FracRealEstate_clients,amount_col='Investment Value', date_col=date_column_map["fractional_real_estate_clients"], frequency='monthly',month_list=three_months, source='fractional_real_estate_client'),
-     "Insurance_clients": get_time_series_data(Insurance_clients, amount_col='Premium',  date_col=date_column_map['insurance_clients'], frequency='monthly', source='insurance_clients', month_list=three_months)                 }
+     "Fractional Real Estate":get_time_series_data(FracRealEstate_clients,amount_col='Investment Value', date_col=date_column_map["fractional_real_estate_clients"], frequency='monthly',month_list=three_months, source='fractional_real_estate_client'),
+     "Insurance": get_time_series_data(Insurance_clients, amount_col='Premium',  date_col=date_column_map['insurance_clients'], frequency='monthly', source='insurance_clients', month_list=three_months)                 }
      investment_df = pd.DataFrame(investment_data).reset_index().melt(id_vars="Year-Month", var_name="Product", value_name="Invested Amount")
      investment_df = investment_df.fillna(0)
      investment_df['Year-Month'] = pd.Categorical(investment_df['Year-Month'], categories=three_months[::-1], ordered=True)
