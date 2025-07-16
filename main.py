@@ -1764,13 +1764,13 @@ def Geenrate_MIS_Report():
         filtered_bonds = bonds_clients[bonds_clients['Calendar_Year'] == selected_cy]
     else:
         filtered_bonds = bonds_clients[bonds_clients['Financial_Year'] == selected_fy]
-    columns_to_select = ['Name', 'Amount', 'PAN', 'Issue Name', 'Type']
+    columns_to_select = ['Name', 'Amount', 'Issue Name', 'Type','RM Name']
     filtered_df_bonds = filtered_bonds[columns_to_select]
     filtered_df_bonds['Name'] = filtered_df_bonds['Name'].str.upper()
     filtered_df_bonds['Issue Name'] = filtered_df_bonds['Issue Name'].str.upper()
     filtered_df_bonds['Type'] = filtered_df_bonds['Type'].str.upper()
-    filtered_df_bonds['PAN'] = filtered_df_bonds['PAN'].str.upper()
-    filtered_df_bonds=filtered_df_bonds.rename(columns={'Name':'NAME', 'Amount':'INVESTED AMOUNT','Issue Name':'ISSUE NAME','Type':'TYPE'})
+    filtered_df_bonds['RM Name'] = filtered_df_bonds['RM Name'].str.upper()
+    filtered_df_bonds=filtered_df_bonds.rename(columns={'Name':'NAME', 'Amount':'INVESTED AMOUNT','Issue Name':'ISSUE NAME','Type':'TYPE',''RM Name':'RM'})
     return filtered_df_bonds   
    with st.container(border=True):
     col1, col2 = st.columns(2)
