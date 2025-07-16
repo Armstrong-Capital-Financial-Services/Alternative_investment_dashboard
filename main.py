@@ -1770,7 +1770,7 @@ def Geenrate_MIS_Report():
     filtered_df_bonds['Issue Name'] = filtered_df_bonds['Issue Name'].str.upper()
     filtered_df_bonds['Type'] = filtered_df_bonds['Type'].str.upper()
     filtered_df_bonds['RM Name'] = filtered_df_bonds['RM Name'].str.upper()
-    filtered_df_bonds=filtered_df_bonds.rename(columns={'Name':'NAME', 'Amount':'INVESTED AMOUNT','Issue Name':'ISSUE NAME','Type':'TYPE',''RM Name':'RM'})
+    filtered_df_bonds=filtered_df_bonds.rename(columns={'Name':'NAME', 'Amount':'INVESTED AMOUNT','Issue Name':'ISSUE NAME','Type':'TYPE','RM Name':'RM'})
     return filtered_df_bonds   
    with st.container(border=True):
     col1, col2 = st.columns(2)
