@@ -594,9 +594,12 @@ def PMS_Analysis(display=True):
     col2,col3=st.columns(2)
     with col2:
       with st.container(border=True):
-        clients_across_PMS = raw_pms_client_data_df.groupby('Strategy')['Name'].nunique().reset_index()
+        raw_pms_client_data_df['Invested Amount']  =   raw_pms_client_data_df['Invested Amount'].astype(float)
+        raw_pms_client_data_df = raw_pms_client_data_df[raw_pms_client_data_df['Invested Amount'] > 0]
+        clients_across_PMS = raw_pms_client_data_df.groupby('Strategy')[['Name','Invested Amount']].agg(list).reset_index()
+        clients_across_PMS['Num_Clients'] = clients_across_PMS['Name'].apply(len)
         fig = go.Figure(data=[go.Pie(labels=clients_across_PMS['Strategy'],
-                                     values=clients_across_PMS['Name'],
+                                     values=clients_across_PMS['Num_Clients'],
                                      hole=0.3,
                                      marker=dict(colors=px.colors.diverging.Temps),
                                      hovertemplate="<b>Strategy:</b> %{label}<br><b>Clients:</b> %{value}<br><b>Percentage:</b> %{percent}<extra></extra>"
