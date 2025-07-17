@@ -765,7 +765,7 @@ def Liquiloans(display=True):
     with tab1:
       col0,col1=st.columns(2)
       with col0:
-        st.metric("Total Active Clients",len(active_liquiloans_clients['Lender Name']),border=True)
+        st.metric("Total Active Clients",len(active_liquiloans_clients[active_liquiloans_clients['Current Value (Rs.)'] != 0]),border=True)
       with col1:
         active_liquiloans_clients.replace(',', '', regex=True, inplace=True)
         active_liquiloans_clients['Current Value (Rs.)'] = pd.to_numeric(active_liquiloans_clients['Current Value (Rs.)'],errors='coerce')
