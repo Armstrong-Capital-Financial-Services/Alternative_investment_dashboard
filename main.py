@@ -1601,6 +1601,17 @@ def Geenrate_MIS_Report():
     investment_df_fy['Financial_Year'] = pd.Categorical(investment_df_fy['Financial_Year'], categories=fy_list[::-1],
                                                        ordered=True)
     investment_df_fy = investment_df_fy.sort_values('Financial_Year') 
+    fig_fy = px.bar( investment_df_fy, x="Product", y="Invested Amount", color="Financial_Year", barmode="group")
+
+    fig_fy.update_layout(  xaxis_title="Products",  yaxis_title="Net Inflow",
+        xaxis=dict(
+            title_font=dict(size=12, family='sans serif', color='black'),
+            tickfont=dict(size=12, family='sans serif', color='black')
+        ), yaxis=dict(    tickformat=',.0f',    title_font=dict(size=12, family='sans serif', color='black'),    tickfont=dict(size=12, family='sans serif', color='black')))
+    fig_fy.update_traces(  hovertemplate="<b>Product:</b> %{x}<br><b>Amount:</b> %{y:,.0f}<extra></extra>",  customdata=investment_df_fy[['Financial_Year']])
+    fig_fy.update_layout(showlegend=True)  
+    fig_fy.update_traces(marker_line_width=1.3, marker_line_color="black",  opacity=0.8)
+    st.plotly_chart(fig_fy)
    elif timeperiod == 'Monthly':
      selected_date = pd.to_datetime(selected_month + '-01')
      three_months = [(selected_date - pd.DateOffset(months=i)).strftime('%B-%Y') for i in range(3)]
