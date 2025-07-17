@@ -761,8 +761,6 @@ def Liquiloans(display=True):
     condition2 = raw_liquiloans_client_data_df['Current Value (Rs.)'].notna()
     active_liquiloans_clients = raw_liquiloans_client_data_df[condition1 & condition2]
   if display:
-    tab1,tab2 = st.tabs(['Active Clients','Past Clients'])
-    with tab1:
       col0,col1=st.columns(2)
       with col0:
         st.metric("Total Active Clients",len(active_liquiloans_clients[active_liquiloans_clients['Current Value (Rs.)'] != 0]),border=True)
@@ -771,12 +769,9 @@ def Liquiloans(display=True):
         active_liquiloans_clients['Current Value (Rs.)'] = pd.to_numeric(active_liquiloans_clients['Current Value (Rs.)'],errors='coerce')
         st.metric("Total AUM",format_currency(active_liquiloans_clients['Current Value (Rs.)'].sum()), border=True)
       with st.container(border=True):
-          raw_bonds_client_data_df = active_liquiloans_clients.sort_values(by=['Current Value (Rs.)'],
-                                                                           ascending=False).head(5)
+          raw_bonds_client_data_df = active_liquiloans_clients.sort_values(by=['Current Value (Rs.)'], ascending=False).head(5)
           st.subheader("Top Investors")
           st.dataframe(raw_bonds_client_data_df, hide_index=True)
-    with tab2:
-        st.dataframe(raw_liquiloans_client_data_df[raw_liquiloans_client_data_df['Current Value (Rs.)']=='0'])
   return active_liquiloans_clients
 def BONDS_Analysis(display=True):
   with psycopg2.connect(**db_config) as connection:
