@@ -1651,7 +1651,7 @@ def Geenrate_MIS_Report():
     filtered_df_smallcase['Name'] = filtered_df_smallcase['Name'].str.upper()
     filtered_df_smallcase['Smallcase Name'] = filtered_df_smallcase['Smallcase Name'].str.upper()
        
-    filtered_df_smallcase = filtered_df_smallcase.rename(columns={'Name': 'NAME', 'Smallcase Name': 'SMALLCASE NAME','Networth': 'CURRENT VALUE','Subscription Start Date})
+    filtered_df_smallcase = filtered_df_smallcase.rename(columns={'Name': 'NAME', 'Smallcase Name': 'SMALLCASE NAME','Networth': 'CURRENT VALUE','Subscription Start Date':'SUBSCRIPTION START DATE','Subscription End Date':'SUBSCRIPTION END DATE'})
     return filtered_df_smallcase
 
    with st.container(border=True):
