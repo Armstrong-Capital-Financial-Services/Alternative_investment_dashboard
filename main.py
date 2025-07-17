@@ -1643,11 +1643,11 @@ def Geenrate_MIS_Report():
         columns_to_select = ['Name', 'Networth', 'PAN', 'Smallcase Name', 'Subscription Start Date','RM']
         
     else:
-        columns_to_select = ['Name', 'Networth', 'RM', 'Smallcase Name','Subscription Start Date']
+        columns_to_select = ['Name', 'Networth', 'RM', 'Smallcase Name','Subscription Start Date',Subscription End Date]
     filtered_df_smallcase = filtered_smallcase[columns_to_select].copy()
     filtered_df_smallcase['RM'] = filtered_df_smallcase['RM'].str.upper()
     filtered_df_smallcase['Subscription Start Date'] = filtered_df_smallcase['Subscription Start Date'].dt.strftime("%d-%m-%Y")   
-    #filtered_df_smallcase['Subscription End Date'] = filtered_df_smallcase['Subscription End Date'].dt.strftime("%d-%m-%Y")  
+    filtered_df_smallcase['Subscription End Date'] = filtered_df_smallcase['Subscription End Date'].dt.strftime("%d-%m-%Y")  
     filtered_df_smallcase['Name'] = filtered_df_smallcase['Name'].str.upper()
     filtered_df_smallcase['Smallcase Name'] = filtered_df_smallcase['Smallcase Name'].str.upper()
        
