@@ -985,7 +985,7 @@ def Insurance_Analysis(display=True):
                 one_month_from_today = today + datetime.timedelta(days=30)
 
                 active_clients['End Date'] = pd.to_datetime(active_clients['End Date'],
-                                                                 format='%d-%m-%Y').dt.strftime('%d-%m-%Y')
+                                                                 format='%d-%m-%Y').dt.date
                 near_maturity_df = active_clients[
                     (active_clients['End Date'] >= today) & (
                                 active_clients['End Date'] <= one_month_from_today)]
