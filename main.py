@@ -878,11 +878,11 @@ def BONDS_Analysis(display=True):
 def Insurance_Analysis(display=True):
     with psycopg2.connect(**db_config) as connection:
         Insurance_client_data_df = fetch_table_data(connection=connection, table_name="INSURANCE")
-        Insurance_client_data_df['End Date'] = pd.to_datetime(Insurance_client_data_df['End Date'],format='mixed')
+        Insurance_client_data_df['End Date'] = pd.to_datetime(Insurance_client_data_df['End Date'],format='%d-%m-%Y')
         Insurance_client_data_df['Current Status'] = Insurance_client_data_df['End Date'].apply(
     lambda x: 'Mature' if x.date() < date.today() else 'Live')
     active_clients = Insurance_client_data_df[Insurance_client_data_df['Current Status'] == 'Live']
-    active_clients['Start Date']=pd.to_datetime(active_clients['Start Date'],format='mixed')
+    active_clients['Start Date']=pd.to_datetime(active_clients['Start Date'],format='%d-%m-%Y')
     active_clients['YearOnly'] = active_clients['Start Date'].dt.strftime("%Y")
     active_clients['Month'] = active_clients['Start Date'].dt.strftime("%B")
     matured_clients = Insurance_client_data_df[Insurance_client_data_df['Current Status']=='Mature']
@@ -985,7 +985,7 @@ def Insurance_Analysis(display=True):
                 one_month_from_today = today + datetime.timedelta(days=30)
 
                 active_clients['End Date'] = pd.to_datetime(active_clients['End Date'],
-                                                                 format='%d-%m-%Y').dt.date
+                                                                 format='%d-%m-%Y').dt.strftime('%d-%m-%Y')
                 near_maturity_df = active_clients[
                     (active_clients['End Date'] >= today) & (
                                 active_clients['End Date'] <= one_month_from_today)]
