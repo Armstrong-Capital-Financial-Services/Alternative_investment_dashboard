@@ -60,8 +60,8 @@ def create_simple_investment_report(investment_df,
 
         # Report Header
         elements.append(Paragraph("Investment Portfolio Report", title_style))
-            elements.append(Paragraph(f"RM: {rm_name}", subtitle_style))
-            elements.append(Spacer(1, 12))
+        elements.append(Paragraph(f"RM: {rm_name}", subtitle_style))
+        elements.append(Spacer(1, 12))
 
         # Bar Chart
         try:
