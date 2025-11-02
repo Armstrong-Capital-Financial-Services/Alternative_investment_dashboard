@@ -1993,28 +1993,28 @@ def Geenrate_MIS_Report():
 
 
 
-if __name__ == "__main__":
-    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products","Insurance", "Bonds","Liquiloans","PMS","Vested","FD","MIS Report"])
-    if page == "Bonds":
-        BONDS_Analysis()
-    elif page == "PMS":
-        PMS_Analysis(display=True)
-    elif page == "Vested":
-        VESTED_Analysis(display=True)
-    elif page == "Liquiloans":
-        Liquiloans()
-    elif page == "Insurance":
-        Insurance_Analysis(display=True)
-    elif page == "Fractional Real Estate":
-        RIETS_Analysis(display=True)
-    elif page == "Smallcase":
-        SMALLCASE_Analysis(display=True)
-    elif page == "FD":
-        FD_Analysis()
-    #elif page == "AIF":
-    #    AIF_Analysis()
-    elif page == "Banking Products":
-        BANK_Analysis(display=True)
-    elif page =="MIS Report":
-        Geenrate_MIS_Report()
+#if __name__ == "__main__":
+#    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products","Insurance", "Bonds","Liquiloans","PMS","Vested","FD","MIS Report"])
+#    if page == "Bonds":
+#        BONDS_Analysis()
+#    elif page == "PMS":
+#        PMS_Analysis(display=True)
+#    elif page == "Vested":
+#        VESTED_Analysis(display=True)
+#    elif page == "Liquiloans":
+#        Liquiloans()
+#    elif page == "Insurance":
+#        Insurance_Analysis(display=True)
+#    elif page == "Fractional Real Estate":
+#        RIETS_Analysis(display=True)
+#    elif page == "Smallcase":
+#        SMALLCASE_Analysis(display=True)
+#    elif page == "FD":
+#        FD_Analysis()
+#    #elif page == "AIF":
+#    #    AIF_Analysis()
+#    elif page == "Banking Products":
+#        BANK_Analysis(display=True)
+#    elif page =="MIS Report":
+#        Geenrate_MIS_Report()
 
