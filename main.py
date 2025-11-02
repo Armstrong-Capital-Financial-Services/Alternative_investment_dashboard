@@ -1994,7 +1994,7 @@ def Geenrate_MIS_Report():
 
 
 if __name__ == "__main__":
-    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products","Insurance", "Bonds","Liquiloans","PMS","Vested","FD","AIF","MIS Report"])
+    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products","Insurance", "Bonds","Liquiloans","PMS","Vested","FD","MIS Report"])
     if page == "Bonds":
         BONDS_Analysis()
     elif page == "PMS":
@@ -2011,8 +2011,8 @@ if __name__ == "__main__":
         SMALLCASE_Analysis(display=True)
     elif page == "FD":
         FD_Analysis()
-    elif page == "AIF":
-        AIF_Analysis()
+    #elif page == "AIF":
+    #    AIF_Analysis()
     elif page == "Banking Products":
         BANK_Analysis(display=True)
     elif page =="MIS Report":
