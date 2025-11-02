@@ -1961,7 +1961,11 @@ def Geenrate_MIS_Report():
    rm_name = RM_name    
    if st.button("Generate Simple PDF Report"):
       with st.spinner("Generating..."):
-          output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
+          if timeperiod == 'Monthly':
+             output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
+          elif timeperiod == 'Calender Year':
+              output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_calender_year.replace(' ', '_')}.pdf"
+              
           temp_path = os.path.join(tempfile.gettempdir(), output_filename)
           pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
                filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df, filtered_FracRealEstate_df,output_path=temp_path)
