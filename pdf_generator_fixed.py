@@ -117,16 +117,16 @@ def create_simple_investment_report(investment_df,
             elements.append(Spacer(1, 12))
 
         # Add product-wise tables
-        add_table("Smallcase", smallcase_clients, ['NAME', 'CURRENT VALUE', 'PAN', 'SMALLCASE NAME'])
+        add_table("Smallcase", smallcase_clients, ['NAME', 'SMALLCASE NAME','CURRENT VALUE','SUBSCRIPTION START DATE'])
         add_table("Vested", vested_clients,['NAME','PLAN TYPE','INVESTED AMOUNT','CURRENT VALUE'])
         add_table("PMS", pms_clients, ['NAME', 'INVESTED AMOUNT', 'STRATEGY'])
         add_table("FD", fd_clients, ['NAME', 'ISSUE DATE', 'INVESTED AMOUNT', 'CHANNEL PARTNER'])
-        add_table("Bonds", bonds_clients, ['NAME', 'INVESTED AMOUNT', 'PAN', 'ISSUE NAME', 'TYPE'])
+        add_table("Bonds", bonds_clients, ['NAME', 'INVESTED AMOUNT', 'ISSUE NAME','TYPE'])
         #add_table("AIF",aif_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
-        add_table("Banking Products",bank_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
-        add_table("Insurance",insurance_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("Banking Products",bank_clients, ['CUSTOMERNAME','BOOKING_MONTH','PRODUCTNAME'])
+        add_table("Insurance",insurance_clients, ['Name', 'Product Partner','Premium','Sum insured','Start Date','End Date'])
         #add_table("Liquiloans",liqiloans_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
-        add_table("Fractional Real Estate",F_real_estate_clients, ['Name', 'Asset Name','Investment Value','Date of investment', 'RM'])
+        add_table("Fractional Real Estate",F_real_estate_clients, ['Name', 'Asset Name','Investment Value','Date of investment'])
     
         
 
