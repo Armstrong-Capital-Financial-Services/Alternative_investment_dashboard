@@ -1962,13 +1962,16 @@ def Geenrate_MIS_Report():
    if st.button("Generate Simple PDF Report"):
       with st.spinner("Generating..."):
           if timeperiod == 'Monthly':
+              pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
+              filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df, filtered_FracRealEstate_df,temp_path)
              output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
           elif timeperiod == 'Calender Year':
+              pdf_path = create_simple_investment_report(selected_calender_year,investment_df,rm_name,filtered_smallcase_df,
+              filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df, filtered_FracRealEstate_df,temp_path)
               output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_calender_year}.pdf"
               
           temp_path = os.path.join(tempfile.gettempdir(), output_filename)
-          pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
-               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df, filtered_FracRealEstate_df,temp_path)
+          
               
           if pdf_path and os.path.exists(pdf_path):
                 with open(pdf_path, "rb") as f:
