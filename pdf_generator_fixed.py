@@ -22,7 +22,7 @@ def format_currency(value):
         return f"{value:.2f}"
 
 def create_simple_investment_report(selected_month,investment_df,
-        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,aif_clients,bank_clients,insurance_clients,liqiloans_clients,F_real_estate_clients,output_path=None,):
+        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,aif_clients,bank_clients,insurance_clients,F_real_estate_clients,output_path=None,):
     """Create a simple investment report using ReportLab"""
 
     def draw_border(canvas, doc):
@@ -126,7 +126,7 @@ def create_simple_investment_report(selected_month,investment_df,
         add_table("AIF",aif_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
         add_table("Banking Products",bank_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
         add_table("Insurance",insurance_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
-        add_table("Liquiloans",liqiloans_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        #add_table("Liquiloans",liqiloans_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
         add_table("Fractional Real Estate",F_real_estate_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
     
         
