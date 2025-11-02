@@ -1966,16 +1966,7 @@ def Geenrate_MIS_Report():
               temp_path = os.path.join(tempfile.gettempdir(), output_filename)
               pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df, filtered_FracRealEstate_df,temp_path)
-          elif timeperiod == 'Calender Year':
-              output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_calender_year}.pdf"
-              temp_path = os.path.join(tempfile.gettempdir(), output_filename)
-              pdf_path = create_simple_investment_report(selected_calender_year,investment_data_calender_year,rm_name,filtered_smallcase_df,
-              filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df, filtered_FracRealEstate_df,temp_path)
-              
-        
-          
-              
-          if pdf_path and os.path.exists(pdf_path):
+              if pdf_path and os.path.exists(pdf_path):
                 with open(pdf_path, "rb") as f:
                     pdf_data = f.read()
 
@@ -1985,8 +1976,30 @@ def Geenrate_MIS_Report():
                     file_name=os.path.basename(pdf_path),
                     mime="application/pdf"
                 )
-          else:
+              else:
                 st.error("Failed to generate PDF report.")
+          elif timeperiod == 'Calender Year':
+              output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_calender_year}.pdf"
+              temp_path = os.path.join(tempfile.gettempdir(), output_filename)
+              pdf_path = create_simple_investment_report(selected_calender_year,investment_data_calender_year,rm_name,filtered_smallcase_df,
+              filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df, filtered_FracRealEstate_df,temp_path)
+              if pdf_path and os.path.exists(pdf_path):
+                with open(pdf_path, "rb") as f:
+                    pdf_data = f.read()
+
+                st.download_button(
+                    label="Download Report",
+                    data=pdf_data,
+                    file_name=os.path.basename(pdf_path),
+                    mime="application/pdf"
+                )
+              else:
+                st.error("Failed to generate PDF report.")
+              
+        
+          
+              
+         
 
 def AIF_Analysis(display=True):
   with psycopg2.connect(**db_config) as connection:
