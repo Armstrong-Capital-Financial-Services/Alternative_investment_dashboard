@@ -22,7 +22,7 @@ def format_currency(value):
         return f"{value:.2f}"
 
 def create_simple_investment_report(selected_month,investment_df,
-        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,aif_clients,bank_clients,insurance_clients,F_real_estate_clients,output_path=None,):
+        rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,aif_clients,bank_clients,insurance_clients,F_real_estate_clients,output_path):
     """Create a simple investment report using ReportLab"""
 
     def draw_border(canvas, doc):
@@ -35,9 +35,9 @@ def create_simple_investment_report(selected_month,investment_df,
         canvas.restoreState()
 
     try:
-        if selected_month is not None:
-            filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
-            output_path = os.path.join(tempfile.gettempdir(), filename)
+        #if selected_month is not None:
+        #    filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
+        #    output_path = os.path.join(tempfile.gettempdir(), filename)
         
         # Create temporary directory for chart
         temp_dir = tempfile.mkdtemp()
