@@ -60,10 +60,10 @@ def create_simple_investment_report(selected_month,investment_df,
 
         # Report Header
         elements.append(Paragraph("Investment Portfolio Report", title_style))
-        if selected_month = selected_month:
+        if selected_month == selected_month:
             elements.append(Paragraph(f"RM: {rm_name} | Month: {selected_month}", subtitle_style))
             elements.append(Spacer(1, 12))
-        if selected_month = selected_calender_year:
+        if selected_month == selected_calender_year:
             elements.append(Paragraph(f"RM: {rm_name} | Month: {selected_calender_year}", subtitle_style))
             elements.append(Spacer(1, 12))
 
