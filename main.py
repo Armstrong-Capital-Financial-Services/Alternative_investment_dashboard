@@ -1959,62 +1959,61 @@ def Geenrate_MIS_Report():
         else:
             st.write("No Transactions")
    rm_name = RM_name    
-   #if st.button("Generate Simple PDF Report"):
-   #   with st.spinner("Generating..."):
-   #       output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
-   #       temp_path = os.path.join(tempfile.gettempdir(), output_filename)
-   #       pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
-   #            filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df,filtered_liquiloans_df, filtered_F_real_estate_df,output_path=temp_path)
+   if st.button("Generate Simple PDF Report"):
+      with st.spinner("Generating..."):
+          output_filename = f"Investment_Report_{rm_name.replace(' ', '_')}_{selected_month.replace(' ', '_')}.pdf"
+          temp_path = os.path.join(tempfile.gettempdir(), output_filename)
+          pdf_path = create_simple_investment_report(selected_month,investment_df,rm_name,filtered_smallcase_df,
+               filtered_vested_df,filtered_pms_df,filtered_bonds_df,filtered_fd_df,filtered_aif_df,filtered_bank_df,filtered_insurance_df,filtered_liquiloans_df, filtered_F_real_estate_df,output_path=temp_path)
               
-   #       if pdf_path and os.path.exists(pdf_path):
-   #             with open(pdf_path, "rb") as f:
-   #                 pdf_data = f.read()
+          if pdf_path and os.path.exists(pdf_path):
+                with open(pdf_path, "rb") as f:
+                    pdf_data = f.read()
 
-   #             st.download_button(
-   #                 label="Download Report",
-   #                 data=pdf_data,
-   #                 file_name=os.path.basename(pdf_path),
-   #                 mime="application/pdf"
-   #             )
-   #       else:
-   #             st.error("Failed to generate PDF report.")
+                st.download_button(
+                    label="Download Report",
+                    data=pdf_data,
+                    file_name=os.path.basename(pdf_path),
+                    mime="application/pdf"
+                )
+          else:
+                st.error("Failed to generate PDF report.")
 
-#def AIF_Analysis(display=True):
-#  with psycopg2.connect(**db_config) as connection:
-#       aif_df=fetch_table_data(connection=connection,table_name="AIF")
-#  if display:
-#    col0,col1=st.columns(2)
-#    with col0:
-#      st.metric("Total Active Clients",len(aif_df),border=True)
+def AIF_Analysis(display=True):
+  with psycopg2.connect(**db_config) as connection:
+       aif_df=fetch_table_data(connection=connection,table_name="AIF")
+  if display:
+    col0,col1=st.columns(2)
+    with col0:
+      st.metric("Total Active Clients",len(aif_df),border=True)
 
-#    with col1:
-#      st.metric("Total AUM",aif_df['Current Value'].sum(),border=True)
-
-
+    with col1:
+      st.metric("Total AUM",aif_df['Current Value'].sum(),border=True)
 
 
-#if __name__ == "__main__":
-#    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products","Insurance", "Bonds","Liquiloans","PMS","Vested","FD","MIS Report"])
-#    if page == "Bonds":
-#        BONDS_Analysis()
-#    elif page == "PMS":
-#        PMS_Analysis(display=True)
-#    elif page == "Vested":
-#        VESTED_Analysis(display=True)
-#    elif page == "Liquiloans":
-#        Liquiloans()
-#    elif page == "Insurance":
-#        Insurance_Analysis(display=True)
-#    elif page == "Fractional Real Estate":
-#        RIETS_Analysis(display=True)
-#    elif page == "Smallcase":
-#        SMALLCASE_Analysis(display=True)
-#    elif page == "FD":
-#        FD_Analysis()
-#    #elif page == "AIF":
-#    #    AIF_Analysis()
-#    elif page == "Banking Products":
-#        BANK_Analysis(display=True)
-#    elif page =="MIS Report":
-#        Geenrate_MIS_Report()
+
+if __name__ == "__main__":
+    page = st.sidebar.radio("Go to", ["Smallcase", "Fractional Real Estate","Banking Products","Insurance", "Bonds","Liquiloans","PMS","Vested","FD","MIS Report"])
+    if page == "Bonds":
+        BONDS_Analysis()
+    elif page == "PMS":
+        PMS_Analysis(display=True)
+    elif page == "Vested":
+        VESTED_Analysis(display=True)
+    elif page == "Liquiloans":
+        Liquiloans()
+    elif page == "Insurance":
+        Insurance_Analysis(display=True)
+    elif page == "Fractional Real Estate":
+        RIETS_Analysis(display=True)
+    elif page == "Smallcase":
+        SMALLCASE_Analysis(display=True)
+    elif page == "FD":
+        FD_Analysis()
+    #elif page == "AIF":
+        AIF_Analysis()
+    elif page == "Banking Products":
+        BANK_Analysis(display=True)
+    elif page =="MIS Report":
+        Geenrate_MIS_Report()
 
