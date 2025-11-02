@@ -123,9 +123,9 @@ def create_simple_investment_report(investment_df,
         add_table("FD", fd_clients, ['NAME', 'ISSUE DATE', 'INVESTED AMOUNT', 'CHANNEL PARTNER'])
         add_table("Bonds", bonds_clients, ['NAME', 'INVESTED AMOUNT', 'PAN', 'ISSUE NAME', 'TYPE'])
         #add_table("AIF",aif_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
-        #add_table("Banking Products",bank_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("Banking Products",bank_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
         add_table("Insurance",insurance_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
-        #add_table("Liquiloans",liqiloans_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
+        add_table("Liquiloans",liqiloans_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
         #add_table("Fractional Real Estate",F_real_estate_clients, ['NAME','INVESTED AMOUNT','CURRENT VALUE'])
     
         
