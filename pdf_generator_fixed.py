@@ -21,7 +21,7 @@ def format_currency(value):
     else:
         return f"{value:.2f}"
 
-def create_simple_investment_report(investment_df,
+def create_simple_investment_report(time_period,investment_df,
         rm_name, smallcase_clients, vested_clients, pms_clients, bonds_clients, fd_clients,aif_clients,bank_clients,insurance_clients,F_real_estate_clients,output_path):
     """Create a simple investment report using ReportLab"""
 
@@ -60,7 +60,7 @@ def create_simple_investment_report(investment_df,
 
         # Report Header
         elements.append(Paragraph("Investment Portfolio Report", title_style))
-        elements.append(Paragraph(f"RM: {rm_name}", subtitle_style))
+        elements.append(Paragraph(f"RM: {rm_name} | Time Period: {time_period}", subtitle_style))
         elements.append(Spacer(1, 12))
 
         # Bar Chart
