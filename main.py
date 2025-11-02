@@ -1865,17 +1865,17 @@ def Geenrate_MIS_Report():
     with col1:
         st.subheader("BANKING PRODUCTS")
         if timeperiod == 'Monthly':
-            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,
+            filtered_bank_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,
                                                        selected_month=selected_month)
         elif timeperiod == 'Quarterly':
-            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,
+            filtered_bank_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,
                                                        selected_quarter_fy=selected_quarter_fy)
         elif timeperiod == 'Calender Year':
-            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
+            filtered_bank_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod,selected_cy=selected_calender_year)
         else:
-            filtered_FracRealEstate_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
-        if len(filtered_FracRealEstate_df) > 0:
-           st.dataframe(filtered_FracRealEstate_df,hide_index=True)
+            filtered_bank_df = filter_bank_clients(Banking_clients, timeperiod=timeperiod, selected_fy=selected_financial_year)
+        if len(filtered_bank_df) > 0:
+           st.dataframe(filtered_bank_df,hide_index=True)
         else:
             st.write("No Transactions")
 
