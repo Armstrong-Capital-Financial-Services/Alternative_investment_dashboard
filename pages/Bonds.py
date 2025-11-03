@@ -160,3 +160,5 @@ def BONDS_Analysis(display=True):
             raw_bonds_client_data_df=raw_bonds_client_data_df.iloc[:,:-5]
             st.dataframe(raw_bonds_client_data_df,hide_index=True)
   return raw_bonds_client_data_df
+
+BONDS_Analysis(display=True)
