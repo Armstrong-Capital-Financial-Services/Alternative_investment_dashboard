@@ -88,3 +88,5 @@ def PMS_Analysis(display=True):
   raw_pms_client_data_df['MonthOnly'] = pd.to_datetime(raw_pms_client_data_df['Date of Investment']).dt.strftime("%B")
   raw_pms_client_data_df['YearOnly'] = pd.to_datetime(raw_pms_client_data_df['Date of Investment']).dt.strftime("%Y")
   return raw_pms_client_data_df
+
+PMS_Analysis(display=True)
