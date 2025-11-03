@@ -350,3 +350,4 @@ def FD_Analysis(display=True):
             near_maturity_df['Issue Date'] = pd.to_datetime(near_maturity_df['Issue Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')
             near_maturity_df['Maturity Date'] = pd.to_datetime(near_maturity_df['Maturity Date'],format ='%d-%m-%Y').dt.strftime('%d-%m-%Y')               
             st.dataframe(near_maturity_df,hide_index=True)
+FD_Analysis(display=True)
