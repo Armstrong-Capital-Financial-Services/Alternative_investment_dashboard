@@ -15,6 +15,17 @@ from psycopg2 import sql
 from supabase import create_client
 from pdf_generator_fixed import create_simple_investment_report
 
+
+def format_currency(value):
+    if abs(value) >= 10000000:
+        return f'{value/10000000:.2f} Crs'
+    elif abs(value) >= 100000:
+        return f"{value / 100000:.2f} L"
+    elif abs(value) >= 1000:
+        return f"{value / 1000:.2f} K"
+    else:
+        return f"{value:.2f}"
+
 db_config = {
     "user": st.secrets["DB"]["USER"],
     "password": st.secrets["DB"]["PASSWORD"],
@@ -77,5 +88,3 @@ def PMS_Analysis(display=True):
   raw_pms_client_data_df['MonthOnly'] = pd.to_datetime(raw_pms_client_data_df['Date of Investment']).dt.strftime("%B")
   raw_pms_client_data_df['YearOnly'] = pd.to_datetime(raw_pms_client_data_df['Date of Investment']).dt.strftime("%Y")
   return raw_pms_client_data_df
-
-PMS_Analysis(display=True)
